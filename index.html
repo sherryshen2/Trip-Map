@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#101a35" />
   <meta name="description" content="欧洲旅行行程、交通与固定时间提醒" />
-  <title>Voyage / 欧洲行程板</title>
+  <title>巴黎、罗马与南法</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23f06449'/%3E%3Cpath d='M17 40h30M22 34h20M27 28h10M32 20v29' stroke='%23fff7ec' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
       --ink: #101a35;
@@ -103,7 +104,7 @@
     .hero {
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
-      min-height: 330px;
+      min-height: 285px;
       overflow: hidden;
       color: var(--paper);
       background: var(--ink);
@@ -113,9 +114,9 @@
     .hero-copy {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 24px;
-      padding: clamp(28px, 5vw, 60px);
+      padding: clamp(24px, 4vw, 44px);
     }
     .eyebrow {
       display: inline-flex;
@@ -150,6 +151,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 9px;
+      margin-top: 24px;
     }
     .stat-pill {
       padding: 8px 13px;
@@ -163,7 +165,7 @@
     .stat-pill:nth-child(3) { background: var(--paper); }
     .hero-photo {
       position: relative;
-      min-height: 330px;
+      min-height: 285px;
       background: #27365e;
     }
     .hero-photo::after {
@@ -177,7 +179,7 @@
       display: block;
       width: 100%;
       height: 100%;
-      min-height: 330px;
+      min-height: 285px;
       object-fit: cover;
       filter: saturate(.82) contrast(1.05);
     }
@@ -208,6 +210,7 @@
       box-shadow: 0 12px 32px rgba(16, 26, 53, .06);
     }
     .schedule-panel { min-width: 0; padding: clamp(18px, 3vw, 30px); }
+    .schedule-panel > .countdown-panel { margin-bottom: 22px; }
     .panel-head {
       display: flex;
       align-items: flex-start;
@@ -407,15 +410,60 @@
     .foot-label { display: block; color: var(--muted); font-size: 12px; font-weight: 800; }
     .foot-value { display: block; margin-top: 3px; font-size: 14px; font-weight: 750; overflow-wrap: anywhere; }
 
+    .route-map {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .route-map-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .route-map-title { font-size: 17px; font-weight: 850; letter-spacing: -.02em; }
+    .route-map-note { color: var(--muted); font-size: 12px; }
+    .route-map-scroll { overflow: hidden; padding: 10px 0 3px; }
+    .route-canvas {
+      position: relative;
+      height: 310px;
+      overflow: hidden;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .route-map-canvas { width: 100%; height: 100%; z-index: 0; background: #dbe7d8; }
+    .leaflet-container { font: inherit; }
+    .leaflet-control-attribution { font-size: 10px; }
+    .leaflet-popup-content { margin: 12px 14px; font-size: 13px; line-height: 1.45; }
+    .leaflet-popup-content strong { display: block; margin-bottom: 3px; font-size: 15px; }
+    .leaflet-popup-content a { color: var(--orange-dark); font-weight: 800; text-decoration: none; }
+    .leaflet-number-marker { background: transparent; border: 0; }
+    .leaflet-number-marker span {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      color: var(--paper);
+      background: var(--orange);
+      border: 3px solid var(--paper);
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(16,26,53,.3);
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .leaflet-routing-line { filter: drop-shadow(0 2px 1px rgba(16,26,53,.22)); }
+    .route-map-foot { margin-top: 7px; color: var(--muted); font-size: 12px; }
+
     .side-column { min-width: 0; display: grid; gap: 22px; }
-    .countdown-panel { overflow: hidden; color: var(--paper); background: var(--orange); border: 0; }
+    .countdown-panel { overflow: hidden; color: var(--paper); background: #f47a60; border: 0; }
     .countdown-panel-inner { padding: 25px; }
     .countdown-panel .section-kicker { color: rgba(255,248,236,.72); }
     .countdown-title { margin-top: 7px; font-size: 27px; line-height: 1.1; letter-spacing: -.04em; }
     .countdown-value {
       margin-top: 20px;
       color: var(--paper);
-      font-size: clamp(30px, 4vw, 44px);
+      font-size: clamp(25px, 3vw, 33px);
       font-variant-numeric: tabular-nums;
       font-weight: 850;
       letter-spacing: -.05em;
@@ -461,7 +509,7 @@
       .topbar-meta { width: 100%; justify-content: space-between; }
       .shell { width: min(calc(100% - 24px), 1420px); padding-top: 18px; }
       .hero { grid-template-columns: 1fr; }
-      .hero-copy { min-height: 350px; padding: 28px 22px; }
+      .hero-copy { min-height: 240px; padding: 24px 22px; }
       .hero-photo, .hero-photo img { min-height: 210px; height: 210px; }
       .panel-head, .day-summary { grid-template-columns: 1fr; flex-direction: column; align-items: flex-start; }
       .day-summary { display: grid; }
@@ -476,6 +524,32 @@
       .side-column { grid-template-columns: 1fr; }
       .footer { flex-direction: column; }
     }
+    @media (max-width: 900px) {
+      .event-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+      }
+      .event-topline { display: contents; }
+      .event-name-row { grid-column: 1 / -1; }
+      .event-meta {
+        grid-column: 1;
+        grid-row: 2;
+        min-width: 0;
+        margin: 13px 0 0;
+      }
+      .map-link {
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: end;
+        align-self: center;
+        margin-top: 13px;
+      }
+      .event-note {
+        grid-column: 1 / -1;
+        margin: 12px 0 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -489,28 +563,18 @@
       <div class="hero-copy">
         <div>
           <div class="eyebrow">2026 / Europe trip</div>
-          <h1 id="page-title">巴黎、罗马与南法，按时间走。</h1>
-          <p class="hero-sub">一眼看清下一站、固定时间和交通；每个景点都可以直接打开 Google Maps。</p>
+          <h1 id="page-title">巴黎、罗马与南法</h1>
         </div>
-        <div class="hero-stats" aria-label="行程概况"><span class="stat-pill">14 天</span><span class="stat-pill">6 座城市</span><span class="stat-pill">Asia/Shanghai 计划表</span></div>
+        <div class="hero-stats" aria-label="行程概况"><span class="stat-pill">14 天</span><span class="stat-pill">6 座城市</span></div>
       </div>
       <div class="hero-photo">
         <img src="https://images.unsplash.com/photo-1633632859220-2688037177d5?auto=format&fit=crop&fm=jpg&ixlib=rb-4.0.3&q=82&w=1200" alt="巴黎城市天际线与埃菲尔铁塔" />
-        <div class="photo-credit">Paris / Unsplash</div>
+        <div class="photo-credit">Paris</div>
       </div>
     </section>
 
     <section class="dashboard-grid" aria-label="旅行行程工作区">
       <section class="panel schedule-panel" aria-labelledby="schedule-title">
-        <div class="panel-head">
-          <div><div class="section-kicker">Live itinerary</div><h2 class="panel-title" id="schedule-title">每日行程</h2></div>
-          <label class="filter"><input id="fixed-only" type="checkbox" /> 只看固定时间</label>
-        </div>
-        <nav class="day-tabs" id="day-tabs" aria-label="选择日期"></nav>
-        <div id="day-content"></div>
-      </section>
-
-      <aside class="side-column" aria-label="提醒与交通">
         <section class="panel countdown-panel" aria-live="polite">
           <div class="countdown-panel-inner">
             <div class="section-kicker">Next fixed time</div>
@@ -520,7 +584,15 @@
           </div>
           <div class="countdown-bar"><span id="countdown-progress"></span></div>
         </section>
+        <div class="panel-head">
+          <div><div class="section-kicker">Live itinerary</div><h2 class="panel-title" id="schedule-title">每日行程</h2></div>
+          <label class="filter"><input id="fixed-only" type="checkbox" /> 只看固定时间</label>
+        </div>
+        <nav class="day-tabs" id="day-tabs" aria-label="选择日期"></nav>
+        <div id="day-content"></div>
+      </section>
 
+      <aside class="side-column" aria-label="提醒与交通">
         <section class="panel side-panel" aria-labelledby="transport-title">
           <div class="section-kicker">Move smart</div>
           <h2 class="side-title" id="transport-title">交通速记</h2>
@@ -540,6 +612,7 @@
     <footer class="footer"><span>行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。</span><a href="https://www.google.com/maps" target="_blank" rel="noreferrer">打开 Google Maps ↗</a></footer>
   </main>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const mapUrl = (query) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     const tripYear = 2026;
@@ -549,6 +622,72 @@
       rome: { label: '罗马', tz: '+02:00' }, nice: { label: '尼斯', tz: '+02:00' },
       menton: { label: '芒通', tz: '+02:00' }, monaco: { label: '摩纳哥', tz: '+02:00' },
       antibes: { label: '昂蒂布', tz: '+02:00' }
+    };
+    const cityCoords = {
+      shenzhen: [22.5431, 114.0579], guangzhou: [23.1291, 113.2644],
+      dubai: [25.2048, 55.2708], paris: [48.8566, 2.3522],
+      rome: [41.9028, 12.4964], nice: [43.7102, 7.2620],
+      menton: [43.7762, 7.5045], monaco: [43.7384, 7.4246],
+      antibes: [43.5808, 7.1239]
+    };
+    const placeCoords = {
+      '深圳北站': [22.6093, 114.0293],
+      '广州白云国际机场': [23.3924, 113.2988],
+      'Dubai International Airport': [25.2532, 55.3657],
+      'Dubai, United Arab Emirates': [25.2048, 55.2708],
+      'Paris Charles de Gaulle Airport': [49.0097, 2.5479],
+      'Eiffel Tower, Paris': [48.8584, 2.2945],
+      'Cité de l’architecture et du patrimoine, Paris': [48.8622, 2.2870],
+      'Palais Garnier, Paris': [48.8719, 2.3316],
+      'Place de la Concorde, Paris': [48.8656, 2.3212],
+      'Arc de Triomphe, Paris': [48.8738, 2.2950],
+      'Galeries Lafayette Haussmann, Paris': [48.8738, 2.3320],
+      'Louvre Museum, Paris': [48.8606, 2.3376],
+      'Jardin des Tuileries, Paris': [48.8634, 2.3275],
+      'Musée d’Orsay, Paris': [48.8600, 2.3266],
+      'Pont de l’Alma, Paris': [48.8639, 2.3000],
+      'Orly Airport Paris': [48.7262, 2.3652],
+      'Spanish Steps, Rome': [41.9059, 12.4823],
+      'Trevi Fountain, Rome': [41.9009, 12.4833],
+      'Vintage shops, Rome': [41.9028, 12.4964],
+      'St. Peter’s Basilica, Vatican City': [41.9022, 12.4539],
+      'Castel Sant’Angelo, Rome': [41.9031, 12.4663],
+      'Piazza Navona, Rome': [41.8992, 12.4731],
+      'Campo de’ Fiori, Rome': [41.8955, 12.4723],
+      'Pantheon, Rome': [41.8986, 12.4769],
+      'Church of St. Ignatius of Loyola, Rome': [41.8990, 12.4796],
+      'Cuoco e Camicia, Via di Monte Polacco 2, Rome': [41.8997, 12.4843],
+      'Colosseum, Rome': [41.8902, 12.4922],
+      'Roman Forum, Rome': [41.8925, 12.4853],
+      'Bocca della Verità, Rome': [41.8885, 12.4816],
+      'Vatican Museums, Vatican City': [41.9065, 12.4536],
+      'Galleria Borghese, Rome': [41.9142, 12.4924],
+      'Villa Borghese, Rome': [41.9145, 12.4855],
+      'Nice Côte d’Azur Airport': [43.6653, 7.2150],
+      'Nice-Ville station': [43.7050, 7.2620],
+      'Jardin Exotique d’Eze, Èze': [43.7274, 7.3624],
+      'Cours Saleya Market, Nice': [43.6955, 7.2759],
+      'Castle Hill, Nice': [43.6952, 7.2806],
+      'Promenade des Anglais, Nice': [43.6940, 7.2610],
+      'Blue Beach, Nice': [43.6950, 7.2600],
+      'Basilique Saint-Michel-Archange, Menton': [43.7750, 7.4980],
+      'Old Town, Menton': [43.7750, 7.5050],
+      'Casino de Monte-Carlo, Monaco': [43.7395, 7.4273],
+      'Circuit de Monaco': [43.7340, 7.4205],
+      'Jardins Saint-Martin, Monaco': [43.7303, 7.4241],
+      'Prince’s Palace of Monaco': [43.7311, 7.4206],
+      'Marché Provençal, Antibes': [43.5807, 7.1251],
+      'Plage du Ponteil, Antibes': [43.5707, 7.1268],
+      'Vieux Nice': [43.6960, 7.2700],
+      'Place Masséna, Nice': [43.6963, 7.2707],
+      'Fresh market, Nice': [43.6955, 7.2759],
+      'Aparthotel Adagio Paris Nation': [48.8420, 2.4000],
+      'Sacré-Cœur, Paris': [48.8867, 2.3431],
+      'Hôtel de la Marine, Paris': [48.8664, 2.3216],
+      'Sainte-Chapelle, Paris': [48.8554, 2.3450],
+      'Notre-Dame de Paris': [48.8530, 2.3499],
+      'Le Marais, Paris': [48.8566, 2.3622],
+      'Guangzhou South Railway Station': [22.9907, 113.2697]
     };
     const at = (month, day, time, city) => `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${time}:00${cities[city].tz}`;
     const event = (time, title, location, query, type, city, options = {}) => ({ time, title, location, query, type, city, ...options });
@@ -677,6 +816,7 @@
     const fixedOnlyEl = document.querySelector('#fixed-only');
     let selectedDay = 0;
     let nextEvent = null;
+    let activeMap = null;
 
     const now = () => new Date();
     const eventDate = (item) => item.iso ? new Date(item.iso) : null;
@@ -705,15 +845,55 @@
       const day = days[selectedDay];
       const visibleEvents = fixedOnlyEl.checked ? day.events.filter(e => e.fixed) : day.events;
       const cards = visibleEvents.map((item) => {
-        const countdown = item.fixed && item.iso ? `<span class="event-chip countdown" data-countdown="${escape(item.iso)}">计算中…</span>` : '';
         const isNext = nextEvent && nextEvent.title === item.title && nextEvent.dayIndex === selectedDay;
-        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta"><span class="event-chip">${escape(item.route || day.transport)}</span>${item.fixed ? '<span class="event-chip">固定时间</span>' : '<span class="event-chip">时间未定</span>'}${countdown}</div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
+        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta"><span class="event-chip">${escape(item.route || day.transport)}</span></div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
       }).join('');
       const notes = day.notes.length ? day.notes.map(n => `<span class="badge todo">提醒：${escape(n)}</span>`).join('') : '';
       const booked = day.booked.length ? `<span class="badge booked">✓ 已预订 ${day.booked.length} 项</span>` : '';
       const todo = day.todo.length ? `<span class="badge todo">待处理 ${day.todo.length} 项</span>` : '';
-      dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(day.city)}</h2><p class="day-route"><strong>主要交通</strong>　${escape(day.transport)}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : '<div class="empty-state">这一天没有符合筛选条件的项目。</div>'}<div class="day-foot"><div class="foot-item"><span class="foot-label">住宿</span><span class="foot-value">${escape(day.hotel)}</span></div><div class="foot-item"><span class="foot-label">穿搭</span><span class="foot-value">${escape(day.outfit)}</span></div><div class="foot-item"><span class="foot-label">当天提醒</span><span class="foot-value">${notes || '暂无额外提醒'}</span></div></div>`;
+      if (activeMap) { activeMap.remove(); activeMap = null; }
+      dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(day.city)}</h2><p class="day-route"><strong>主要交通</strong>　${escape(day.transport)}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : '<div class="empty-state">这一天没有符合筛选条件的项目。</div>'}<div class="day-foot"><div class="foot-item"><span class="foot-label">住宿</span><span class="foot-value">${escape(day.hotel)}</span></div><div class="foot-item"><span class="foot-label">穿搭</span><span class="foot-value">${escape(day.outfit)}</span></div><div class="foot-item"><span class="foot-label">当天提醒</span><span class="foot-value">${notes || '暂无额外提醒'}</span></div></div>${renderRouteMap(day)}`;
+      requestAnimationFrame(() => drawLeafletMap(day));
       updateCountdowns();
+    }
+
+    function renderRouteMap(day) {
+      return `<section class="route-map" aria-label="${escape(day.date)} ${escape(day.city)} 真实地图路线"><div class="route-map-head"><h3 class="route-map-title">当天路线</h3><span class="route-map-note">真实地图位置 · 按行程顺序连线</span></div><div class="route-map-scroll"><div class="route-canvas"><div class="route-map-canvas" id="route-map-view-${selectedDay}" role="img" aria-label="${escape(day.date)} ${escape(day.city)} 的路线地图"></div></div></div><div class="route-map-foot">地图使用 OpenStreetMap 底图；餐厅待定的吃饭行程不纳入路线。点击标记可直接打开 Google Maps。</div></section>`;
+    }
+
+    function drawLeafletMap(day) {
+      const mapElement = document.querySelector(`#route-map-view-${selectedDay}`);
+      if (!mapElement || typeof L === 'undefined') {
+        if (mapElement) mapElement.innerHTML = '<div style="padding:20px;color:#62708d;font-size:13px">地图底图加载失败，请联网后刷新页面。</div>';
+        return;
+      }
+      const points = day.events.filter(item => !(item.type === 'food' && /待定|未定|未知/.test(item.location || ''))).map(item => ({ item, coords: placeCoords[item.query] || cityCoords[item.city] })).filter(point => point.coords);
+      if (!points.length) return;
+      activeMap = L.map(mapElement, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
+      const latLngs = points.map(point => point.coords);
+      const primaryTiles = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' });
+      const fallbackTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' });
+      let switchedToFallback = false;
+      primaryTiles.on('tileerror', () => {
+        if (!switchedToFallback) {
+          switchedToFallback = true;
+          activeMap.removeLayer(primaryTiles);
+          fallbackTiles.addTo(activeMap);
+        }
+      });
+      primaryTiles.addTo(activeMap);
+      const route = L.polyline(latLngs, { color: '#f06449', weight: 4, opacity: .9, className: 'leaflet-routing-line' }).addTo(activeMap);
+      points.forEach((point, index) => {
+        const icon = L.divIcon({ className: 'leaflet-number-marker', html: `<span>${index + 1}</span>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
+        L.marker(point.coords, { icon }).addTo(activeMap).bindPopup(`<strong>${escape(point.item.title)}</strong><div>${escape(point.item.time)} · ${escape(point.item.location)}</div><a href="${mapUrl(point.item.query)}" target="_blank" rel="noreferrer">在 Google Maps 中打开 ↗</a>`);
+      });
+      const bounds = L.latLngBounds(latLngs);
+      if (latLngs.length === 1 || bounds.getNorthEast().equals(bounds.getSouthWest())) {
+        activeMap.setView(latLngs[0], 13);
+      } else {
+        activeMap.fitBounds(bounds.pad(.18), { maxZoom: 16 });
+      }
+      route.bringToFront();
     }
 
     function renderSidebar() {
