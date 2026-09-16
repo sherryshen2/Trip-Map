@@ -557,25 +557,79 @@
 
     .side-panel { padding: 24px; }
     .side-title { font-size: 22px; letter-spacing: -.03em; }
+    .side-title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .side-title-row .side-title { margin: 0; }
     .side-intro { margin-top: 4px; color: var(--muted); font-size: 14px; }
     .transport-list { margin-top: 16px; }
-    .transport-row { display: grid; grid-template-columns: 22px minmax(0,1fr) auto; gap: 9px; align-items: start; padding: 13px 0; border-bottom: 1px solid var(--line); }
+    .transport-row { display: grid; grid-template-columns: 22px minmax(0,1fr); gap: 9px; align-items: start; padding: 13px 0; border-bottom: 1px solid var(--line); }
     .transport-row:last-child { border-bottom: 0; padding-bottom: 0; }
     .transport-symbol { color: var(--orange-dark); font-size: 17px; line-height: 1.4; }
-    .transport-route { font-size: 14px; font-weight: 800; line-height: 1.3; }
-    .transport-detail { margin-top: 3px; color: var(--muted); font-size: 12px; }
-    .transport-map { color: var(--orange-dark); text-decoration: none; font-size: 12px; font-weight: 850; white-space: nowrap; }
+    .transport-route-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+    .transport-route { min-width: 0; font-size: 14px; font-weight: 800; line-height: 1.3; }
+    .transport-code {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      padding: 4px 8px;
+      color: var(--ink);
+      background: var(--yellow);
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      line-height: 1;
+    }
+    .transport-detail { margin-top: 3px; color: var(--muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
 
-    .reminder-list { display: grid; gap: 10px; margin-top: 16px; }
-    .reminder { display: grid; grid-template-columns: 28px 1fr; gap: 10px; padding: 12px; background: var(--paper-2); border-radius: 13px; }
-    .reminder-icon { display: grid; place-items: center; width: 28px; height: 28px; color: var(--ink); background: var(--yellow); border-radius: 9px; font-size: 14px; }
+    .reminder-add {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      color: var(--paper);
+      background: var(--ink);
+      border: 0;
+      border-radius: 9px;
+      font: inherit;
+      font-size: 24px;
+      font-weight: 850;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .reminder-add:hover { background: var(--ink-2); }
+    .reminder-list { display: grid; gap: 16px; margin-top: 16px; }
+    .reminder { display: grid; grid-template-columns: 20px minmax(0,1fr) auto; gap: 8px; align-items: start; padding: 12px; background: var(--paper-2); border-radius: 13px; cursor: grab; user-select: none; }
+    .reminder.is-dragging { opacity: .42; cursor: grabbing; }
+    .reminder.is-drop-target { outline: 2px dashed var(--orange); outline-offset: 2px; }
+    .reminder-check { display: grid; place-items: center; width: 20px; height: 28px; cursor: pointer; }
+    .reminder-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--orange-dark); cursor: pointer; }
     .reminder-copy { font-size: 14px; line-height: 1.4; }
     .reminder-copy strong { display: block; margin-bottom: 2px; font-size: 13px; }
+    .reminder.is-done { opacity: .62; }
+    .reminder.is-done .reminder-copy { text-decoration: line-through; text-decoration-color: var(--orange); }
+    .reminder-actions { display: flex; align-items: center; gap: 2px; align-self: center; }
+    .reminder-action { display: grid; place-items: center; width: 26px; height: 28px; padding: 0; color: var(--muted); background: transparent; border: 0; border-radius: 7px; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .16s ease, color .16s ease, background .16s ease; }
+    .reminder:hover .reminder-action, .reminder:focus-within .reminder-action { opacity: 1; pointer-events: auto; }
+    .reminder-action:hover { color: var(--orange-dark); background: rgba(240,100,73,.10); }
+    .reminder-action:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+    .reminder-action svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .reminder-empty { padding: 18px 4px 4px; color: var(--muted); font-size: 13px; text-align: center; }
 
-    .hotel-strip { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px 0 0; margin-top: 16px; border-top: 1px solid var(--line); }
-    .hotel-label { color: var(--muted); font-size: 12px; font-weight: 800; }
-    .hotel-name { margin-top: 3px; font-size: 14px; font-weight: 800; }
-    .hotel-city { color: var(--orange-dark); font-size: 12px; font-weight: 800; text-align: right; }
+    .reminder-dialog { width: min(540px, 100%); }
+    .reminder-dialog .ticket-modal-head { padding: 16px 24px 14px; }
+    .reminder-editor { display: grid; gap: 16px; padding: 24px 26px 26px; }
+    .reminder-field { display: grid; gap: 7px; }
+    .reminder-field > span { color: var(--muted); font-size: 12px; font-weight: 850; letter-spacing: .04em; }
+    .reminder-field input, .reminder-field textarea { width: 100%; box-sizing: border-box; padding: 11px 12px; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: 14px; outline: none; }
+    .reminder-field textarea { min-height: 112px; resize: vertical; line-height: 1.5; }
+    .reminder-field input:focus, .reminder-field textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(240,100,73,.14); }
+    .reminder-editor-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 2px; }
+    .reminder-editor-actions button { padding: 10px 13px; border-radius: 9px; font: inherit; font-size: 13px; font-weight: 850; cursor: pointer; }
+    .reminder-cancel { color: var(--ink-2); background: transparent; border: 1px solid var(--line); }
+    .reminder-cancel:hover { background: var(--paper-2); }
+    .reminder-save { color: var(--paper); background: var(--ink); border: 1px solid var(--ink); }
+    .reminder-save:hover { background: var(--ink-2); }
 
     .empty-state { padding: 42px 12px; color: var(--muted); text-align: center; }
     .footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 22px; color: var(--muted); font-size: 13px; }
@@ -683,16 +737,15 @@
       <aside class="side-column" aria-label="提醒与交通">
         <section class="panel side-panel" aria-labelledby="transport-title">
           <div class="section-kicker">Move smart</div>
-          <h2 class="side-title" id="transport-title">交通速记</h2>
-          <p class="side-intro">跨城移动集中在这几段，点地图查看机场、车站或路线。</p>
+          <h2 class="side-title" id="transport-title">交通详情</h2>
+          <p class="side-intro">以下时间均为当地时间；航班号和车次已单独标注。</p>
           <div class="transport-list" id="transport-list"></div>
         </section>
 
         <section class="panel side-panel" aria-labelledby="reminder-title">
           <div class="section-kicker">Don’t miss</div>
-          <h2 class="side-title" id="reminder-title">出发前提醒</h2>
+          <div class="side-title-row"><h2 class="side-title" id="reminder-title">备忘提醒</h2><button class="reminder-add" id="reminder-add" type="button" aria-label="新增备忘提醒">+</button></div>
           <div class="reminder-list" id="reminder-list"></div>
-          <div class="hotel-strip"><div><div class="hotel-label">当前住宿</div><div class="hotel-name" id="hotel-name">—</div></div><div class="hotel-city" id="hotel-city">—</div></div>
         </section>
       </aside>
     </section>
@@ -719,6 +772,24 @@
           <a class="ticket-open-link" id="ticket-open-link" href="assets/louvre-ticket-2026-09-27-0900.pdf" target="_blank" rel="noreferrer">在新窗口打开原始门票 ↗</a>
         </div>
       </div>
+    </section>
+  </div>
+
+  <div class="ticket-modal reminder-modal" id="reminder-modal" hidden>
+    <div class="ticket-modal-backdrop" data-reminder-close></div>
+    <section class="ticket-dialog reminder-dialog" role="dialog" aria-modal="true" aria-labelledby="reminder-modal-title">
+      <div class="ticket-modal-head">
+        <div>
+          <div class="ticket-modal-kicker">Memo</div>
+          <h2 class="ticket-modal-title" id="reminder-modal-title">新增备忘</h2>
+        </div>
+        <button class="ticket-modal-close" type="button" data-reminder-close aria-label="关闭备忘编辑">×</button>
+      </div>
+      <form class="reminder-editor" id="reminder-editor-form">
+        <label class="reminder-field"><span>标题</span><input id="reminder-editor-title" type="text" maxlength="60" placeholder="例如：提前预订" required /></label>
+        <label class="reminder-field"><span>内容</span><textarea id="reminder-editor-copy" maxlength="240" placeholder="补充具体时间、地点或注意事项" required></textarea></label>
+        <div class="reminder-editor-actions"><button class="reminder-cancel" type="button" data-reminder-close>取消</button><button class="reminder-save" type="submit">保存</button></div>
+      </form>
     </section>
   </div>
 
@@ -906,20 +977,41 @@
     ];
 
     const transportLegs = [
-      { icon:'🚄', route:'深圳北 → 广州白云', detail:'9/24 · 18:00 高铁，19:35 送机', query:'深圳北站 广州白云国际机场' },
-      { icon:'✈', route:'广州 → 迪拜 → 巴黎', detail:'9/25 · 00:20 / 14:40 航班', query:'Dubai International Airport' },
-      { icon:'✈', route:'巴黎 → 罗马', detail:'9/28 · 09:55 巴黎奥利 T2', query:'Orly Airport Paris' },
-      { icon:'✈', route:'罗马 → 尼斯', detail:'10/1 · 17:15 罗马 T1', query:'Nice Côte d’Azur Airport' },
-      { icon:'✈', route:'尼斯 → 巴黎', detail:'10/5 · 13:40 尼斯 T2', query:'Nice Côte d’Azur Airport' },
-      { icon:'✈', route:'巴黎 → 迪拜 → 广州', detail:'10/6–10/7 · 晚间出发，22:00 抵达广州', query:'Guangzhou Baiyun International Airport' },
-      { icon:'🚄', route:'广州南 → 深圳北', detail:'10/7 · 23:25 最晚一班', query:'广州南站 深圳北站' }
+      { icon:'🚄', route:'深圳北 → 广州白云', code:'C8024', detail:'9/24 18:00 · 4车厢 12F · 6检票口' },
+      { icon:'✈', route:'广州 → 迪拜', code:'EK363', detail:'阿联酋航空 · 9/25 00:20 起飞 / 04:00 落地 · 20:20 开始值机 · 座位 16K' },
+      { icon:'✈', route:'迪拜 → 巴黎', code:'EK075', detail:'阿联酋航空 · 9/25 14:40 起飞 / 20:00 落地 · 11:40 开始值机 · 座位 9A' },
+      { icon:'✈', route:'巴黎 → 罗马', code:'W46062', detail:'Wizz Air · 9/28 09:55 起飞 / 12:00 落地 · 需提前在 APP 值机' },
+      { icon:'✈', route:'罗马 → 尼斯', code:'AZ354', detail:'ITA Airways · 10/1 17:15 起飞 / 18:30 落地 · 需提前在 APP 值机' },
+      { icon:'✈', route:'尼斯 → 巴黎', code:'TO7135', detail:'Transavia · 10/5 13:40 起飞 / 15:10 落地 · 需提前在 APP 值机' },
+      { icon:'✈', route:'巴黎 → 迪拜', code:'EK076', detail:'阿联酋航空 · 10/6 21:55 起飞 / 10/7 06:40 落地 · 17:55 开始值机 · 座位 11K' },
+      { icon:'✈', route:'迪拜 → 广州', code:'EK362', detail:'阿联酋航空 · 10/7 14:40 起飞 / 20:00 落地 · 07:15 开始值机 · 座位 16K' },
+      { icon:'🚄', route:'广州南 → 深圳北', code:'G6025', detail:'10/7 23:25 · 最晚一班' }
     ];
-    const reminders = [
-      ['🎫','提前预订','包车半日游需提前一周；巴黎交通卡可用 Apple Pay。'],
-      ['⏱','不能迟到','10/1 09:00–11:00 博尔盖塞美术馆，迟到会影响入场。'],
-      ['🛳','提前到码头','9/27 19:20 塞纳河游船，登船点在 Pont de l’Alma。'],
-      ['🚆','回程留后手','10/7 赶不上 23:25 高铁时，按顺风车／南站过夜方案处理。']
+    const reminderStorageKey = 'voyage-europe-2026-reminders';
+    const defaultReminders = [
+      { id:'book-ahead', title:'提前预订', copy:'包车半日游需提前一周；巴黎交通卡可用 Apple Pay。', done:false },
+      { id:'be-on-time', title:'不能迟到', copy:'10/1 09:00–11:00 博尔盖塞美术馆，迟到会影响入场。', done:false },
+      { id:'arrive-early', title:'提前到码头', copy:'9/27 19:20 塞纳河游船，登船点在 Pont de l’Alma。', done:false },
+      { id:'backup-plan', title:'回程留后手', copy:'10/7 赶不上 23:25 高铁时，按顺风车／南站过夜方案处理。', done:false }
     ];
+    const loadReminders = () => {
+      try {
+        const stored = window.localStorage.getItem(reminderStorageKey);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) return parsed.map(item => ({
+            id: String(item.id || `saved-${Date.now()}`),
+            title: String(item.title || '自定义提醒'),
+            copy: String(item.copy || ''),
+            done: Boolean(item.done)
+          }));
+        }
+      } catch (error) {}
+      return defaultReminders.map(item => ({ ...item }));
+    };
+    let reminders = loadReminders();
+    const sortReminders = () => reminders.sort((a, b) => Number(a.done) - Number(b.done));
+    sortReminders();
     const ticketData = {
       louvre: {
         title: '卢浮宫参观门票',
@@ -1080,11 +1172,20 @@
     const tabsEl = document.querySelector('#day-tabs');
     const dayEl = document.querySelector('#day-content');
     const fixedOnlyEl = document.querySelector('#fixed-only');
+    const reminderAddButton = document.querySelector('#reminder-add');
+    const reminderListEl = document.querySelector('#reminder-list');
+    const reminderModal = document.querySelector('#reminder-modal');
+    const reminderEditorForm = document.querySelector('#reminder-editor-form');
+    const reminderEditorTitle = document.querySelector('#reminder-editor-title');
+    const reminderEditorCopy = document.querySelector('#reminder-editor-copy');
     const ticketModal = document.querySelector('#ticket-modal');
     let selectedDay = 0;
     let nextEvent = null;
     let activeMap = null;
     let lastFocusedElement = null;
+    let lastReminderFocusedElement = null;
+    let editingReminderId = null;
+    let draggedReminderId = null;
 
     const now = () => new Date();
     const eventDate = (item) => item.iso ? new Date(item.iso) : null;
@@ -1199,18 +1300,126 @@
     ticketModal.querySelectorAll('[data-ticket-close]').forEach(element => element.addEventListener('click', closeTicketModal));
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && !ticketModal.hidden) closeTicketModal();
+      if (event.key === 'Escape' && !reminderModal.hidden) closeReminderModal();
+    });
+
+    function openReminderEditor(reminderId, trigger) {
+      const reminder = reminders.find(item => item.id === reminderId);
+      editingReminderId = reminder?.id || null;
+      document.querySelector('#reminder-modal-title').textContent = reminder ? '编辑备忘' : '新增备忘';
+      reminderEditorTitle.value = reminder?.title || '';
+      reminderEditorCopy.value = reminder?.copy || '';
+      lastReminderFocusedElement = trigger || reminderAddButton;
+      reminderModal.hidden = false;
+      document.body.classList.add('modal-open');
+      reminderEditorTitle.focus();
+    }
+
+    function closeReminderModal() {
+      reminderModal.hidden = true;
+      document.body.classList.remove('modal-open');
+      editingReminderId = null;
+      if (lastReminderFocusedElement) lastReminderFocusedElement.focus();
+    }
+
+    reminderAddButton.addEventListener('click', () => openReminderEditor(null, reminderAddButton));
+    reminderModal.querySelectorAll('[data-reminder-close]').forEach(element => element.addEventListener('click', closeReminderModal));
+
+    reminderEditorForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const title = reminderEditorTitle.value.trim();
+      const copy = reminderEditorCopy.value.trim();
+      if (!title) { reminderEditorTitle.focus(); return; }
+      if (!copy) { reminderEditorCopy.focus(); return; }
+      if (editingReminderId) {
+        const reminder = reminders.find(item => item.id === editingReminderId);
+        if (reminder) { reminder.title = title; reminder.copy = copy; }
+      } else {
+        reminders.unshift({ id:`custom-${Date.now()}-${Math.random().toString(16).slice(2)}`, title, copy, done:false });
+      }
+      sortReminders();
+      saveReminders();
+      renderReminders();
+      closeReminderModal();
+    });
+
+    function saveReminders() {
+      try { window.localStorage.setItem(reminderStorageKey, JSON.stringify(reminders)); } catch (error) {}
+    }
+
+    function renderReminders() {
+      reminderListEl.innerHTML = reminders.length ? reminders.map(reminder => `<div class="reminder ${reminder.done ? 'is-done' : ''}" draggable="true" data-reminder-id="${escape(reminder.id)}"><label class="reminder-check"><input type="checkbox" data-reminder-toggle="${escape(reminder.id)}" ${reminder.done ? 'checked' : ''} aria-label="完成 ${escape(reminder.title)}" /></label><div class="reminder-copy"><strong>${escape(reminder.title)}</strong>${escape(reminder.copy)}</div><div class="reminder-actions"><button class="reminder-action reminder-edit" type="button" data-reminder-edit="${escape(reminder.id)}" aria-label="编辑 ${escape(reminder.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.12 2.12 0 0 0-3-3L5 17v3zM14.5 8.5l3 3"></path></svg></button><button class="reminder-action reminder-delete" type="button" data-reminder-delete="${escape(reminder.id)}" aria-label="删除 ${escape(reminder.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div>`).join('') : '<div class="reminder-empty">暂无备忘提醒</div>';
+    }
+
+    reminderListEl.addEventListener('change', event => {
+      const checkbox = event.target.closest('[data-reminder-toggle]');
+      if (!checkbox) return;
+      const reminder = reminders.find(item => item.id === checkbox.dataset.reminderToggle);
+      if (!reminder) return;
+      reminder.done = checkbox.checked;
+      sortReminders();
+      saveReminders();
+      renderReminders();
+    });
+
+    reminderListEl.addEventListener('click', event => {
+      const editButton = event.target.closest('[data-reminder-edit]');
+      if (editButton) {
+        openReminderEditor(editButton.dataset.reminderEdit, editButton);
+        return;
+      }
+      const deleteButton = event.target.closest('[data-reminder-delete]');
+      if (!deleteButton) return;
+      reminders = reminders.filter(item => item.id !== deleteButton.dataset.reminderDelete);
+      saveReminders();
+      renderReminders();
+    });
+
+    reminderListEl.addEventListener('dragstart', event => {
+      const row = event.target.closest('.reminder[draggable="true"]');
+      if (!row || event.target.closest('button, input, label')) return;
+      draggedReminderId = row.dataset.reminderId;
+      row.classList.add('is-dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', draggedReminderId);
+    });
+
+    reminderListEl.addEventListener('dragover', event => {
+      const row = event.target.closest('.reminder[draggable="true"]');
+      if (!row || !draggedReminderId || row.dataset.reminderId === draggedReminderId) return;
+      const source = reminders.find(item => item.id === draggedReminderId);
+      const target = reminders.find(item => item.id === row.dataset.reminderId);
+      if (!source || !target || source.done !== target.done) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      reminderListEl.querySelectorAll('.reminder.is-drop-target').forEach(element => element.classList.remove('is-drop-target'));
+      row.classList.add('is-drop-target');
+    });
+
+    reminderListEl.addEventListener('drop', event => {
+      const row = event.target.closest('.reminder[draggable="true"]');
+      if (!row || !draggedReminderId || row.dataset.reminderId === draggedReminderId) return;
+      const sourceIndex = reminders.findIndex(item => item.id === draggedReminderId);
+      const targetIndex = reminders.findIndex(item => item.id === row.dataset.reminderId);
+      if (sourceIndex < 0 || targetIndex < 0 || reminders[sourceIndex].done !== reminders[targetIndex].done) return;
+      event.preventDefault();
+      const insertAfter = event.clientY > row.getBoundingClientRect().top + row.getBoundingClientRect().height / 2;
+      const [moved] = reminders.splice(sourceIndex, 1);
+      let insertionIndex = reminders.findIndex(item => item.id === row.dataset.reminderId);
+      if (insertAfter) insertionIndex += 1;
+      reminders.splice(insertionIndex, 0, moved);
+      saveReminders();
+      renderReminders();
+    });
+
+    reminderListEl.addEventListener('dragend', () => {
+      draggedReminderId = null;
+      reminderListEl.querySelectorAll('.reminder.is-dragging, .reminder.is-drop-target').forEach(element => element.classList.remove('is-dragging', 'is-drop-target'));
     });
 
     function renderSidebar() {
-      document.querySelector('#transport-list').innerHTML = transportLegs.map(leg => `<div class="transport-row"><div class="transport-symbol" aria-hidden="true">${leg.icon}</div><div><div class="transport-route">${escape(leg.route)}</div><div class="transport-detail">${escape(leg.detail)}</div></div><a class="transport-map" href="${mapUrl(leg.query)}" target="_blank" rel="noreferrer">地图 ↗</a></div>`).join('');
-      document.querySelector('#reminder-list').innerHTML = reminders.map(([icon,title,copy]) => `<div class="reminder"><span class="reminder-icon" aria-hidden="true">${icon}</span><div class="reminder-copy"><strong>${escape(title)}</strong>${escape(copy)}</div></div>`).join('');
-      updateHotel();
-    }
-
-    function updateHotel() {
-      const active = days[selectedDay];
-      document.querySelector('#hotel-name').textContent = active.hotel;
-      document.querySelector('#hotel-city').textContent = active.hotelCity;
+      document.querySelector('#transport-list').innerHTML = transportLegs.map(leg => `<div class="transport-row"><div class="transport-symbol" aria-hidden="true">${leg.icon}</div><div><div class="transport-route-row"><div class="transport-route">${escape(leg.route)}</div><span class="transport-code">${escape(leg.code)}</span></div><div class="transport-detail">${escape(leg.detail)}</div></div></div>`).join('');
+      renderReminders();
     }
 
     function updateCountdowns() {
