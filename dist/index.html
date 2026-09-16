@@ -398,6 +398,21 @@
     .countdown.is-done { color: var(--muted); background: #e8e9eb; }
     .event-note { margin: 12px 0 0 41px; color: var(--ink-2); font-size: 14px; }
     .event-note strong { color: var(--orange-dark); }
+    .ticket-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 8px;
+      color: var(--ink);
+      background: #f7c948;
+      border: 0;
+      border-radius: 7px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+    .ticket-button:hover { background: #efb92d; }
     .day-foot {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -454,6 +469,73 @@
     }
     .leaflet-routing-line { filter: drop-shadow(0 2px 1px rgba(16,26,53,.22)); }
     .route-map-foot { margin-top: 7px; color: var(--muted); font-size: 12px; }
+
+    .ticket-modal[hidden] { display: none; }
+    body.modal-open { overflow: hidden; }
+    .ticket-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+    .ticket-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(16, 26, 53, .66);
+      backdrop-filter: blur(3px);
+    }
+    .ticket-dialog {
+      position: relative;
+      z-index: 1;
+      width: min(1080px, 100%);
+      max-height: min(92vh, 900px);
+      overflow: auto;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,.7);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 70px rgba(16,26,53,.32);
+    }
+    .ticket-modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px 26px 18px;
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .ticket-modal-kicker { color: var(--yellow); font-size: 12px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .ticket-modal-title { margin-top: 7px; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.04em; }
+    .ticket-modal-subtitle { margin-top: 7px; color: rgba(255,248,236,.72); font-size: 14px; }
+    .ticket-modal-close {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      color: var(--paper);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50%;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .ticket-modal-close:hover { background: rgba(255,255,255,.22); }
+    .ticket-modal-body { display: grid; grid-template-columns: minmax(250px, .78fr) minmax(340px, 1.22fr); gap: 18px; padding: 20px 26px 26px; }
+    .ticket-facts { display: grid; align-content: start; gap: 10px; }
+    .ticket-fact { padding: 13px 14px; background: var(--paper-2); border-radius: 13px; }
+    .ticket-fact-label { display: block; color: var(--muted); font-size: 11px; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
+    .ticket-fact-value { display: block; margin-top: 4px; color: var(--ink); font-size: 14px; font-weight: 800; line-height: 1.45; }
+    .ticket-fact-value + .ticket-fact-value { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line); }
+    .ticket-modal-note { margin-top: 4px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .ticket-preview { min-width: 0; }
+    .ticket-preview-label { margin-bottom: 8px; color: var(--muted); font-size: 12px; font-weight: 850; }
+    .ticket-pdf { display: block; width: 100%; height: 560px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+    .ticket-open-link { display: inline-flex; margin-top: 9px; color: var(--orange-dark); font-size: 12px; font-weight: 850; text-decoration: none; }
+    .ticket-open-link:hover { text-decoration: underline; }
 
     .side-column { min-width: 0; display: grid; gap: 22px; }
     .countdown-panel { overflow: hidden; color: var(--paper); background: #f47a60; border: 0; }
@@ -550,6 +632,12 @@
         margin: 12px 0 0;
       }
     }
+    @media (max-width: 760px) {
+      .ticket-modal { padding: 10px; }
+      .ticket-modal-head { padding: 20px 18px 16px; }
+      .ticket-modal-body { grid-template-columns: 1fr; padding: 16px 18px 20px; }
+      .ticket-pdf { height: 480px; }
+    }
   </style>
 </head>
 <body>
@@ -611,6 +699,28 @@
 
     <footer class="footer"><span>行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。</span><a href="https://www.google.com/maps" target="_blank" rel="noreferrer">打开 Google Maps ↗</a></footer>
   </main>
+
+  <div class="ticket-modal" id="ticket-modal" hidden>
+    <div class="ticket-modal-backdrop" data-ticket-close></div>
+    <section class="ticket-dialog" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title">
+      <div class="ticket-modal-head">
+        <div>
+          <div class="ticket-modal-kicker">Ticket details</div>
+          <h2 class="ticket-modal-title" id="ticket-modal-title">卢浮宫参观门票</h2>
+          <p class="ticket-modal-subtitle" id="ticket-modal-subtitle">9月27日（周日） · 09:00 · Permanent collections</p>
+        </div>
+        <button class="ticket-modal-close" type="button" data-ticket-close aria-label="关闭门票信息">×</button>
+      </div>
+      <div class="ticket-modal-body">
+        <div class="ticket-facts" id="ticket-facts"></div>
+        <div class="ticket-preview">
+          <div class="ticket-preview-label" id="ticket-preview-label">完整门票（含二维码）</div>
+          <iframe class="ticket-pdf" id="ticket-pdf" src="assets/louvre-ticket-2026-09-27-0900.pdf#view=FitH" title="卢浮宫完整门票 PDF"></iframe>
+          <a class="ticket-open-link" id="ticket-open-link" href="assets/louvre-ticket-2026-09-27-0900.pdf" target="_blank" rel="noreferrer">在新窗口打开原始门票 ↗</a>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
@@ -707,19 +817,19 @@
       ]},
       { date:'9/26', dow:'星期六', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['巴黎歌剧院参观票 25／15 欧','巴黎建筑与遗产之城门票 13 欧／张'], todo:[], outfit:'金色礼服裙＋风衣＋蝴蝶项链＋蝴蝶手链＋银色单鞋／白色高跟', notes:['巴黎歌剧院与建筑遗产之城门票链接在原始表格备注'], events:[
         event('09:30','早午餐','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
-        event('11:00','巴黎建筑与遗产之城','Cité de l’architecture et du patrimoine','Cité de l’architecture et du patrimoine, Paris','attraction','paris',{iso:at(9,26,'11:00','paris'),fixed:true,route:'地铁／步行'}),
-        event('12:30','巴黎歌剧院','Palais Garnier','Palais Garnier, Paris','attraction','paris',{iso:at(9,26,'12:30','paris'),fixed:true,route:'地铁／步行'}),
+        event('11:00','巴黎建筑与遗产之城','Cité de l’architecture et du patrimoine','Cité de l’architecture et du patrimoine, Paris','attraction','paris',{iso:at(9,26,'11:00','paris'),fixed:true,route:'地铁／步行',ticket:'cite'}),
+        event('12:30','巴黎歌剧院','Palais Garnier','Palais Garnier, Paris','attraction','paris',{iso:at(9,26,'12:30','paris'),fixed:true,route:'地铁／步行',ticket:'opera'}),
         event('15:00','弥撒','香榭丽舍大街／协和广场','Place de la Concorde, Paris','attraction','paris',{iso:at(9,26,'15:00','paris'),fixed:true,route:'步行'}),
         event('下午','凯旋门','Arc de Triomphe','Arc de Triomphe, Paris','attraction','paris',{route:'步行／地铁'}),
         event('17:00','老佛爷百货','Galeries Lafayette Haussmann','Galeries Lafayette Haussmann, Paris','shopping','paris',{iso:at(9,26,'17:00','paris'),fixed:true,route:'地铁／步行'}),
         event('20:00','晚餐','巴黎（餐厅待定）','Paris, France','food','paris',{iso:at(9,26,'20:00','paris'),fixed:true,route:'步行／地铁'})
       ]},
       { date:'9/27', dow:'星期日', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['卢浮宫门票 32／22 欧','奥赛博物馆门票 16 欧／张','塞纳河游船晚餐 170 欧／人'], todo:[], outfit:'白碎花长裙＋风衣＋蝴蝶项链＋蝴蝶手链＋戒指＋银色单鞋／白色高跟', notes:['游船登船点在 Pont de l’Alma，需提前到达'], events:[
-        event('09:00–12:00','卢浮宫参观','卢浮宫博物馆','Louvre Museum, Paris','attraction','paris',{iso:at(9,27,'09:00','paris'),fixed:true,route:'地铁／步行'}),
+        event('09:00–12:00','卢浮宫参观','卢浮宫博物馆','Louvre Museum, Paris','attraction','paris',{iso:at(9,27,'09:00','paris'),fixed:true,route:'地铁／步行',ticket:'louvre'}),
         event('12:00–13:30','午餐','巴黎（餐厅待定）','Paris, France','food','paris',{iso:at(9,27,'12:00','paris'),fixed:true,route:'步行'}),
         event('13:30–14:30','杜乐丽花园','Jardin des Tuileries','Jardin des Tuileries, Paris','attraction','paris',{iso:at(9,27,'13:30','paris'),fixed:true,route:'步行'}),
-        event('14:30','奥赛博物馆','Musée d’Orsay','Musée d’Orsay, Paris','attraction','paris',{iso:at(9,27,'14:30','paris'),fixed:true,route:'步行／地铁'}),
-        event('19:20','塞纳河游船晚餐','Pont de l’Alma 登船点','Pont de l’Alma, Paris','food','paris',{iso:at(9,27,'19:20','paris'),fixed:true,route:'提前到达登船'})
+        event('14:30','奥赛博物馆','Musée d’Orsay','Musée d’Orsay, Paris','attraction','paris',{iso:at(9,27,'14:30','paris'),fixed:true,route:'步行／地铁',ticket:'orsay'}),
+        event('19:20','塞纳河游船晚餐','Pont de l’Alma 登船点','Pont de l’Alma, Paris','food','paris',{iso:at(9,27,'19:20','paris'),fixed:true,route:'提前到达登船',ticket:'seine-dinner'})
       ]},
       { date:'9/28', dow:'星期一', city:'巴黎 → 罗马', transport:'飞机，地铁，步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['巴黎到罗马机票'], todo:[], outfit:'白色吊带长裙＋短外套＋珍珠项链＋帽子＋银色单鞋／白色高跟', notes:[], events:[
         event('09:55–12:00','巴黎奥利机场 T2 → 罗马机场','巴黎奥利机场 → 罗马菲乌米奇诺机场','Orly Airport Paris','flight','paris',{iso:at(9,28,'09:55','paris'),fixed:true,route:'航班出发'}),
@@ -737,19 +847,19 @@
         event('20:00','Cuoco e Camicia 晚餐','Via di Monte Polacco, 2, Rome','Cuoco e Camicia, Via di Monte Polacco 2, Rome','food','rome',{iso:at(9,29,'20:00','rome'),fixed:true,route:'步行'})
       ]},
       { date:'9/30', dow:'星期三', city:'罗马 → 梵蒂冈 → 罗马', transport:'步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['罗马斗兽场 18 欧／张','梵蒂冈博物馆门票 25 欧／张'], todo:[], outfit:'红色花裙子＋短外套＋爱心项链＋银色单鞋', notes:['斗兽场、古罗马广场与帕拉蒂尼山作为一段参观安排'], events:[
-        event('09:30','斗兽场','Colosseo','Colosseum, Rome','attraction','rome',{iso:at(9,30,'09:30','rome'),fixed:true,route:'步行'}),
+        event('09:30','斗兽场','Colosseo','Colosseum, Rome','attraction','rome',{iso:at(9,30,'09:30','rome'),fixed:true,route:'步行',ticket:'colosseum'}),
         event('上午','古罗马广场＋帕拉蒂尼山','Roman Forum / Palatine Hill','Roman Forum, Rome','attraction','rome',{route:'随斗兽场参观'}),
         event('下午','真理之口','Bocca della Verità','Bocca della Verità, Rome','attraction','rome',{route:'步行'}),
-        event('17:00','梵蒂冈博物馆','Vatican Museums','Vatican Museums, Vatican City','attraction','rome',{iso:at(9,30,'17:00','rome'),fixed:true,route:'步行／地铁'})
+        event('17:00','梵蒂冈博物馆','Vatican Museums','Vatican Museums, Vatican City','attraction','rome',{iso:at(9,30,'17:00','rome'),fixed:true,route:'步行／地铁',ticket:'vatican'}),
       ]},
       { date:'10/1', dow:'星期四', city:'罗马 → 尼斯', transport:'步行，飞机', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:['博尔盖塞美术馆门票 20 欧／张','罗马到尼斯机票'], todo:[], outfit:'白色礼裙＋短外套＋运动鞋', notes:['博尔盖塞美术馆不能迟到','到尼斯后买南法火车联票'], events:[
-        event('09:00–11:00','博尔盖塞美术馆','Galleria Borghese','Galleria Borghese, Rome','attraction','rome',{iso:at(10,1,'09:00','rome'),fixed:true,route:'步行，不能迟到'}),
+        event('09:00–11:00','博尔盖塞美术馆','Galleria Borghese','Galleria Borghese, Rome','attraction','rome',{iso:at(10,1,'09:00','rome'),fixed:true,route:'步行，不能迟到',ticket:'borghese'}),
         event('上午','博尔盖塞公园','Villa Borghese','Villa Borghese, Rome','attraction','rome',{route:'步行'}),
         event('17:15–18:30','罗马 T1 → 尼斯 T1','罗马菲乌米奇诺机场 → 尼斯蔚蓝海岸机场','Nice Côte d’Azur Airport','flight','rome',{iso:at(10,1,'17:15','rome'),fixed:true,route:'航班出发'}),
         event('抵达后','购买南法火车联票','尼斯火车站','Nice-Ville station','train','nice',{route:'步行／火车站'})
       ]},
       { date:'10/2', dow:'星期五', city:'尼斯 → 埃兹 → 尼斯', transport:'火车，步行', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:['埃兹植物园门票 10 欧／张'], todo:[], outfit:'橘色长裙＋外套＋运动鞋', notes:[], events:[
-        event('上午','埃兹植物园','Jardin Exotique d’Èze','Jardin Exotique d’Eze, Èze','attraction','nice',{route:'火车＋步行'}),
+        event('上午','埃兹植物园','Jardin Exotique d’Èze','Jardin Exotique d’Eze, Èze','attraction','nice',{route:'火车＋步行',ticket:'eze'}),
         event('下午','萨雷亚集市','Cours Saleya','Cours Saleya Market, Nice','attraction','nice',{route:'火车＋步行'}),
         event('下午','城堡山','Colline du Château','Castle Hill, Nice','attraction','nice',{route:'步行'}),
         event('下午','英国人大道','Promenade des Anglais','Promenade des Anglais, Nice','attraction','nice',{route:'步行'}),
@@ -778,8 +888,8 @@
       ]},
       { date:'10/6', dow:'星期二', city:'巴黎 → 迪拜', transport:'地铁，步行，飞机', hotel:'—', hotelCity:'—', booked:['海军府门票','圣礼拜堂门票','机票','送机服务'], todo:[], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['大哥 16:00 出发去机场','巴黎奥利机场送机：17:10','游乐园博物馆门票约 21 欧／张'], events:[
         event('上午','早午饭','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
-        event('10:45','海军府','Hôtel de la Marine','Hôtel de la Marine, Paris','attraction','paris',{iso:at(10,6,'10:45','paris'),fixed:true,route:'地铁／步行'}),
-        event('13:00','圣礼拜堂','Sainte-Chapelle','Sainte-Chapelle, Paris','attraction','paris',{iso:at(10,6,'13:00','paris'),fixed:true,route:'步行'}),
+        event('10:45','海军府','Hôtel de la Marine','Hôtel de la Marine, Paris','attraction','paris',{iso:at(10,6,'10:45','paris'),fixed:true,route:'地铁／步行',ticket:'marine'}),
+        event('13:00','圣礼拜堂','Sainte-Chapelle','Sainte-Chapelle, Paris','attraction','paris',{iso:at(10,6,'13:00','paris'),fixed:true,route:'步行',ticket:'sainte-chapelle'}),
         event('下午','巴黎圣母院','Cathédrale Notre-Dame de Paris','Notre-Dame de Paris','attraction','paris',{route:'步行'}),
         event('16:00','大哥出发去机场','巴黎市区 → 巴黎奥利机场','Orly Airport Paris','transfer','paris',{iso:at(10,6,'16:00','paris'),fixed:true,route:'送机'}),
         event('下午','玛黑区逛街','Le Marais','Le Marais, Paris','shopping','paris',{route:'步行'}),
@@ -810,13 +920,171 @@
       ['🛳','提前到码头','9/27 19:20 塞纳河游船，登船点在 Pont de l’Alma。'],
       ['🚆','回程留后手','10/7 赶不上 23:25 高铁时，按顺风车／南站过夜方案处理。']
     ];
+    const ticketData = {
+      louvre: {
+        title: '卢浮宫参观门票',
+        subtitle: '9月27日（周日） · 09:00 · Permanent collections',
+        previewLabel: '完整门票（含二维码）',
+        pdf: 'assets/louvre-ticket-2026-09-27-0900.pdf',
+        facts: [
+          { label: '参观日期与时间', values: ['2026/09/27 · 09:00'] },
+          { label: '持票人', values: ['Yanru Shen · 32 €', 'Calvin Yeung · 22 €'] },
+          { label: '票种', values: ['全价票（非 EEA）', '永久藏品参观'] },
+          { label: '入场方式', values: ['Carrousel 入口或 Pyramid 入口', 'Porte des Lions 入口开放至 17:15'] },
+          { label: '公共交通', values: ['地铁 M1 / M7：Palais-Royal / Musée du Louvre', '地铁 M14：Pyramides'] }
+        ],
+        note: '门票实名、不可转让、不可修改，仅可使用一次。二维码、订单号和完整票面请查看右侧原始 PDF。'
+      },
+      cite: {
+        title: '巴黎建筑与遗产之城门票',
+        subtitle: '9月26日（周六） · 11:00 · Permanent collections',
+        previewLabel: '完整门票（含二维码）',
+        pdf: 'assets/cite-architecture-2026-09-26-1100.pdf',
+        facts: [
+          { label: '参观日期与时间', values: ['2026/09/26 · 11:00'] },
+          { label: '票种与价格', values: ['Full rate · 13 €', '持票人：Yanru Shen'] },
+          { label: '地址', values: ['1, place du Trocadéro et du 11 novembre', '75116 Paris'] },
+          { label: '公共交通', values: ['地铁 Trocadéro：M9 / M6，avenue Wilson 出口', '公交 22 / 30 / 32 / 63：Trocadéro 站'] },
+          { label: '入场提醒', values: ['不可更改、不可退款', '大件行李、滑板和滑板车不可带入'] }
+        ],
+        note: '博物馆通常 11:00–19:00 开放，闭馆前 1 小时停止入场；票面二维码和票号请查看右侧 PDF。'
+      },
+      opera: {
+        title: '巴黎歌剧院参观票',
+        subtitle: '9月26日（周六） · 15:30 · Palais Garnier',
+        previewLabel: '完整门票（含电子票）',
+        pdf: 'assets/paris-opera-2026-09-26-1530.pdf',
+        facts: [
+          { label: '参观日期与时间', values: ['2026/09/26 · 15:30'] },
+          { label: '参观项目', values: ['Visite autonome du Palais Garnier'] },
+          { label: '票种与价格', values: ['Adult - EEA · 15 €', 'Adult - hors EEA · 25 €', '合计 · 40 €'] },
+          { label: '入场位置', values: ['Palais Garnier', 'rue Scribe 与 rue Auber 交界入口'] },
+          { label: '预订信息', values: ['持票人：Yanru Shen', '订单号：21481405'] }
+        ],
+        note: '歌剧院票面预约时间为 15:30；请按票面时间前往入口，并准备好电子票。'
+      },
+      orsay: {
+        title: '奥赛美术馆门票',
+        subtitle: '9月27日（周日） · 14:30 · Timed entry',
+        previewLabel: '完整门票（含二维码）',
+        pdf: 'assets/orsay-2026-09-27-1430.pdf',
+        facts: [
+          { label: '参观日期与时间', values: ['2026/09/27 · 14:30'] },
+          { label: '票种与价格', values: ['Entrée horodatée · 全价票', '16 € / 张 · 共 2 张'] },
+          { label: '参观地点', values: ['Musée d’Orsay · 奥赛美术馆'] },
+          { label: '持票人', values: ['Yanru Shen'] },
+          { label: '票面信息', values: ['PDF 内含两张独立票面和票号'] }
+        ],
+        note: '这是定时入场票；二维码和两张独立票面请在右侧 PDF 中分别出示。'
+      },
+      'seine-dinner': {
+        title: '塞纳河晚餐预订凭证',
+        subtitle: '9月27日（周日） · 19:30 登船 · Bateaux-Mouches',
+        previewLabel: '完整预订凭证',
+        pdf: 'assets/seine-dinner-2026-09-27-1930.pdf',
+        facts: [
+          { label: '预订日期', values: ['2026/09/27 · 晚餐航次'] },
+          { label: '预订内容', values: ['Excellence dinner menu · 2 人', '总价 · 340 €'] },
+          { label: '登船与航程', values: ['19:30 登船：Pont de l’Alma', '20:30 出发 · 22:45 返回港口 · 2 小时 15 分'] },
+          { label: '地点与交通', values: ['Pont de l’Alma, Paris 8th', '地铁 M9：Alma-Marceau'] },
+          { label: '着装与座位', values: ['需要正装', '含服务费 · 优先安排靠窗座位'] }
+        ],
+        note: '请在 19:30 前到 Pont de l’Alma 的餐厅欢迎台出示预订凭证；完整订单信息请查看右侧 PDF。'
+      },
+      vatican: {
+        title: '梵蒂冈博物馆门票',
+        subtitle: '9月30日（周三） · 17:00 · Vatican Museums',
+        previewLabel: '完整门票（含二维码）',
+        pdf: 'assets/vatican-museums-2026-09-30-1700.pdf',
+        facts: [
+          { label: '参观日期与时间', values: ['2026/09/30 · 17:00'] },
+          { label: '持票人与价格', values: ['Yanru Shen · 25 € / 张', 'Calvin Yeung · 25 € / 张'] },
+          { label: '票种', values: ['Musei Vaticani · Full Price Ticket', '票价 20 € + 预订费 5 €'] },
+          { label: '入场位置', values: ['Viale Vaticano', 'Corridoio 1 / Passageway 1'] },
+          { label: '入场提醒', values: ['携带电子或纸质票及有效身份证件', '先由入口外工作人员验证，再前往一楼闸机'] }
+        ],
+        note: 'PDF 内含两张票；到达梵蒂冈博物馆入口后，必须先完成工作人员验证，再刷闸机入场。'
+      },
+      colosseum: {
+        title: '罗马斗兽场门票',
+        subtitle: '9月30日（周三） · 09:30 · Colosseo-Foro Romano-Palatino 24H',
+        previewLabel: '完整门票（含二维码）',
+        pdf: 'assets/colosseum-2026-09-30-0930.pdf',
+        facts: [
+          { label: '预约日期与时间', values: ['2026/09/30 · 09:30'] },
+          { label: '持票人与价格', values: ['Calvin Yeung · 18 €', 'Yanru Shen · 18 €'] },
+          { label: '包含项目', values: ['斗兽场、古罗马广场、帕拉蒂尼山', '24 小时组合票'] },
+          { label: '入场提醒', values: ['建议提前 15 分钟到达斗兽场入口', '需出示身份证件；斗兽场参观时长约 75 分钟'] },
+          { label: '票面规则', values: ['斗兽场仅可按预约时段入场一次', '古罗马广场与帕拉蒂尼山可在预约时间前后 24 小时内进入'] }
+        ],
+        note: 'PDF 内含两张独立电子票；请按票面时间提前到达，并分别准备好二维码和身份证件。'
+      },
+      borghese: {
+        title: '博尔盖塞美术馆门票',
+        subtitle: '10月1日（周四） · 09:00–11:00 · Galleria Borghese',
+        previewLabel: '完整门票（含条形码）',
+        pdf: 'assets/galleria-borghese-2026-10-01-0900.pdf',
+        facts: [
+          { label: '参观日期与时段', values: ['2026/10/01 · 09:00–11:00'] },
+          { label: '持票人', values: ['Yanru Shen · 2 张票'] },
+          { label: '价格', values: ['16 € + 2 € 费用 · 18 € / 张', '两张合计 · 36 €'] },
+          { label: '入场提醒', values: ['每位访客只能出示自己的票', '请把条形码朝上，准备好供入口扫描'] },
+          { label: '参观地点', values: ['Galleria Borghese Roma', '博尔盖塞公园内'] }
+        ],
+        note: '这是不能迟到的预约时段票；PDF 内含两张独立票面，请分别准备好条形码。'
+      },
+      eze: {
+        title: '埃兹植物园门票',
+        subtitle: '10月2日（周五） · Jardin Exotique d’Èze',
+        previewLabel: '完整电子票（含二维码）',
+        pdf: 'assets/eze-exotic-garden.pdf',
+        facts: [
+          { label: '票种与价格', values: ['Individual · Adulte', '10 € / 张 · 共 2 张'] },
+          { label: '有效期', values: ['2026/08/21–2027/08/20', '无固定预约时间'] },
+          { label: '开放时间', values: ['7–9 月：09:00–19:30', '4–6 月及 10 月：09:00–18:30'] },
+          { label: '入场方式', values: ['入口处出示打印票或手机电子票', '请调高屏幕亮度并放大二维码'] },
+          { label: '参观地点', values: ['Jardin Exotique d’Eze', '埃兹村植物园'] }
+        ],
+        note: '票面为有效期票，没有固定预约时段；游览当天请携带二维码并在入口扫码。'
+      },
+      marine: {
+        title: '海军府门票',
+        subtitle: '10月6日（周二） · 10:45 · Hôtel de la Marine',
+        previewLabel: '完整门票（含二维码）',
+        pdf: 'assets/hotel-de-la-marine-2026-10-06-1045.pdf',
+        facts: [
+          { label: '参观日期与时间', values: ['2026/10/06 · 10:45'] },
+          { label: '参观项目', values: ['Grand Tour · Travelling Through Time', 'Chinese · 2 张单人票'] },
+          { label: '价格', values: ['17 € / 张 · 共 2 张'] },
+          { label: '地址与交通', values: ['2 Place de la Concorde, 75008 Paris', '地铁 M1：Concorde 站'] },
+          { label: '入场方式', values: ['可直接入场', '可使用手机或打印票'] }
+        ],
+        note: '门票允许直接入场；PDF 内含两张独立电子票，请分别准备好二维码。'
+      },
+      'sainte-chapelle': {
+        title: '圣礼拜堂门票',
+        subtitle: '10月6日（周二） · 13:00 · Sainte-Chapelle',
+        previewLabel: '完整门票（含二维码）',
+        pdf: 'assets/sainte-chapelle-2026-10-06-1300.pdf',
+        facts: [
+          { label: '参观日期与时间', values: ['2026/10/06 · 13:00'] },
+          { label: '票种与价格', values: ['Non-EEA visitor · 22 €', 'EEA visitor · 16 €'] },
+          { label: '地址', values: ['8 boulevard du Palais', '75001 Paris · Île de la Cité'] },
+          { label: '公共交通', values: ['地铁 M4：Cité', '地铁 M1 / M7 / M11 / M14：Châtelet'] },
+          { label: '入场提醒', values: ['入口可能因安检出现排队', 'EEA 票持有人需出示有效身份证或护照'] }
+        ],
+        note: 'PDF 内含两张不同票种的门票；请根据持票人身份准备对应证件，并预留安检时间。'
+      }
+    };
 
     const tabsEl = document.querySelector('#day-tabs');
     const dayEl = document.querySelector('#day-content');
     const fixedOnlyEl = document.querySelector('#fixed-only');
+    const ticketModal = document.querySelector('#ticket-modal');
     let selectedDay = 0;
     let nextEvent = null;
     let activeMap = null;
+    let lastFocusedElement = null;
 
     const now = () => new Date();
     const eventDate = (item) => item.iso ? new Date(item.iso) : null;
@@ -846,13 +1114,15 @@
       const visibleEvents = fixedOnlyEl.checked ? day.events.filter(e => e.fixed) : day.events;
       const cards = visibleEvents.map((item) => {
         const isNext = nextEvent && nextEvent.title === item.title && nextEvent.dayIndex === selectedDay;
-        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta"><span class="event-chip">${escape(item.route || day.transport)}</span></div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
+        const ticketAction = item.ticket ? `<button class="ticket-button" type="button" data-ticket="${escape(item.ticket)}">门票信息</button>` : '';
+        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta"><span class="event-chip">${escape(item.route || day.transport)}</span>${ticketAction}</div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
       }).join('');
       const notes = day.notes.length ? day.notes.map(n => `<span class="badge todo">提醒：${escape(n)}</span>`).join('') : '';
       const booked = day.booked.length ? `<span class="badge booked">✓ 已预订 ${day.booked.length} 项</span>` : '';
       const todo = day.todo.length ? `<span class="badge todo">待处理 ${day.todo.length} 项</span>` : '';
       if (activeMap) { activeMap.remove(); activeMap = null; }
       dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(day.city)}</h2><p class="day-route"><strong>主要交通</strong>　${escape(day.transport)}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : '<div class="empty-state">这一天没有符合筛选条件的项目。</div>'}<div class="day-foot"><div class="foot-item"><span class="foot-label">住宿</span><span class="foot-value">${escape(day.hotel)}</span></div><div class="foot-item"><span class="foot-label">穿搭</span><span class="foot-value">${escape(day.outfit)}</span></div><div class="foot-item"><span class="foot-label">当天提醒</span><span class="foot-value">${notes || '暂无额外提醒'}</span></div></div>${renderRouteMap(day)}`;
+      dayEl.querySelectorAll('[data-ticket]').forEach(button => button.addEventListener('click', () => openTicketModal(button.dataset.ticket, button)));
       requestAnimationFrame(() => drawLeafletMap(day));
       updateCountdowns();
     }
@@ -895,6 +1165,41 @@
       }
       route.bringToFront();
     }
+
+    function renderTicketModal(kind) {
+      const ticket = ticketData[kind];
+      if (!ticket) return false;
+      document.querySelector('#ticket-modal-title').textContent = ticket.title;
+      document.querySelector('#ticket-modal-subtitle').textContent = ticket.subtitle;
+      document.querySelector('#ticket-preview-label').textContent = ticket.previewLabel;
+      document.querySelector('#ticket-facts').innerHTML = ticket.facts.map(fact => `<div class="ticket-fact"><span class="ticket-fact-label">${escape(fact.label)}</span>${fact.values.map(value => `<strong class="ticket-fact-value">${escape(value)}</strong>`).join('')}</div>`).join('') + `<p class="ticket-modal-note">${escape(ticket.note)}</p>`;
+      const pdf = document.querySelector('#ticket-pdf');
+      pdf.src = `${ticket.pdf}#view=FitH`;
+      pdf.title = `${ticket.title} PDF`;
+      const openLink = document.querySelector('#ticket-open-link');
+      openLink.href = ticket.pdf;
+      openLink.textContent = '在新窗口打开原始凭证 ↗';
+      return true;
+    }
+
+    function openTicketModal(kind, trigger) {
+      if (!renderTicketModal(kind)) return;
+      lastFocusedElement = trigger;
+      ticketModal.hidden = false;
+      document.body.classList.add('modal-open');
+      ticketModal.querySelector('.ticket-modal-close').focus();
+    }
+
+    function closeTicketModal() {
+      ticketModal.hidden = true;
+      document.body.classList.remove('modal-open');
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+
+    ticketModal.querySelectorAll('[data-ticket-close]').forEach(element => element.addEventListener('click', closeTicketModal));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !ticketModal.hidden) closeTicketModal();
+    });
 
     function renderSidebar() {
       document.querySelector('#transport-list').innerHTML = transportLegs.map(leg => `<div class="transport-row"><div class="transport-symbol" aria-hidden="true">${leg.icon}</div><div><div class="transport-route">${escape(leg.route)}</div><div class="transport-detail">${escape(leg.detail)}</div></div><a class="transport-map" href="${mapUrl(leg.query)}" target="_blank" rel="noreferrer">地图 ↗</a></div>`).join('');
