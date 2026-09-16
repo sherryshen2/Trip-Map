@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101a35" />
+  <meta name="description" content="欧洲旅行行程、交通与固定时间提醒" />
+  <title>Voyage / 欧洲行程板</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23f06449'/%3E%3Cpath d='M17 40h30M22 34h20M27 28h10M32 20v29' stroke='%23fff7ec' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --ink: #101a35;
+      --ink-2: #243356;
+      --paper: #fff8ec;
+      --paper-2: #f6efdf;
+      --orange: #f06449;
+      --orange-dark: #c94b34;
+      --yellow: #f7c948;
+      --mint: #a7d8cb;
+      --blue: #7594e8;
+      --line: rgba(16, 26, 53, .14);
+      --muted: #62708d;
+      --shadow: 0 20px 60px rgba(7, 16, 43, .16);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      min-height: 74px;
+      padding: 16px clamp(18px, 4vw, 64px);
+      color: var(--paper);
+      background: rgba(16, 26, 53, .96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 248, 236, .12);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: .06em;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      color: var(--ink);
+      background: var(--yellow);
+      border-radius: 12px;
+      font-size: 20px;
+    }
+    .topbar-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: rgba(255, 248, 236, .72);
+      font-size: 13px;
+    }
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      color: var(--ink);
+      background: var(--paper);
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 750;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .source-link:hover { transform: translateY(-2px); background: white; }
+
+    .shell {
+      width: min(1420px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 38px 0 70px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      min-height: 330px;
+      overflow: hidden;
+      color: var(--paper);
+      background: var(--ink);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      padding: clamp(28px, 5vw, 60px);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: var(--yellow);
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      max-width: 680px;
+      font-size: clamp(36px, 5.7vw, 72px);
+      line-height: .98;
+      letter-spacing: -.06em;
+      font-weight: 850;
+    }
+    .hero-sub {
+      max-width: 550px;
+      color: rgba(255, 248, 236, .7);
+      font-size: clamp(16px, 2vw, 20px);
+    }
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+    .stat-pill {
+      padding: 8px 13px;
+      color: var(--ink);
+      background: var(--mint);
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .stat-pill:nth-child(2) { background: var(--yellow); }
+    .stat-pill:nth-child(3) { background: var(--paper); }
+    .hero-photo {
+      position: relative;
+      min-height: 330px;
+      background: #27365e;
+    }
+    .hero-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(16, 26, 53, .5), transparent 42%), linear-gradient(0deg, rgba(16, 26, 53, .45), transparent 48%);
+      pointer-events: none;
+    }
+    .hero-photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 330px;
+      object-fit: cover;
+      filter: saturate(.82) contrast(1.05);
+    }
+    .photo-credit {
+      position: absolute;
+      left: 20px;
+      bottom: 16px;
+      z-index: 1;
+      padding: 5px 9px;
+      color: rgba(255, 248, 236, .85);
+      background: rgba(16, 26, 53, .56);
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
+      align-items: start;
+      gap: 22px;
+      margin-top: 22px;
+    }
+    .panel {
+      min-width: 0;
+      background: rgba(255, 255, 255, .42);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 32px rgba(16, 26, 53, .06);
+    }
+    .schedule-panel { min-width: 0; padding: clamp(18px, 3vw, 30px); }
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .section-kicker {
+      color: var(--orange-dark);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .panel-title {
+      margin-top: 4px;
+      font-size: clamp(23px, 3vw, 32px);
+      line-height: 1.12;
+      letter-spacing: -.04em;
+    }
+    .filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 12px;
+      color: var(--ink-2);
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .filter input { accent-color: var(--orange); }
+    .day-tabs {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      padding: 2px 2px 14px;
+      scrollbar-width: thin;
+    }
+    .day-tab {
+      flex: 0 0 auto;
+      min-width: 72px;
+      padding: 11px 14px 10px;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      text-align: left;
+      transition: transform .2s ease, color .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .day-tab:hover { transform: translateY(-2px); color: var(--ink); border-color: var(--ink-2); }
+    .day-tab.is-active { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+    .day-tab.is-next:not(.is-active) { border-color: var(--orange); }
+    .day-tab-date { display: block; font-size: 20px; font-weight: 850; line-height: 1; }
+    .day-tab-label { display: block; margin-top: 5px; font-size: 12px; font-weight: 800; }
+
+    .day-summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px 0 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .day-heading { font-size: 28px; letter-spacing: -.04em; }
+    .day-route { margin-top: 4px; color: var(--muted); font-size: 14px; }
+    .day-route strong { color: var(--ink-2); }
+    .day-badges { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 9px;
+      color: var(--ink-2);
+      background: var(--paper-2);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .badge.booked { color: #1f5e55; background: #d7efe8; }
+    .badge.todo { color: #9a4b2f; background: #ffe0cb; }
+
+    .timeline { position: relative; padding: 24px 0 0; }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 42px;
+      bottom: 20px;
+      left: 73px;
+      width: 2px;
+      background: linear-gradient(var(--orange), rgba(240, 100, 73, .08));
+    }
+    .event {
+      position: relative;
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 32px;
+      padding-bottom: 20px;
+    }
+    .event-time {
+      position: relative;
+      z-index: 1;
+      padding-top: 15px;
+      color: var(--ink-2);
+      font-variant-numeric: tabular-nums;
+      font-size: 14px;
+      font-weight: 850;
+      text-align: right;
+    }
+    .event-time.is-open { color: var(--orange-dark); }
+    .event-dot {
+      position: absolute;
+      top: 20px;
+      left: 67px;
+      z-index: 2;
+      width: 14px;
+      height: 14px;
+      background: var(--paper);
+      border: 4px solid var(--orange);
+      border-radius: 50%;
+      box-shadow: 0 0 0 5px var(--paper);
+    }
+    .event-card {
+      padding: 16px 17px;
+      background: rgba(255,255,255,.66);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .event-card:hover { transform: translateY(-2px); border-color: rgba(16,26,53,.28); box-shadow: 0 12px 28px rgba(16,26,53,.08); }
+    .event-card.is-next { background: #fff0d7; border-color: var(--yellow); box-shadow: 0 14px 28px rgba(247, 201, 72, .18); }
+    .event-topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .event-name-row { display: flex; gap: 10px; min-width: 0; }
+    .event-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      background: var(--mint);
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    .event[data-type="flight"] .event-icon { background: var(--blue); }
+    .event[data-type="train"] .event-icon { background: var(--yellow); }
+    .event[data-type="food"] .event-icon { background: #ffcfbd; }
+    .event[data-type="shopping"] .event-icon { background: #d9c8ee; }
+    .event-title { font-size: 18px; font-weight: 850; line-height: 1.25; letter-spacing: -.02em; overflow-wrap: anywhere; }
+    .event-location { margin-top: 3px; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+    .event-location::before { content: "⌖ "; color: var(--orange-dark); font-weight: 900; }
+    .map-link {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 9px;
+      color: var(--ink);
+      background: var(--paper);
+      border-radius: 9px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .map-link:hover { color: var(--orange-dark); }
+    .event-meta { display: flex; flex-wrap: wrap; gap: 7px; margin: 13px 0 0 41px; }
+    .event-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 8px;
+      color: var(--muted);
+      background: var(--paper-2);
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .countdown {
+      color: var(--orange-dark);
+      background: #ffe0cb;
+      font-variant-numeric: tabular-nums;
+    }
+    .countdown.is-done { color: var(--muted); background: #e8e9eb; }
+    .event-note { margin: 12px 0 0 41px; color: var(--ink-2); font-size: 14px; }
+    .event-note strong { color: var(--orange-dark); }
+    .day-foot {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 5px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .foot-item { padding: 12px; background: var(--paper-2); border-radius: 13px; }
+    .foot-label { display: block; color: var(--muted); font-size: 12px; font-weight: 800; }
+    .foot-value { display: block; margin-top: 3px; font-size: 14px; font-weight: 750; overflow-wrap: anywhere; }
+
+    .side-column { min-width: 0; display: grid; gap: 22px; }
+    .countdown-panel { overflow: hidden; color: var(--paper); background: var(--orange); border: 0; }
+    .countdown-panel-inner { padding: 25px; }
+    .countdown-panel .section-kicker { color: rgba(255,248,236,.72); }
+    .countdown-title { margin-top: 7px; font-size: 27px; line-height: 1.1; letter-spacing: -.04em; }
+    .countdown-value {
+      margin-top: 20px;
+      color: var(--paper);
+      font-size: clamp(30px, 4vw, 44px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 850;
+      letter-spacing: -.05em;
+      line-height: 1;
+    }
+    .countdown-label { margin-top: 9px; color: rgba(255,248,236,.75); font-size: 14px; }
+    .countdown-bar { height: 8px; background: rgba(16,26,53,.16); }
+    .countdown-bar span { display: block; width: 24%; height: 100%; background: var(--yellow); }
+
+    .side-panel { padding: 24px; }
+    .side-title { font-size: 22px; letter-spacing: -.03em; }
+    .side-intro { margin-top: 4px; color: var(--muted); font-size: 14px; }
+    .transport-list { margin-top: 16px; }
+    .transport-row { display: grid; grid-template-columns: 22px minmax(0,1fr) auto; gap: 9px; align-items: start; padding: 13px 0; border-bottom: 1px solid var(--line); }
+    .transport-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .transport-symbol { color: var(--orange-dark); font-size: 17px; line-height: 1.4; }
+    .transport-route { font-size: 14px; font-weight: 800; line-height: 1.3; }
+    .transport-detail { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .transport-map { color: var(--orange-dark); text-decoration: none; font-size: 12px; font-weight: 850; white-space: nowrap; }
+
+    .reminder-list { display: grid; gap: 10px; margin-top: 16px; }
+    .reminder { display: grid; grid-template-columns: 28px 1fr; gap: 10px; padding: 12px; background: var(--paper-2); border-radius: 13px; }
+    .reminder-icon { display: grid; place-items: center; width: 28px; height: 28px; color: var(--ink); background: var(--yellow); border-radius: 9px; font-size: 14px; }
+    .reminder-copy { font-size: 14px; line-height: 1.4; }
+    .reminder-copy strong { display: block; margin-bottom: 2px; font-size: 13px; }
+
+    .hotel-strip { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px 0 0; margin-top: 16px; border-top: 1px solid var(--line); }
+    .hotel-label { color: var(--muted); font-size: 12px; font-weight: 800; }
+    .hotel-name { margin-top: 3px; font-size: 14px; font-weight: 800; }
+    .hotel-city { color: var(--orange-dark); font-size: 12px; font-weight: 800; text-align: right; }
+
+    .empty-state { padding: 42px 12px; color: var(--muted); text-align: center; }
+    .footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 22px; color: var(--muted); font-size: 13px; }
+    .footer a { color: var(--ink-2); font-weight: 800; }
+
+    @media (max-width: 1020px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .countdown-panel { grid-column: 1 / -1; }
+    }
+    @media (max-width: 700px) {
+      .topbar { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .topbar-meta { width: 100%; justify-content: space-between; }
+      .shell { width: min(calc(100% - 24px), 1420px); padding-top: 18px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { min-height: 350px; padding: 28px 22px; }
+      .hero-photo, .hero-photo img { min-height: 210px; height: 210px; }
+      .panel-head, .day-summary { grid-template-columns: 1fr; flex-direction: column; align-items: flex-start; }
+      .day-summary { display: grid; }
+      .day-badges { justify-content: flex-start; }
+      .timeline::before { left: 56px; }
+      .event { grid-template-columns: 42px minmax(0,1fr); gap: 26px; }
+      .event-dot { left: 50px; }
+      .event-time { font-size: 12px; }
+      .event-topline { flex-direction: column; }
+      .event-meta, .event-note { margin-left: 0; }
+      .day-foot { grid-template-columns: 1fr; }
+      .side-column { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span>Voyage / 行程板</span></div>
+    <div class="topbar-meta"><span id="clock">正在读取时间…</span><a class="source-link" href="https://docs.google.com/spreadsheets/d/1ePDJu8IQryhT_kBEzkip5-tlVueirg1-9IQhvny8Kvc/edit?gid=0#gid=0" target="_blank" rel="noreferrer">打开原始行程 ↗</a></div>
+  </header>
+
+  <main class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <div>
+          <div class="eyebrow">2026 / Europe trip</div>
+          <h1 id="page-title">巴黎、罗马与南法，按时间走。</h1>
+          <p class="hero-sub">一眼看清下一站、固定时间和交通；每个景点都可以直接打开 Google Maps。</p>
+        </div>
+        <div class="hero-stats" aria-label="行程概况"><span class="stat-pill">14 天</span><span class="stat-pill">6 座城市</span><span class="stat-pill">Asia/Shanghai 计划表</span></div>
+      </div>
+      <div class="hero-photo">
+        <img src="https://images.unsplash.com/photo-1633632859220-2688037177d5?auto=format&fit=crop&fm=jpg&ixlib=rb-4.0.3&q=82&w=1200" alt="巴黎城市天际线与埃菲尔铁塔" />
+        <div class="photo-credit">Paris / Unsplash</div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid" aria-label="旅行行程工作区">
+      <section class="panel schedule-panel" aria-labelledby="schedule-title">
+        <div class="panel-head">
+          <div><div class="section-kicker">Live itinerary</div><h2 class="panel-title" id="schedule-title">每日行程</h2></div>
+          <label class="filter"><input id="fixed-only" type="checkbox" /> 只看固定时间</label>
+        </div>
+        <nav class="day-tabs" id="day-tabs" aria-label="选择日期"></nav>
+        <div id="day-content"></div>
+      </section>
+
+      <aside class="side-column" aria-label="提醒与交通">
+        <section class="panel countdown-panel" aria-live="polite">
+          <div class="countdown-panel-inner">
+            <div class="section-kicker">Next fixed time</div>
+            <h2 class="countdown-title" id="next-title">正在寻找下一项…</h2>
+            <div class="countdown-value" id="next-countdown">—</div>
+            <p class="countdown-label" id="next-meta">固定时间项目会在这里倒计时</p>
+          </div>
+          <div class="countdown-bar"><span id="countdown-progress"></span></div>
+        </section>
+
+        <section class="panel side-panel" aria-labelledby="transport-title">
+          <div class="section-kicker">Move smart</div>
+          <h2 class="side-title" id="transport-title">交通速记</h2>
+          <p class="side-intro">跨城移动集中在这几段，点地图查看机场、车站或路线。</p>
+          <div class="transport-list" id="transport-list"></div>
+        </section>
+
+        <section class="panel side-panel" aria-labelledby="reminder-title">
+          <div class="section-kicker">Don’t miss</div>
+          <h2 class="side-title" id="reminder-title">出发前提醒</h2>
+          <div class="reminder-list" id="reminder-list"></div>
+          <div class="hotel-strip"><div><div class="hotel-label">当前住宿</div><div class="hotel-name" id="hotel-name">—</div></div><div class="hotel-city" id="hotel-city">—</div></div>
+        </section>
+      </aside>
+    </section>
+
+    <footer class="footer"><span>行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。</span><a href="https://www.google.com/maps" target="_blank" rel="noreferrer">打开 Google Maps ↗</a></footer>
+  </main>
+
+  <script>
+    const mapUrl = (query) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    const tripYear = 2026;
+    const cities = {
+      shenzhen: { label: '深圳', tz: '+08:00' }, guangzhou: { label: '广州', tz: '+08:00' },
+      dubai: { label: '迪拜', tz: '+04:00' }, paris: { label: '巴黎', tz: '+02:00' },
+      rome: { label: '罗马', tz: '+02:00' }, nice: { label: '尼斯', tz: '+02:00' },
+      menton: { label: '芒通', tz: '+02:00' }, monaco: { label: '摩纳哥', tz: '+02:00' },
+      antibes: { label: '昂蒂布', tz: '+02:00' }
+    };
+    const at = (month, day, time, city) => `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${time}:00${cities[city].tz}`;
+    const event = (time, title, location, query, type, city, options = {}) => ({ time, title, location, query, type, city, ...options });
+
+    const days = [
+      { date:'9/24', dow:'星期四', city:'深圳 → 广州', transport:'高铁，飞机', hotel:'—', hotelCity:'—', booked:['高铁票','送机服务'], todo:[], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['18:00 深圳北高铁到广州白云','19:35 广州白云送机到机场'], events:[
+        event('18:00','深圳北高铁 → 广州白云','深圳北站', '深圳北站', 'train','shenzhen',{iso:at(9,24,'18:00','shenzhen'),fixed:true,route:'前往广州白云'}),
+        event('19:35','送机 → 广州白云机场','广州白云国际机场','广州白云国际机场','transfer','guangzhou',{iso:at(9,24,'19:35','guangzhou'),fixed:true,route:'前往机场'})
+      ]},
+      { date:'9/25', dow:'星期五', city:'广州 → 迪拜 → 巴黎', transport:'飞机，包车', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['机票','接机服务'], todo:['包车游（提前一周）','巴黎交通卡（Apple Pay）'], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['到达后要买巴黎交通卡','夜间看埃菲尔铁塔亮灯'], events:[
+        event('00:20','广州 ✈ 迪拜','广州白云国际机场 → 迪拜国际机场','广州白云国际机场','flight','guangzhou',{iso:at(9,25,'00:20','guangzhou'),fixed:true,route:'航班出发'}),
+        event('04:00','抵达迪拜','迪拜国际机场','Dubai International Airport','flight','dubai',{iso:at(9,25,'04:00','dubai'),fixed:true,route:'转机／入境'}),
+        event('06:00–11:00','包车半日游','迪拜（包车路线）','Dubai, United Arab Emirates','transfer','dubai',{iso:at(9,25,'06:00','dubai'),fixed:true,route:'包车游，提前一周预订'}),
+        event('14:40','迪拜 ✈ 巴黎','迪拜国际机场 → 巴黎戴高乐机场','Dubai International Airport','flight','dubai',{iso:at(9,25,'14:40','dubai'),fixed:true,route:'航班出发'}),
+        event('20:00','抵达巴黎＋接机','巴黎戴高乐机场 → 酒店','Paris Charles de Gaulle Airport','transfer','paris',{iso:at(9,25,'20:00','paris'),fixed:true,route:'接机到酒店'}),
+        event('22:00','埃菲尔铁塔亮灯夜景','埃菲尔铁塔','Eiffel Tower, Paris','attraction','paris',{iso:at(9,25,'22:00','paris'),fixed:true,route:'地铁／步行'})
+      ]},
+      { date:'9/26', dow:'星期六', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['巴黎歌剧院参观票 25／15 欧','巴黎建筑与遗产之城门票 13 欧／张'], todo:[], outfit:'金色礼服裙＋风衣＋蝴蝶项链＋蝴蝶手链＋银色单鞋／白色高跟', notes:['巴黎歌剧院与建筑遗产之城门票链接在原始表格备注'], events:[
+        event('09:30','早午餐','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
+        event('11:00','巴黎建筑与遗产之城','Cité de l’architecture et du patrimoine','Cité de l’architecture et du patrimoine, Paris','attraction','paris',{iso:at(9,26,'11:00','paris'),fixed:true,route:'地铁／步行'}),
+        event('12:30','巴黎歌剧院','Palais Garnier','Palais Garnier, Paris','attraction','paris',{iso:at(9,26,'12:30','paris'),fixed:true,route:'地铁／步行'}),
+        event('15:00','弥撒','香榭丽舍大街／协和广场','Place de la Concorde, Paris','attraction','paris',{iso:at(9,26,'15:00','paris'),fixed:true,route:'步行'}),
+        event('下午','凯旋门','Arc de Triomphe','Arc de Triomphe, Paris','attraction','paris',{route:'步行／地铁'}),
+        event('17:00','老佛爷百货','Galeries Lafayette Haussmann','Galeries Lafayette Haussmann, Paris','shopping','paris',{iso:at(9,26,'17:00','paris'),fixed:true,route:'地铁／步行'}),
+        event('20:00','晚餐','巴黎（餐厅待定）','Paris, France','food','paris',{iso:at(9,26,'20:00','paris'),fixed:true,route:'步行／地铁'})
+      ]},
+      { date:'9/27', dow:'星期日', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['卢浮宫门票 32／22 欧','奥赛博物馆门票 16 欧／张','塞纳河游船晚餐 170 欧／人'], todo:[], outfit:'白碎花长裙＋风衣＋蝴蝶项链＋蝴蝶手链＋戒指＋银色单鞋／白色高跟', notes:['游船登船点在 Pont de l’Alma，需提前到达'], events:[
+        event('09:00–12:00','卢浮宫参观','卢浮宫博物馆','Louvre Museum, Paris','attraction','paris',{iso:at(9,27,'09:00','paris'),fixed:true,route:'地铁／步行'}),
+        event('12:00–13:30','午餐','巴黎（餐厅待定）','Paris, France','food','paris',{iso:at(9,27,'12:00','paris'),fixed:true,route:'步行'}),
+        event('13:30–14:30','杜乐丽花园','Jardin des Tuileries','Jardin des Tuileries, Paris','attraction','paris',{iso:at(9,27,'13:30','paris'),fixed:true,route:'步行'}),
+        event('14:30','奥赛博物馆','Musée d’Orsay','Musée d’Orsay, Paris','attraction','paris',{iso:at(9,27,'14:30','paris'),fixed:true,route:'步行／地铁'}),
+        event('19:20','塞纳河游船晚餐','Pont de l’Alma 登船点','Pont de l’Alma, Paris','food','paris',{iso:at(9,27,'19:20','paris'),fixed:true,route:'提前到达登船'})
+      ]},
+      { date:'9/28', dow:'星期一', city:'巴黎 → 罗马', transport:'飞机，地铁，步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['巴黎到罗马机票'], todo:[], outfit:'白色吊带长裙＋短外套＋珍珠项链＋帽子＋银色单鞋／白色高跟', notes:[], events:[
+        event('09:55–12:00','巴黎奥利机场 T2 → 罗马机场','巴黎奥利机场 → 罗马菲乌米奇诺机场','Orly Airport Paris','flight','paris',{iso:at(9,28,'09:55','paris'),fixed:true,route:'航班出发'}),
+        event('下午','西班牙广场','Piazza di Spagna','Spanish Steps, Rome','attraction','rome',{route:'地铁／步行'}),
+        event('下午','许愿池','Fontana di Trevi','Trevi Fountain, Rome','attraction','rome',{route:'步行'}),
+        event('下午','Vintage 店','罗马市区（店铺待定）','Vintage shops, Rome','shopping','rome',{route:'步行／地铁'})
+      ]},
+      { date:'9/29', dow:'星期二', city:'罗马 → 梵蒂冈 → 罗马', transport:'步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['Cuoco e Camicia 晚餐'], todo:['圣彼得大教堂登顶票 10 欧／张','万神殿门票 7 欧／张'], outfit:'格子长裙＋短外套＋珍珠项链＋运动鞋', notes:['圣彼得大教堂可现场排队，登顶票可现场购买','晚餐地址：Via di Monte Polacco, 2, I-00184 Roma'], events:[
+        event('09:00','圣彼得大教堂','梵蒂冈圣彼得大教堂','St. Peter’s Basilica, Vatican City','attraction','rome',{iso:at(9,29,'09:00','rome'),fixed:true,route:'步行'}),
+        event('11:00','圣天使堡','Castel Sant’Angelo','Castel Sant’Angelo, Rome','attraction','rome',{iso:at(9,29,'11:00','rome'),fixed:true,route:'步行'}),
+        event('下午','纳沃纳广场','Piazza Navona','Piazza Navona, Rome','attraction','rome',{route:'步行'}),
+        event('下午','鲜花广场','Campo de’ Fiori','Campo de’ Fiori, Rome','attraction','rome',{route:'步行'}),
+        event('下午','万神殿','Pantheon','Pantheon, Rome','attraction','rome',{route:'步行'}),
+        event('下午','圣依纳爵堂','Church of St. Ignatius of Loyola','Church of St. Ignatius of Loyola, Rome','attraction','rome',{route:'步行'}),
+        event('20:00','Cuoco e Camicia 晚餐','Via di Monte Polacco, 2, Rome','Cuoco e Camicia, Via di Monte Polacco 2, Rome','food','rome',{iso:at(9,29,'20:00','rome'),fixed:true,route:'步行'})
+      ]},
+      { date:'9/30', dow:'星期三', city:'罗马 → 梵蒂冈 → 罗马', transport:'步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['罗马斗兽场 18 欧／张','梵蒂冈博物馆门票 25 欧／张'], todo:[], outfit:'红色花裙子＋短外套＋爱心项链＋银色单鞋', notes:['斗兽场、古罗马广场与帕拉蒂尼山作为一段参观安排'], events:[
+        event('09:30','斗兽场','Colosseo','Colosseum, Rome','attraction','rome',{iso:at(9,30,'09:30','rome'),fixed:true,route:'步行'}),
+        event('上午','古罗马广场＋帕拉蒂尼山','Roman Forum / Palatine Hill','Roman Forum, Rome','attraction','rome',{route:'随斗兽场参观'}),
+        event('下午','真理之口','Bocca della Verità','Bocca della Verità, Rome','attraction','rome',{route:'步行'}),
+        event('17:00','梵蒂冈博物馆','Vatican Museums','Vatican Museums, Vatican City','attraction','rome',{iso:at(9,30,'17:00','rome'),fixed:true,route:'步行／地铁'})
+      ]},
+      { date:'10/1', dow:'星期四', city:'罗马 → 尼斯', transport:'步行，飞机', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:['博尔盖塞美术馆门票 20 欧／张','罗马到尼斯机票'], todo:[], outfit:'白色礼裙＋短外套＋运动鞋', notes:['博尔盖塞美术馆不能迟到','到尼斯后买南法火车联票'], events:[
+        event('09:00–11:00','博尔盖塞美术馆','Galleria Borghese','Galleria Borghese, Rome','attraction','rome',{iso:at(10,1,'09:00','rome'),fixed:true,route:'步行，不能迟到'}),
+        event('上午','博尔盖塞公园','Villa Borghese','Villa Borghese, Rome','attraction','rome',{route:'步行'}),
+        event('17:15–18:30','罗马 T1 → 尼斯 T1','罗马菲乌米奇诺机场 → 尼斯蔚蓝海岸机场','Nice Côte d’Azur Airport','flight','rome',{iso:at(10,1,'17:15','rome'),fixed:true,route:'航班出发'}),
+        event('抵达后','购买南法火车联票','尼斯火车站','Nice-Ville station','train','nice',{route:'步行／火车站'})
+      ]},
+      { date:'10/2', dow:'星期五', city:'尼斯 → 埃兹 → 尼斯', transport:'火车，步行', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:['埃兹植物园门票 10 欧／张'], todo:[], outfit:'橘色长裙＋外套＋运动鞋', notes:[], events:[
+        event('上午','埃兹植物园','Jardin Exotique d’Èze','Jardin Exotique d’Eze, Èze','attraction','nice',{route:'火车＋步行'}),
+        event('下午','萨雷亚集市','Cours Saleya','Cours Saleya Market, Nice','attraction','nice',{route:'火车＋步行'}),
+        event('下午','城堡山','Colline du Château','Castle Hill, Nice','attraction','nice',{route:'步行'}),
+        event('下午','英国人大道','Promenade des Anglais','Promenade des Anglais, Nice','attraction','nice',{route:'步行'}),
+        event('下午','天使湾蓝滩','Blue Beach','Blue Beach, Nice','attraction','nice',{route:'步行'})
+      ]},
+      { date:'10/3', dow:'星期六', city:'尼斯 → 芒通 → 摩纳哥 → 尼斯', transport:'火车，步行', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:[], todo:[], outfit:'黄色短上衣＋红色格裙＋运动鞋', notes:[], events:[
+        event('全天','芒通：圣米歇尔大教堂','Basilique Saint-Michel-Archange','Basilique Saint-Michel-Archange, Menton','attraction','menton',{route:'火车＋步行'}),
+        event('全天','芒通老城区','Menton Old Town','Old Town, Menton','attraction','menton',{route:'步行'}),
+        event('全天','蒙特卡洛赌场','Casino de Monte-Carlo','Casino de Monte-Carlo, Monaco','attraction','monaco',{route:'火车＋步行'}),
+        event('全天','F1 赛道','Circuit de Monaco','Circuit de Monaco','attraction','monaco',{route:'步行'}),
+        event('全天','圣马丁花园','Jardins Saint-Martin','Jardins Saint-Martin, Monaco','attraction','monaco',{route:'步行'}),
+        event('全天','王子宫殿','Prince’s Palace of Monaco','Prince’s Palace of Monaco','attraction','monaco',{route:'步行'})
+      ]},
+      { date:'10/4', dow:'星期天', city:'尼斯 → 昂蒂布 → 尼斯', transport:'火车，步行', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:[], todo:[], outfit:'黄色长裙＋外套＋银色单鞋', notes:[], events:[
+        event('11:00–13:00','普罗旺斯集市','Marché Provençal d’Antibes','Marché Provençal, Antibes','attraction','antibes',{iso:at(10,4,'11:00','antibes'),fixed:true,route:'火车＋步行'}),
+        event('下午','Plage du Ponteil','Plage du Ponteil','Plage du Ponteil, Antibes','attraction','antibes',{route:'步行'}),
+        event('下午','尼斯老城','Vieux Nice','Vieux Nice','attraction','nice',{route:'火车＋步行'}),
+        event('下午','马塞纳广场','Place Masséna','Place Masséna, Nice','attraction','nice',{route:'步行'}),
+        event('下午','生鲜市场','尼斯市区市场','Fresh market, Nice','attraction','nice',{route:'步行'})
+      ]},
+      { date:'10/5', dow:'星期一', city:'尼斯 → 巴黎', transport:'飞机，地铁，步行', hotel:'Aparthotel Adagio Paris Nation', hotelCity:'巴黎', booked:['尼斯到巴黎机票'], todo:[], outfit:'紫色长裙＋灰珍珠项链＋银色单鞋', notes:[], events:[
+        event('上午','休息或自由活动','尼斯','Nice, France','attraction','nice',{route:'自由安排'}),
+        event('13:40–15:10','尼斯 T2 → 巴黎奥利 T3','尼斯蔚蓝海岸机场 → 巴黎奥利机场','Nice Côte d’Azur Airport','flight','nice',{iso:at(10,5,'13:40','nice'),fixed:true,route:'航班出发'}),
+        event('16:30','酒店 check-in','Aparthotel Adagio Paris Nation','Aparthotel Adagio Paris Nation','hotel','paris',{iso:at(10,5,'16:30','paris'),fixed:true,route:'地铁／步行'}),
+        event('17:30','蒙马特高地＋圣心大教堂','Montmartre / Sacré-Cœur','Sacré-Cœur, Paris','attraction','paris',{iso:at(10,5,'17:30','paris'),fixed:true,route:'地铁，步行'})
+      ]},
+      { date:'10/6', dow:'星期二', city:'巴黎 → 迪拜', transport:'地铁，步行，飞机', hotel:'—', hotelCity:'—', booked:['海军府门票','圣礼拜堂门票','机票','送机服务'], todo:[], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['大哥 16:00 出发去机场','巴黎奥利机场送机：17:10','游乐园博物馆门票约 21 欧／张'], events:[
+        event('上午','早午饭','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
+        event('10:45','海军府','Hôtel de la Marine','Hôtel de la Marine, Paris','attraction','paris',{iso:at(10,6,'10:45','paris'),fixed:true,route:'地铁／步行'}),
+        event('13:00','圣礼拜堂','Sainte-Chapelle','Sainte-Chapelle, Paris','attraction','paris',{iso:at(10,6,'13:00','paris'),fixed:true,route:'步行'}),
+        event('下午','巴黎圣母院','Cathédrale Notre-Dame de Paris','Notre-Dame de Paris','attraction','paris',{route:'步行'}),
+        event('16:00','大哥出发去机场','巴黎市区 → 巴黎奥利机场','Orly Airport Paris','transfer','paris',{iso:at(10,6,'16:00','paris'),fixed:true,route:'送机'}),
+        event('下午','玛黑区逛街','Le Marais','Le Marais, Paris','shopping','paris',{route:'步行'}),
+        event('17:10','送机去机场','巴黎市区 → 巴黎奥利机场','Orly Airport Paris','transfer','paris',{iso:at(10,6,'17:10','paris'),fixed:true,route:'送机服务'}),
+        event('18:20','巴黎奥利 ✈ 迪拜','巴黎奥利机场 → 迪拜国际机场','Orly Airport Paris','flight','paris',{iso:at(10,6,'18:20','paris'),fixed:true,route:'航班出发'}),
+        event('21:55','巴黎 ✈ 迪拜（晚间航班）','巴黎 → 迪拜','Paris, France','flight','paris',{iso:at(10,6,'21:55','paris'),fixed:true,route:'航班出发'})
+      ]},
+      { date:'10/7', dow:'星期三', city:'迪拜 → 广州 → 深圳', transport:'飞机，打车', hotel:'—', hotelCity:'—', booked:['机票','接机服务'], todo:['最晚一班高铁票（或顺风车）'], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['赶不上 23:25 高铁就打顺风车；如果也打不到，在广州南站过夜，8 号上午高铁回深圳'], events:[
+        event('06:40','抵达迪拜','迪拜国际机场','Dubai International Airport','flight','dubai',{iso:at(10,7,'06:40','dubai'),fixed:true,route:'转机'}),
+        event('10:15','迪拜 ✈ 广州','迪拜国际机场 → 广州白云国际机场','Dubai International Airport','flight','dubai',{iso:at(10,7,'10:15','dubai'),fixed:true,route:'航班出发'}),
+        event('22:00','抵达广州＋接机去广州南站','广州白云国际机场 → 广州南站','Guangzhou South Railway Station','transfer','guangzhou',{iso:at(10,7,'22:00','guangzhou'),fixed:true,route:'接机＋打车'}),
+        event('23:25','广州南 → 深圳北（最晚一班）','广州南站 → 深圳北站','Guangzhou South Railway Station','train','guangzhou',{iso:at(10,7,'23:25','guangzhou'),fixed:true,route:'赶不上则顺风车／南站过夜'})
+      ]}
+    ];
+
+    const transportLegs = [
+      { icon:'🚄', route:'深圳北 → 广州白云', detail:'9/24 · 18:00 高铁，19:35 送机', query:'深圳北站 广州白云国际机场' },
+      { icon:'✈', route:'广州 → 迪拜 → 巴黎', detail:'9/25 · 00:20 / 14:40 航班', query:'Dubai International Airport' },
+      { icon:'✈', route:'巴黎 → 罗马', detail:'9/28 · 09:55 巴黎奥利 T2', query:'Orly Airport Paris' },
+      { icon:'✈', route:'罗马 → 尼斯', detail:'10/1 · 17:15 罗马 T1', query:'Nice Côte d’Azur Airport' },
+      { icon:'✈', route:'尼斯 → 巴黎', detail:'10/5 · 13:40 尼斯 T2', query:'Nice Côte d’Azur Airport' },
+      { icon:'✈', route:'巴黎 → 迪拜 → 广州', detail:'10/6–10/7 · 晚间出发，22:00 抵达广州', query:'Guangzhou Baiyun International Airport' },
+      { icon:'🚄', route:'广州南 → 深圳北', detail:'10/7 · 23:25 最晚一班', query:'广州南站 深圳北站' }
+    ];
+    const reminders = [
+      ['🎫','提前预订','包车半日游需提前一周；巴黎交通卡可用 Apple Pay。'],
+      ['⏱','不能迟到','10/1 09:00–11:00 博尔盖塞美术馆，迟到会影响入场。'],
+      ['🛳','提前到码头','9/27 19:20 塞纳河游船，登船点在 Pont de l’Alma。'],
+      ['🚆','回程留后手','10/7 赶不上 23:25 高铁时，按顺风车／南站过夜方案处理。']
+    ];
+
+    const tabsEl = document.querySelector('#day-tabs');
+    const dayEl = document.querySelector('#day-content');
+    const fixedOnlyEl = document.querySelector('#fixed-only');
+    let selectedDay = 0;
+    let nextEvent = null;
+
+    const now = () => new Date();
+    const eventDate = (item) => item.iso ? new Date(item.iso) : null;
+    const fixedEvents = () => days.flatMap((day, dayIndex) => day.events.filter(e => e.fixed && e.iso).map(e => ({...e, dayIndex, day}))).sort((a,b) => eventDate(a) - eventDate(b));
+    const nextFixed = () => fixedEvents().find(e => eventDate(e) > now());
+    const pad = (n) => String(n).padStart(2,'0');
+    const countdownText = (diff) => {
+      const positive = diff > 0;
+      const ms = Math.abs(diff);
+      const daysPart = Math.floor(ms / 86400000);
+      const hours = Math.floor((ms % 86400000) / 3600000);
+      const minutes = Math.floor((ms % 3600000) / 60000);
+      const seconds = Math.floor((ms % 60000) / 1000);
+      const compact = daysPart ? `${daysPart}天 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      return positive ? `还有 ${compact}` : '已开始／已结束';
+    };
+    const escape = (value) => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const eventIcon = (type) => ({flight:'✈',train:'🚄',transfer:'⇢',food:'◒',shopping:'◇',hotel:'⌂',attraction:'✦'}[type] || '•');
+
+    function renderTabs() {
+      tabsEl.innerHTML = days.map((day, i) => `<button class="day-tab ${i === selectedDay ? 'is-active' : ''} ${i === (nextEvent?.dayIndex ?? -1) ? 'is-next' : ''}" data-day="${i}" aria-label="查看 ${day.date} ${day.city}" aria-pressed="${i === selectedDay}"><span class="day-tab-date">${day.date}</span><span class="day-tab-label">${day.dow.replace('星期','周')}</span></button>`).join('');
+      tabsEl.querySelectorAll('.day-tab').forEach(button => button.addEventListener('click', () => { selectedDay = Number(button.dataset.day); renderDay(); renderTabs(); }));
+    }
+
+    function renderDay() {
+      const day = days[selectedDay];
+      const visibleEvents = fixedOnlyEl.checked ? day.events.filter(e => e.fixed) : day.events;
+      const cards = visibleEvents.map((item) => {
+        const countdown = item.fixed && item.iso ? `<span class="event-chip countdown" data-countdown="${escape(item.iso)}">计算中…</span>` : '';
+        const isNext = nextEvent && nextEvent.title === item.title && nextEvent.dayIndex === selectedDay;
+        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta"><span class="event-chip">${escape(item.route || day.transport)}</span>${item.fixed ? '<span class="event-chip">固定时间</span>' : '<span class="event-chip">时间未定</span>'}${countdown}</div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
+      }).join('');
+      const notes = day.notes.length ? day.notes.map(n => `<span class="badge todo">提醒：${escape(n)}</span>`).join('') : '';
+      const booked = day.booked.length ? `<span class="badge booked">✓ 已预订 ${day.booked.length} 项</span>` : '';
+      const todo = day.todo.length ? `<span class="badge todo">待处理 ${day.todo.length} 项</span>` : '';
+      dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(day.city)}</h2><p class="day-route"><strong>主要交通</strong>　${escape(day.transport)}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : '<div class="empty-state">这一天没有符合筛选条件的项目。</div>'}<div class="day-foot"><div class="foot-item"><span class="foot-label">住宿</span><span class="foot-value">${escape(day.hotel)}</span></div><div class="foot-item"><span class="foot-label">穿搭</span><span class="foot-value">${escape(day.outfit)}</span></div><div class="foot-item"><span class="foot-label">当天提醒</span><span class="foot-value">${notes || '暂无额外提醒'}</span></div></div>`;
+      updateCountdowns();
+    }
+
+    function renderSidebar() {
+      document.querySelector('#transport-list').innerHTML = transportLegs.map(leg => `<div class="transport-row"><div class="transport-symbol" aria-hidden="true">${leg.icon}</div><div><div class="transport-route">${escape(leg.route)}</div><div class="transport-detail">${escape(leg.detail)}</div></div><a class="transport-map" href="${mapUrl(leg.query)}" target="_blank" rel="noreferrer">地图 ↗</a></div>`).join('');
+      document.querySelector('#reminder-list').innerHTML = reminders.map(([icon,title,copy]) => `<div class="reminder"><span class="reminder-icon" aria-hidden="true">${icon}</span><div class="reminder-copy"><strong>${escape(title)}</strong>${escape(copy)}</div></div>`).join('');
+      updateHotel();
+    }
+
+    function updateHotel() {
+      const active = days[selectedDay];
+      document.querySelector('#hotel-name').textContent = active.hotel;
+      document.querySelector('#hotel-city').textContent = active.hotelCity;
+    }
+
+    function updateCountdowns() {
+      const current = now();
+      document.querySelectorAll('[data-countdown]').forEach(el => {
+        const target = new Date(el.dataset.countdown);
+        const diff = target - current;
+        el.textContent = diff > 0 ? countdownText(diff) : '已过时间';
+        el.classList.toggle('is-done', diff <= 0);
+      });
+      if (nextEvent) {
+        const diff = eventDate(nextEvent) - current;
+        document.querySelector('#next-title').textContent = nextEvent.title;
+        document.querySelector('#next-countdown').textContent = diff > 0 ? countdownText(diff) : '旅程已结束';
+        document.querySelector('#next-meta').textContent = `${nextEvent.day.date} · ${nextEvent.time} · ${nextEvent.location}`;
+        const nextIndex = fixedEvents().indexOf(nextEvent);
+        const total = Math.max(fixedEvents().length - 1, 1);
+        document.querySelector('#countdown-progress').style.width = `${Math.max(8, Math.min(100, ((nextIndex + 1) / total) * 100))}%`;
+      } else {
+        document.querySelector('#next-title').textContent = '本次固定行程已完成';
+        document.querySelector('#next-countdown').textContent = '旅程已结束';
+        document.querySelector('#next-meta').textContent = '可以回到原始表格查看完整记录';
+        document.querySelector('#countdown-progress').style.width = '100%';
+      }
+      const display = new Intl.DateTimeFormat('zh-CN', { timeZone:'Asia/Shanghai', month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false }).format(current);
+      document.querySelector('#clock').textContent = `现在 · ${display}（北京时间）`;
+    }
+
+    function refreshNext() {
+      nextEvent = nextFixed();
+      const initialDay = nextEvent?.dayIndex ?? 0;
+      selectedDay = initialDay;
+      renderTabs();
+      renderDay();
+      renderSidebar();
+      updateCountdowns();
+    }
+
+    fixedOnlyEl.addEventListener('change', renderDay);
+    refreshNext();
+    setInterval(updateCountdowns, 1000);
+  </script>
+</body>
+</html>
