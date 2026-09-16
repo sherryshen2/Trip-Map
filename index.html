@@ -78,10 +78,24 @@
     .topbar-meta {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 14px;
       color: rgba(255, 248, 236, .72);
       font-size: 13px;
     }
+    .weather-trigger {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      color: var(--paper);
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .weather-trigger:hover { background: rgba(255,255,255,.18); }
     .source-link {
       display: inline-flex;
       align-items: center;
@@ -537,6 +551,35 @@
     .ticket-open-link { display: inline-flex; margin-top: 9px; color: var(--orange-dark); font-size: 12px; font-weight: 850; text-decoration: none; }
     .ticket-open-link:hover { text-decoration: underline; }
 
+    .weather-dialog { width: min(780px, 100%); }
+    .weather-modal-body { padding: 20px 26px 26px; }
+    .weather-tabs { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; }
+    .weather-tab { flex: 0 0 auto; padding: 9px 16px; color: var(--muted); background: var(--paper-2); border: 1px solid var(--line); border-radius: 999px; font: inherit; font-size: 13px; font-weight: 850; }
+    .weather-tab:hover { color: var(--ink); border-color: rgba(240,100,73,.45); }
+    .weather-tab.is-active { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+    .weather-state { min-height: 230px; display: grid; place-items: center; padding: 24px; color: var(--muted); text-align: center; }
+    .weather-state button { margin-top: 12px; padding: 8px 13px; color: var(--paper); background: var(--ink); border: 0; border-radius: 8px; font-size: 13px; font-weight: 800; }
+    .weather-current { padding: 19px; background: var(--paper-2); border-radius: 16px; }
+    .weather-current-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .weather-current-place { color: var(--ink); font-size: 16px; font-weight: 850; }
+    .weather-updated { color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .weather-current-main { display: flex; align-items: center; gap: 16px; margin-top: 15px; }
+    .weather-current-icon { font-size: 47px; line-height: 1; }
+    .weather-current-temp { display: block; color: var(--ink); font-size: 40px; font-weight: 850; letter-spacing: -.06em; line-height: 1; }
+    .weather-current-text { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; }
+    .weather-facts { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 9px; margin-top: 18px; }
+    .weather-fact { padding: 10px 11px; background: rgba(255,255,255,.62); border-radius: 10px; }
+    .weather-fact-label { display: block; color: var(--muted); font-size: 11px; }
+    .weather-fact-value { display: block; margin-top: 3px; color: var(--ink); font-size: 13px; font-weight: 800; }
+    .weather-forecast-title { margin: 20px 0 10px; color: var(--ink); font-size: 15px; }
+    .weather-forecast-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+    .weather-day { padding: 14px; border: 1px solid var(--line); border-radius: 13px; }
+    .weather-day-name { color: var(--ink); font-size: 13px; font-weight: 850; }
+    .weather-day-icon { display: block; margin: 13px 0 9px; font-size: 28px; line-height: 1; }
+    .weather-day-summary { color: var(--muted); font-size: 12px; }
+    .weather-day-temp { margin-top: 8px; color: var(--ink); font-size: 14px; font-weight: 850; }
+    .weather-day-rain { margin-top: 5px; color: var(--orange-dark); font-size: 11px; font-weight: 750; }
+
     .side-column { min-width: 0; display: grid; gap: 22px; }
     .countdown-panel { overflow: hidden; color: var(--paper); background: #f47a60; border: 0; }
     .countdown-panel-inner { padding: 25px; }
@@ -691,13 +734,20 @@
       .ticket-modal-head { padding: 20px 18px 16px; }
       .ticket-modal-body { grid-template-columns: 1fr; padding: 16px 18px 20px; }
       .ticket-pdf { height: 480px; }
+      .weather-modal-body { padding: 16px 18px 20px; }
+      .weather-current-head { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .weather-facts { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; }
+      .weather-fact { min-width: 0; padding: 9px 7px; }
+      .weather-fact-label { font-size: 10px; white-space: nowrap; }
+      .weather-fact-value { font-size: 12px; white-space: nowrap; }
+      .weather-forecast-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span>Voyage / 行程板</span></div>
-    <div class="topbar-meta"><span id="clock">正在读取时间…</span><a class="source-link" href="https://docs.google.com/spreadsheets/d/1ePDJu8IQryhT_kBEzkip5-tlVueirg1-9IQhvny8Kvc/edit?gid=0#gid=0" target="_blank" rel="noreferrer">打开原始行程 ↗</a></div>
+    <div class="topbar-meta"><span id="clock">正在读取时间…</span><button class="weather-trigger" id="weather-open" type="button" aria-haspopup="dialog">查看天气</button><a class="source-link" href="https://docs.google.com/spreadsheets/d/1ePDJu8IQryhT_kBEzkip5-tlVueirg1-9IQhvny8Kvc/edit?gid=0#gid=0" target="_blank" rel="noreferrer">打开原始行程 ↗</a></div>
   </header>
 
   <main class="shell">
@@ -793,6 +843,24 @@
     </section>
   </div>
 
+  <div class="ticket-modal weather-modal" id="weather-modal" hidden>
+    <div class="ticket-modal-backdrop" data-weather-close></div>
+    <section class="ticket-dialog weather-dialog" role="dialog" aria-modal="true" aria-labelledby="weather-modal-title">
+      <div class="ticket-modal-head">
+        <div>
+          <div class="ticket-modal-kicker">Weather update</div>
+          <h2 class="ticket-modal-title" id="weather-modal-title">城市天气</h2>
+          <p class="ticket-modal-subtitle">打开时更新 · 温度为摄氏度</p>
+        </div>
+        <button class="ticket-modal-close" type="button" data-weather-close aria-label="关闭天气信息">×</button>
+      </div>
+      <div class="weather-modal-body">
+        <nav class="weather-tabs" id="weather-tabs" role="tablist" aria-label="选择天气城市"></nav>
+        <div id="weather-content" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const mapUrl = (query) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
@@ -810,6 +878,21 @@
       rome: [41.9028, 12.4964], nice: [43.7102, 7.2620],
       menton: [43.7762, 7.5045], monaco: [43.7384, 7.4246],
       antibes: [43.5808, 7.1239]
+    };
+    const weatherCities = [
+      { id:'paris', label:'巴黎', latitude:48.8566, longitude:2.3522, timezone:'Europe/Paris' },
+      { id:'rome', label:'罗马', latitude:41.9028, longitude:12.4964, timezone:'Europe/Rome' },
+      { id:'nice', label:'尼斯', latitude:43.7102, longitude:7.2620, timezone:'Europe/Paris' },
+      { id:'shenzhen', label:'深圳', latitude:22.5431, longitude:114.0579, timezone:'Asia/Shanghai' },
+      { id:'guangzhou', label:'广州', latitude:23.1291, longitude:113.2644, timezone:'Asia/Shanghai' }
+    ];
+    const weatherDescriptions = {
+      0:['晴','☀️'], 1:['大致晴','🌤️'], 2:['局部多云','⛅'], 3:['阴','☁️'],
+      45:['雾','🌫️'], 48:['雾凇','🌫️'], 51:['小雨','🌦️'], 53:['中雨','🌦️'], 55:['大雨','🌧️'],
+      56:['冻雨','🌧️'], 57:['冻雨','🌧️'], 61:['小雨','🌧️'], 63:['中雨','🌧️'], 65:['大雨','🌧️'],
+      66:['冻雨','🌧️'], 67:['冻雨','🌧️'], 71:['小雪','🌨️'], 73:['中雪','🌨️'], 75:['大雪','❄️'],
+      77:['雪粒','❄️'], 80:['阵雨','🌦️'], 81:['阵雨','🌦️'], 82:['强阵雨','🌧️'],
+      85:['阵雪','🌨️'], 86:['阵雪','🌨️'], 95:['雷雨','⛈️'], 96:['雷雨冰雹','⛈️'], 99:['雷雨冰雹','⛈️']
     };
     const placeCoords = {
       '深圳北站': [22.6093, 114.0293],
@@ -874,7 +957,7 @@
     const event = (time, title, location, query, type, city, options = {}) => ({ time, title, location, query, type, city, ...options });
 
     const days = [
-      { date:'9/24', dow:'星期四', city:'深圳 → 广州', transport:'高铁，飞机', hotel:'—', hotelCity:'—', booked:['高铁票','送机服务'], todo:[], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['18:00 深圳北高铁到广州白云','19:35 广州白云送机到机场'], events:[
+      { date:'9/24', dow:'星期四', city:'深圳 → 广州', transport:'高铁，飞机', hotel:'在飞机上', hotelCity:'—', booked:['高铁票','送机服务'], todo:[], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['18:00 深圳北高铁到广州白云','19:35 广州白云送机到机场'], events:[
         event('18:00','深圳北高铁 → 广州白云','深圳北站', '深圳北站', 'train','shenzhen',{iso:at(9,24,'18:00','shenzhen'),fixed:true,route:'前往广州白云'}),
         event('19:35','送机 → 广州白云机场','广州白云国际机场','广州白云国际机场','transfer','guangzhou',{iso:at(9,24,'19:35','guangzhou'),fixed:true,route:'前往机场'})
       ]},
@@ -886,7 +969,7 @@
         event('20:00','抵达巴黎＋接机','巴黎戴高乐机场 → 酒店','Paris Charles de Gaulle Airport','transfer','paris',{iso:at(9,25,'20:00','paris'),fixed:true,route:'接机到酒店'}),
         event('22:00','埃菲尔铁塔亮灯夜景','埃菲尔铁塔','Eiffel Tower, Paris','attraction','paris',{iso:at(9,25,'22:00','paris'),fixed:true,route:'地铁／步行'})
       ]},
-      { date:'9/26', dow:'星期六', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['巴黎歌剧院参观票 25／15 欧','巴黎建筑与遗产之城门票 13 欧／张'], todo:[], outfit:'金色礼服裙＋风衣＋蝴蝶项链＋蝴蝶手链＋银色单鞋／白色高跟', notes:['巴黎歌剧院与建筑遗产之城门票链接在原始表格备注'], events:[
+      { date:'9/26', dow:'星期六', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['巴黎歌剧院参观票 25／15 欧','巴黎建筑与遗产之城门票 13 欧／张'], todo:[], outfit:'金色礼服裙＋风衣＋蝴蝶项链＋蝴蝶手链＋银色单鞋／白色高跟', notes:[], events:[
         event('09:30','早午餐','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
         event('11:00','巴黎建筑与遗产之城','Cité de l’architecture et du patrimoine','Cité de l’architecture et du patrimoine, Paris','attraction','paris',{iso:at(9,26,'11:00','paris'),fixed:true,route:'地铁／步行',ticket:'cite'}),
         event('12:30','巴黎歌剧院','Palais Garnier','Palais Garnier, Paris','attraction','paris',{iso:at(9,26,'12:30','paris'),fixed:true,route:'地铁／步行',ticket:'opera'}),
@@ -957,7 +1040,7 @@
         event('16:30','酒店 check-in','Aparthotel Adagio Paris Nation','Aparthotel Adagio Paris Nation','hotel','paris',{iso:at(10,5,'16:30','paris'),fixed:true,route:'地铁／步行'}),
         event('17:30','蒙马特高地＋圣心大教堂','Montmartre / Sacré-Cœur','Sacré-Cœur, Paris','attraction','paris',{iso:at(10,5,'17:30','paris'),fixed:true,route:'地铁，步行'})
       ]},
-      { date:'10/6', dow:'星期二', city:'巴黎 → 迪拜', transport:'地铁，步行，飞机', hotel:'—', hotelCity:'—', booked:['海军府门票','圣礼拜堂门票','机票','送机服务'], todo:[], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['大哥 16:00 出发去机场','巴黎奥利机场送机：17:10','游乐园博物馆门票约 21 欧／张'], events:[
+      { date:'10/6', dow:'星期二', city:'巴黎 → 迪拜', transport:'地铁，步行，飞机', hotel:'在飞机上', hotelCity:'—', booked:['海军府门票','圣礼拜堂门票','机票','送机服务'], todo:[], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['大哥 16:00 出发去机场','巴黎奥利机场送机：17:10','游乐园博物馆门票约 21 欧／张'], events:[
         event('上午','早午饭','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
         event('10:45','海军府','Hôtel de la Marine','Hôtel de la Marine, Paris','attraction','paris',{iso:at(10,6,'10:45','paris'),fixed:true,route:'地铁／步行',ticket:'marine'}),
         event('13:00','圣礼拜堂','Sainte-Chapelle','Sainte-Chapelle, Paris','attraction','paris',{iso:at(10,6,'13:00','paris'),fixed:true,route:'步行',ticket:'sainte-chapelle'}),
@@ -968,7 +1051,7 @@
         event('18:20','巴黎奥利 ✈ 迪拜','巴黎奥利机场 → 迪拜国际机场','Orly Airport Paris','flight','paris',{iso:at(10,6,'18:20','paris'),fixed:true,route:'航班出发'}),
         event('21:55','巴黎 ✈ 迪拜（晚间航班）','巴黎 → 迪拜','Paris, France','flight','paris',{iso:at(10,6,'21:55','paris'),fixed:true,route:'航班出发'})
       ]},
-      { date:'10/7', dow:'星期三', city:'迪拜 → 广州 → 深圳', transport:'飞机，打车', hotel:'—', hotelCity:'—', booked:['机票','接机服务'], todo:['最晚一班高铁票（或顺风车）'], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['赶不上 23:25 高铁就打顺风车；如果也打不到，在广州南站过夜，8 号上午高铁回深圳'], events:[
+      { date:'10/7', dow:'星期三', city:'迪拜 → 广州 → 深圳', transport:'飞机，打车', hotel:'回家', hotelCity:'—', booked:['机票','接机服务'], todo:['最晚一班高铁票（或顺风车）'], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['赶不上 23:25 高铁就打顺风车；如果也打不到，在广州南站过夜，8 号上午高铁回深圳'], events:[
         event('06:40','抵达迪拜','迪拜国际机场','Dubai International Airport','flight','dubai',{iso:at(10,7,'06:40','dubai'),fixed:true,route:'转机'}),
         event('10:15','迪拜 ✈ 广州','迪拜国际机场 → 广州白云国际机场','Dubai International Airport','flight','dubai',{iso:at(10,7,'10:15','dubai'),fixed:true,route:'航班出发'}),
         event('22:00','抵达广州＋接机去广州南站','广州白云国际机场 → 广州南站','Guangzhou South Railway Station','transfer','guangzhou',{iso:at(10,7,'22:00','guangzhou'),fixed:true,route:'接机＋打车'}),
@@ -1179,13 +1262,19 @@
     const reminderEditorTitle = document.querySelector('#reminder-editor-title');
     const reminderEditorCopy = document.querySelector('#reminder-editor-copy');
     const ticketModal = document.querySelector('#ticket-modal');
+    const weatherOpenButton = document.querySelector('#weather-open');
+    const weatherModal = document.querySelector('#weather-modal');
+    const weatherTabs = document.querySelector('#weather-tabs');
+    const weatherContent = document.querySelector('#weather-content');
     let selectedDay = 0;
     let nextEvent = null;
     let activeMap = null;
     let lastFocusedElement = null;
     let lastReminderFocusedElement = null;
+    let lastWeatherFocusedElement = null;
     let editingReminderId = null;
     let draggedReminderId = null;
+    const weatherState = { activeCity:'paris', loading:false, data:{}, errors:{}, loadedAt:null };
 
     const now = () => new Date();
     const eventDate = (item) => item.iso ? new Date(item.iso) : null;
@@ -1204,6 +1293,79 @@
     };
     const escape = (value) => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const eventIcon = (type) => ({flight:'✈',train:'🚄',transfer:'⇢',food:'◒',shopping:'◇',hotel:'⌂',attraction:'✦'}[type] || '•');
+    const weatherInfo = (code) => weatherDescriptions[Number(code)] || ['天气变化','🌤️'];
+    const weatherNumber = (value, suffix = '') => Number.isFinite(Number(value)) ? `${Math.round(Number(value))}${suffix}` : '—';
+    const weatherDate = (value, timezone) => new Intl.DateTimeFormat('zh-CN', { month:'numeric', day:'numeric', weekday:'short', timeZone:timezone }).format(new Date(`${value}T12:00:00`));
+    const weatherUpdatedTime = (timezone) => new Intl.DateTimeFormat('zh-CN', { hour:'2-digit', minute:'2-digit', hour12:false, timeZone:timezone }).format(new Date());
+
+    function weatherRequestUrl(city) {
+      const params = new URLSearchParams({
+        latitude: city.latitude,
+        longitude: city.longitude,
+        current: 'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m',
+        daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+        temperature_unit: 'celsius',
+        wind_speed_unit: 'kmh',
+        forecast_days: '4',
+        timezone: 'auto'
+      });
+      return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+    }
+
+    function renderWeatherTabs() {
+      weatherTabs.innerHTML = weatherCities.map(city => `<button class="weather-tab ${city.id === weatherState.activeCity ? 'is-active' : ''}" type="button" role="tab" data-weather-city="${city.id}" aria-selected="${city.id === weatherState.activeCity}">${city.label}</button>`).join('');
+      weatherTabs.querySelectorAll('[data-weather-city]').forEach(button => button.addEventListener('click', () => {
+        weatherState.activeCity = button.dataset.weatherCity;
+        renderWeather();
+      }));
+    }
+
+    function renderWeather() {
+      renderWeatherTabs();
+      const city = weatherCities.find(item => item.id === weatherState.activeCity) || weatherCities[0];
+      const data = weatherState.data[city.id];
+      if (weatherState.loading && !data) {
+        weatherContent.innerHTML = `<div class="weather-state">正在读取${escape(city.label)}天气…</div>`;
+        return;
+      }
+      if (!data) {
+        weatherContent.innerHTML = `<div class="weather-state"><div>暂时无法读取${escape(city.label)}天气，请检查网络后重试。<br><button type="button" data-weather-retry>重新读取</button></div></div>`;
+        return;
+      }
+      const current = data.current;
+      const daily = data.daily;
+      const [currentSummary, currentIcon] = weatherInfo(current.weather_code);
+      const forecast = daily.time.slice(1, 4).map((date, index) => {
+        const dailyIndex = index + 1;
+        const [summary, icon] = weatherInfo(daily.weather_code[dailyIndex]);
+        return `<article class="weather-day"><div class="weather-day-name">${escape(weatherDate(date, city.timezone))}</div><span class="weather-day-icon" aria-hidden="true">${icon}</span><div class="weather-day-summary">${escape(summary)}</div><div class="weather-day-temp">${weatherNumber(daily.temperature_2m_max[dailyIndex], '°')} / ${weatherNumber(daily.temperature_2m_min[dailyIndex], '°')}</div><div class="weather-day-rain">降雨概率 ${weatherNumber(daily.precipitation_probability_max?.[dailyIndex], '%')}</div></article>`;
+      }).join('');
+      weatherContent.innerHTML = `<section class="weather-current"><div class="weather-current-head"><div class="weather-current-place">${escape(city.label)} · 当前天气</div><span class="weather-updated">更新于 ${escape(weatherUpdatedTime(city.timezone))}</span></div><div class="weather-current-main"><span class="weather-current-icon" aria-hidden="true">${currentIcon}</span><div><strong class="weather-current-temp">${weatherNumber(current.temperature_2m, '°')}</strong><span class="weather-current-text">${escape(currentSummary)}</span></div></div><div class="weather-facts"><div class="weather-fact"><span class="weather-fact-label">今日温度范围</span><strong class="weather-fact-value">${weatherNumber(daily.temperature_2m_min?.[0], '°')} – ${weatherNumber(daily.temperature_2m_max?.[0], '°')}</strong></div><div class="weather-fact"><span class="weather-fact-label">湿度</span><strong class="weather-fact-value">${weatherNumber(current.relative_humidity_2m, '%')}</strong></div><div class="weather-fact"><span class="weather-fact-label">风速</span><strong class="weather-fact-value">${weatherNumber(current.wind_speed_10m, ' km/h')}</strong></div></div></section><h3 class="weather-forecast-title">未来三天</h3><div class="weather-forecast-grid">${forecast}</div>`;
+    }
+
+    async function loadWeather() {
+      weatherState.loading = true;
+      weatherState.errors = {};
+      renderWeather();
+      const results = await Promise.all(weatherCities.map(async city => {
+        try {
+          const response = await fetch(weatherRequestUrl(city));
+          if (!response.ok) throw new Error(`weather request failed: ${response.status}`);
+          const data = await response.json();
+          if (!data.current || !data.daily) throw new Error('weather data incomplete');
+          return { id: city.id, data };
+        } catch (error) {
+          return { id: city.id, error: true };
+        }
+      }));
+      results.forEach(result => {
+        if (result.data) weatherState.data[result.id] = result.data;
+        if (result.error) weatherState.errors[result.id] = true;
+      });
+      weatherState.loading = false;
+      weatherState.loadedAt = Date.now();
+      renderWeather();
+    }
 
     function renderTabs() {
       tabsEl.innerHTML = days.map((day, i) => `<button class="day-tab ${i === selectedDay ? 'is-active' : ''} ${i === (nextEvent?.dayIndex ?? -1) ? 'is-next' : ''}" data-day="${i}" aria-label="查看 ${day.date} ${day.city}" aria-pressed="${i === selectedDay}"><span class="day-tab-date">${day.date}</span><span class="day-tab-label">${day.dow.replace('星期','周')}</span></button>`).join('');
@@ -1301,6 +1463,7 @@
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && !ticketModal.hidden) closeTicketModal();
       if (event.key === 'Escape' && !reminderModal.hidden) closeReminderModal();
+      if (event.key === 'Escape' && !weatherModal.hidden) closeWeatherModal();
     });
 
     function openReminderEditor(reminderId, trigger) {
@@ -1322,8 +1485,27 @@
       if (lastReminderFocusedElement) lastReminderFocusedElement.focus();
     }
 
+    function openWeatherModal(trigger) {
+      lastWeatherFocusedElement = trigger || weatherOpenButton;
+      weatherModal.hidden = false;
+      document.body.classList.add('modal-open');
+      weatherModal.querySelector('.ticket-modal-close').focus();
+      loadWeather();
+    }
+
+    function closeWeatherModal() {
+      weatherModal.hidden = true;
+      document.body.classList.remove('modal-open');
+      if (lastWeatherFocusedElement) lastWeatherFocusedElement.focus();
+    }
+
     reminderAddButton.addEventListener('click', () => openReminderEditor(null, reminderAddButton));
     reminderModal.querySelectorAll('[data-reminder-close]').forEach(element => element.addEventListener('click', closeReminderModal));
+    weatherOpenButton.addEventListener('click', () => openWeatherModal(weatherOpenButton));
+    weatherModal.querySelectorAll('[data-weather-close]').forEach(element => element.addEventListener('click', closeWeatherModal));
+    weatherContent.addEventListener('click', event => {
+      if (event.target.closest('[data-weather-retry]')) loadWeather();
+    });
 
     reminderEditorForm.addEventListener('submit', event => {
       event.preventDefault();
