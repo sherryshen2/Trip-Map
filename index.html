@@ -404,6 +404,8 @@
       font-size: 12px;
       font-weight: 750;
     }
+    .route-button { border: 0; font-family: inherit; font-size: 12px; font-weight: 750; line-height: 1.55; cursor: pointer; }
+    .route-button:hover { color: var(--ink); background: #e9e0cd; }
     .countdown {
       color: var(--orange-dark);
       background: #ffe0cb;
@@ -551,6 +553,23 @@
     .ticket-open-link { display: inline-flex; margin-top: 9px; color: var(--orange-dark); font-size: 12px; font-weight: 850; text-decoration: none; }
     .ticket-open-link:hover { text-decoration: underline; }
 
+    .route-dialog { width: min(700px, 100%); }
+    .route-modal-body { padding: 20px 26px 26px; }
+    .route-path { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 12px; align-items: center; }
+    .route-point { min-width: 0; padding: 13px 14px; background: var(--paper-2); border-radius: 13px; }
+    .route-point-label { display: block; color: var(--muted); font-size: 11px; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
+    .route-point-value { display: block; margin-top: 5px; color: var(--ink); font-size: 14px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
+    .route-path-arrow { color: var(--orange); font-size: 22px; font-weight: 850; }
+    .route-options { display: grid; gap: 10px; margin-top: 18px; }
+    .route-option { padding: 14px; border: 1px solid var(--line); border-radius: 13px; }
+    .route-option-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .route-option-title { color: var(--ink); font-size: 14px; font-weight: 850; }
+    .route-option-badge { flex: 0 0 auto; padding: 4px 7px; color: var(--orange-dark); background: #ffe0cb; border-radius: 999px; font-size: 11px; font-weight: 850; }
+    .route-option-detail { margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .route-option-link { display: inline-flex; margin-top: 9px; padding: 7px 10px; color: var(--ink); background: var(--yellow); border-radius: 8px; font-size: 12px; font-weight: 850; text-decoration: none; }
+    .route-option-link:hover { background: #efb92d; }
+    .route-modal-note { margin-top: 15px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
     .weather-dialog { width: min(780px, 100%); }
     .weather-modal-body { padding: 16px 22px 22px; }
     .weather-tabs { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; }
@@ -679,6 +698,12 @@
     .footer a { color: var(--ink-2); font-weight: 800; }
 
     @media (max-width: 1020px) {
+      .topbar { display: grid; grid-template-columns: minmax(0,1fr) auto; grid-template-areas: 'brand source' 'clock weather'; align-items: center; gap: 10px 12px; }
+      .brand { grid-area: brand; min-width: 0; }
+      .topbar-meta { display: contents; }
+      .topbar-meta #clock { grid-area: clock; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .topbar-meta .weather-trigger { grid-area: weather; justify-self: end; }
+      .topbar-meta .source-link { grid-area: source; justify-self: end; padding: 7px 10px; font-size: 12px; }
       .dashboard-grid { grid-template-columns: 1fr; }
       .side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .countdown-panel { grid-column: 1 / -1; }
@@ -738,6 +763,9 @@
       .ticket-modal-head { padding: 20px 18px 16px; }
       .ticket-modal-body { grid-template-columns: 1fr; padding: 16px 18px 20px; }
       .ticket-pdf { height: 480px; }
+      .route-modal-body { padding: 16px 18px 20px; }
+      .route-path { grid-template-columns: 1fr; gap: 7px; }
+      .route-path-arrow { justify-self: center; transform: rotate(90deg); }
       .weather-modal-body { padding: 16px 18px 20px; }
       .weather-current-head { align-items: flex-start; flex-direction: column; gap: 4px; }
       .weather-facts { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; }
@@ -828,6 +856,25 @@
     </section>
   </div>
 
+  <div class="ticket-modal route-modal" id="route-modal" hidden>
+    <div class="ticket-modal-backdrop" data-route-close></div>
+    <section class="ticket-dialog route-dialog" role="dialog" aria-modal="true" aria-labelledby="route-modal-title">
+      <div class="ticket-modal-head">
+        <div>
+          <div class="ticket-modal-kicker">Route plan</div>
+          <h2 class="ticket-modal-title" id="route-modal-title">交通路线</h2>
+          <p class="ticket-modal-subtitle" id="route-modal-subtitle">按行程顺序查看这一段移动</p>
+        </div>
+        <button class="ticket-modal-close" type="button" data-route-close aria-label="关闭交通路线">×</button>
+      </div>
+      <div class="route-modal-body">
+        <div class="route-path"><div class="route-point"><span class="route-point-label">出发</span><strong class="route-point-value" id="route-origin">—</strong></div><span class="route-path-arrow" aria-hidden="true">→</span><div class="route-point"><span class="route-point-label">到达</span><strong class="route-point-value" id="route-destination">—</strong></div></div>
+        <div class="route-options" id="route-options"></div>
+        <p class="route-modal-note">公共交通的站点、换乘和预计时间会随当天情况变化；点击方案按钮可打开 Google Maps 查看实时路线。</p>
+      </div>
+    </section>
+  </div>
+
   <div class="ticket-modal reminder-modal" id="reminder-modal" hidden>
     <div class="ticket-modal-backdrop" data-reminder-close></div>
     <section class="ticket-dialog reminder-dialog" role="dialog" aria-modal="true" aria-labelledby="reminder-modal-title">
@@ -898,7 +945,9 @@
       85:['阵雪','🌨️'], 86:['阵雪','🌨️'], 95:['雷雨','⛈️'], 96:['雷雨冰雹','⛈️'], 99:['雷雨冰雹','⛈️']
     };
     const placeCoords = {
+      '深圳站': [22.5398, 114.1095],
       '深圳北站': [22.6093, 114.0293],
+      '广州白云站': [23.2915, 113.2647],
       '广州白云国际机场': [23.3924, 113.2988],
       'Dubai International Airport': [25.2532, 55.3657],
       'Dubai, United Arab Emirates': [25.2048, 55.2708],
@@ -914,6 +963,7 @@
       'Musée d’Orsay, Paris': [48.8600, 2.3266],
       'Pont de l’Alma, Paris': [48.8639, 2.3000],
       'Orly Airport Paris': [48.7262, 2.3652],
+      'Novotel Suites Paris Expo Porte de Versailles': [48.8276, 2.3054],
       'Spanish Steps, Rome': [41.9059, 12.4823],
       'Trevi Fountain, Rome': [41.9009, 12.4833],
       'Vintage shops, Rome': [41.9028, 12.4964],
@@ -928,9 +978,11 @@
       'Roman Forum, Rome': [41.8925, 12.4853],
       'Bocca della Verità, Rome': [41.8885, 12.4816],
       'Vatican Museums, Vatican City': [41.9065, 12.4536],
+      'Ruby Giulia Hotel Rome': [41.9005, 12.4947],
       'Galleria Borghese, Rome': [41.9142, 12.4924],
       'Villa Borghese, Rome': [41.9145, 12.4855],
       'Nice Côte d’Azur Airport': [43.6653, 7.2150],
+      'Novotel Nice Arénas Aéroport': [43.6670, 7.2155],
       'Nice-Ville station': [43.7050, 7.2620],
       'Jardin Exotique d’Eze, Èze': [43.7274, 7.3624],
       'Cours Saleya Market, Nice': [43.6955, 7.2759],
@@ -956,21 +1008,31 @@
       'Le Marais, Paris': [48.8566, 2.3622],
       'Guangzhou South Railway Station': [22.9907, 113.2697]
     };
+    const routeHotelQueries = {
+      'Novotel Suites Paris Expo Porte de Versailles': 'Novotel Suites Paris Expo Porte de Versailles, Paris',
+      'Ruby Giulia Hotel Rome': 'Ruby Giulia Hotel Rome, Rome',
+      'Novotel Nice Arénas Aéroport': 'Novotel Nice Arénas Aéroport, Nice',
+      'Aparthotel Adagio Paris Nation': 'Aparthotel Adagio Paris Nation, Paris'
+    };
     const at = (month, day, time, city) => `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${time}:00${cities[city].tz}`;
     const event = (time, title, location, query, type, city, options = {}) => ({ time, title, location, query, type, city, ...options });
 
     const days = [
-      { date:'9/24', dow:'星期四', city:'深圳 → 广州', transport:'高铁，飞机', hotel:'在飞机上', hotelCity:'—', booked:['高铁票','送机服务'], todo:[], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['18:00 深圳北高铁到广州白云','19:35 广州白云送机到机场'], events:[
-        event('18:00','深圳北高铁 → 广州白云','深圳北站', '深圳北站', 'train','shenzhen',{iso:at(9,24,'18:00','shenzhen'),fixed:true,route:'前往广州白云'}),
-        event('19:35','送机 → 广州白云机场','广州白云国际机场','广州白云国际机场','transfer','guangzhou',{iso:at(9,24,'19:35','guangzhou'),fixed:true,route:'前往机场'})
+      { date:'9/24', dow:'星期四', city:'深圳 → 广州', transport:'高铁，专车', hotel:'在飞机上', hotelCity:'—', booked:['高铁票','专车接送'], todo:[], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['18:00 深圳站高铁到广州白云站','广州白云站已预约专车前往机场'], events:[
+        event('18:00','深圳站高铁 → 广州白云站','深圳站 → 广州白云站', '广州白云站', 'train','shenzhen',{iso:at(9,24,'18:00','shenzhen'),fixed:true,route:'高铁到广州白云站',mapPoints:[
+          { title:'深圳火车站', time:'18:00 出发', location:'深圳站', query:'深圳站' },
+          { title:'广州白云火车站', time:'抵达后', location:'广州白云站', query:'广州白云站' }
+        ]}),
+        event('抵达后','预约专车 → 广州白云机场','广州白云站 → 广州白云机场','广州白云国际机场','transfer','guangzhou',{route:'预约专车接送',routeExcluded:true})
       ]},
-      { date:'9/25', dow:'星期五', city:'广州 → 迪拜 → 巴黎', transport:'飞机，包车', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['机票','接机服务'], todo:['包车游（提前一周）','巴黎交通卡（Apple Pay）'], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['到达后要买巴黎交通卡','夜间看埃菲尔铁塔亮灯'], events:[
+      { date:'9/25', dow:'星期五', city:'广州 → 迪拜 → 巴黎', transport:'飞机，包车', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['机票','接机服务'], todo:['包车游（提前一周）','巴黎交通卡（Apple Pay）'], outfit:'米色上衣＋腰链＋牛仔裤＋外套＋运动鞋', notes:['到达后要买巴黎交通卡','夜间看埃菲尔铁塔亮灯'], routeOnly:['埃菲尔铁塔亮灯夜景','回酒店'], events:[
         event('00:20','广州 ✈ 迪拜','广州白云国际机场 → 迪拜国际机场','广州白云国际机场','flight','guangzhou',{iso:at(9,25,'00:20','guangzhou'),fixed:true,route:'航班出发'}),
         event('04:00','抵达迪拜','迪拜国际机场','Dubai International Airport','flight','dubai',{iso:at(9,25,'04:00','dubai'),fixed:true,route:'转机／入境'}),
         event('06:00–11:00','包车半日游','迪拜（包车路线）','Dubai, United Arab Emirates','transfer','dubai',{iso:at(9,25,'06:00','dubai'),fixed:true,route:'包车游，提前一周预订'}),
         event('14:40','迪拜 ✈ 巴黎','迪拜国际机场 → 巴黎戴高乐机场','Dubai International Airport','flight','dubai',{iso:at(9,25,'14:40','dubai'),fixed:true,route:'航班出发'}),
         event('20:00','抵达巴黎＋接机','巴黎戴高乐机场 → 酒店','Paris Charles de Gaulle Airport','transfer','paris',{iso:at(9,25,'20:00','paris'),fixed:true,route:'接机到酒店'}),
-        event('22:00','埃菲尔铁塔亮灯夜景','埃菲尔铁塔','Eiffel Tower, Paris','attraction','paris',{iso:at(9,25,'22:00','paris'),fixed:true,route:'地铁／步行'})
+        event('22:00','埃菲尔铁塔亮灯夜景','埃菲尔铁塔','Eiffel Tower, Paris','attraction','paris',{iso:at(9,25,'22:00','paris'),fixed:true,route:'地铁／步行',routeOrigin:'Novotel Suites Paris Expo Porte de Versailles'}),
+        event('夜间','回酒店','Novotel Suites Paris Expo Porte de Versailles','Novotel Suites Paris Expo Porte de Versailles','hotel','paris',{route:'返回酒店'})
       ]},
       { date:'9/26', dow:'星期六', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['巴黎歌剧院参观票 25／15 欧','巴黎建筑与遗产之城门票 13 欧／张'], todo:[], outfit:'金色礼服裙＋风衣＋蝴蝶项链＋蝴蝶手链＋银色单鞋／白色高跟', notes:[], events:[
         event('09:30','早午餐','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
@@ -979,20 +1041,23 @@
         event('15:00','弥撒','香榭丽舍大街／协和广场','Place de la Concorde, Paris','attraction','paris',{iso:at(9,26,'15:00','paris'),fixed:true,route:'步行'}),
         event('下午','凯旋门','Arc de Triomphe','Arc de Triomphe, Paris','attraction','paris',{route:'步行／地铁'}),
         event('17:00','老佛爷百货','Galeries Lafayette Haussmann','Galeries Lafayette Haussmann, Paris','shopping','paris',{iso:at(9,26,'17:00','paris'),fixed:true,route:'地铁／步行'}),
-        event('20:00','晚餐','巴黎（餐厅待定）','Paris, France','food','paris',{iso:at(9,26,'20:00','paris'),fixed:true,route:'步行／地铁'})
+        event('20:00','晚餐','巴黎（餐厅待定）','Paris, France','food','paris',{iso:at(9,26,'20:00','paris'),fixed:true,route:'步行／地铁'}),
+        event('晚上','回酒店','Novotel Suites Paris Expo Porte de Versailles','Novotel Suites Paris Expo Porte de Versailles','hotel','paris',{route:'返回酒店'})
       ]},
       { date:'9/27', dow:'星期日', city:'巴黎', transport:'地铁，步行', hotel:'Novotel Suites Paris Expo Porte de Versailles', hotelCity:'巴黎', booked:['卢浮宫门票 32／22 欧','奥赛博物馆门票 16 欧／张','塞纳河游船晚餐 170 欧／人'], todo:[], outfit:'白碎花长裙＋风衣＋蝴蝶项链＋蝴蝶手链＋戒指＋银色单鞋／白色高跟', notes:['游船登船点在 Pont de l’Alma，需提前到达'], events:[
         event('09:00–12:00','卢浮宫参观','卢浮宫博物馆','Louvre Museum, Paris','attraction','paris',{iso:at(9,27,'09:00','paris'),fixed:true,route:'地铁／步行',ticket:'louvre'}),
         event('12:00–13:30','午餐','巴黎（餐厅待定）','Paris, France','food','paris',{iso:at(9,27,'12:00','paris'),fixed:true,route:'步行'}),
         event('13:30–14:30','杜乐丽花园','Jardin des Tuileries','Jardin des Tuileries, Paris','attraction','paris',{iso:at(9,27,'13:30','paris'),fixed:true,route:'步行'}),
         event('14:30','奥赛博物馆','Musée d’Orsay','Musée d’Orsay, Paris','attraction','paris',{iso:at(9,27,'14:30','paris'),fixed:true,route:'步行／地铁',ticket:'orsay'}),
-        event('19:20','塞纳河游船晚餐','Pont de l’Alma 登船点','Pont de l’Alma, Paris','food','paris',{iso:at(9,27,'19:20','paris'),fixed:true,route:'提前到达登船',ticket:'seine-dinner'})
+        event('19:20','塞纳河游船晚餐','Pont de l’Alma 登船点','Pont de l’Alma, Paris','food','paris',{iso:at(9,27,'19:20','paris'),fixed:true,route:'提前到达登船',ticket:'seine-dinner'}),
+        event('22:45','回酒店','Novotel Suites Paris Expo Porte de Versailles','Novotel Suites Paris Expo Porte de Versailles','hotel','paris',{route:'返回酒店'})
       ]},
       { date:'9/28', dow:'星期一', city:'巴黎 → 罗马', transport:'飞机，地铁，步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['巴黎到罗马机票'], todo:[], outfit:'白色吊带长裙＋短外套＋珍珠项链＋帽子＋银色单鞋／白色高跟', notes:[], events:[
         event('09:55–12:00','巴黎奥利机场 T2 → 罗马机场','巴黎奥利机场 → 罗马菲乌米奇诺机场','Orly Airport Paris','flight','paris',{iso:at(9,28,'09:55','paris'),fixed:true,route:'航班出发'}),
         event('下午','西班牙广场','Piazza di Spagna','Spanish Steps, Rome','attraction','rome',{route:'地铁／步行'}),
         event('下午','许愿池','Fontana di Trevi','Trevi Fountain, Rome','attraction','rome',{route:'步行'}),
-        event('下午','Vintage 店','罗马市区（店铺待定）','Vintage shops, Rome','shopping','rome',{route:'步行／地铁'})
+        event('下午','Vintage 店','罗马市区（店铺待定）','Vintage shops, Rome','shopping','rome',{route:'步行／地铁'}),
+        event('晚上','回酒店','Ruby Giulia Hotel Rome','Ruby Giulia Hotel Rome','hotel','rome',{route:'返回酒店'})
       ]},
       { date:'9/29', dow:'星期二', city:'罗马 → 梵蒂冈 → 罗马', transport:'步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['Cuoco e Camicia 晚餐'], todo:['圣彼得大教堂登顶票 10 欧／张','万神殿门票 7 欧／张'], outfit:'格子长裙＋短外套＋珍珠项链＋运动鞋', notes:['圣彼得大教堂可现场排队，登顶票可现场购买','晚餐地址：Via di Monte Polacco, 2, I-00184 Roma'], events:[
         event('09:00','圣彼得大教堂','梵蒂冈圣彼得大教堂','St. Peter’s Basilica, Vatican City','attraction','rome',{iso:at(9,29,'09:00','rome'),fixed:true,route:'步行'}),
@@ -1001,26 +1066,30 @@
         event('下午','鲜花广场','Campo de’ Fiori','Campo de’ Fiori, Rome','attraction','rome',{route:'步行'}),
         event('下午','万神殿','Pantheon','Pantheon, Rome','attraction','rome',{route:'步行'}),
         event('下午','圣依纳爵堂','Church of St. Ignatius of Loyola','Church of St. Ignatius of Loyola, Rome','attraction','rome',{route:'步行'}),
-        event('20:00','Cuoco e Camicia 晚餐','Via di Monte Polacco, 2, Rome','Cuoco e Camicia, Via di Monte Polacco 2, Rome','food','rome',{iso:at(9,29,'20:00','rome'),fixed:true,route:'步行'})
+        event('20:00','Cuoco e Camicia 晚餐','Via di Monte Polacco, 2, Rome','Cuoco e Camicia, Via di Monte Polacco 2, Rome','food','rome',{iso:at(9,29,'20:00','rome'),fixed:true,route:'步行'}),
+        event('晚上','回酒店','Ruby Giulia Hotel Rome','Ruby Giulia Hotel Rome','hotel','rome',{route:'返回酒店'})
       ]},
       { date:'9/30', dow:'星期三', city:'罗马 → 梵蒂冈 → 罗马', transport:'步行', hotel:'Ruby Giulia Hotel Rome', hotelCity:'罗马', booked:['罗马斗兽场 18 欧／张','梵蒂冈博物馆门票 25 欧／张'], todo:[], outfit:'红色花裙子＋短外套＋爱心项链＋银色单鞋', notes:['斗兽场、古罗马广场与帕拉蒂尼山作为一段参观安排'], events:[
         event('09:30','斗兽场','Colosseo','Colosseum, Rome','attraction','rome',{iso:at(9,30,'09:30','rome'),fixed:true,route:'步行',ticket:'colosseum'}),
         event('上午','古罗马广场＋帕拉蒂尼山','Roman Forum / Palatine Hill','Roman Forum, Rome','attraction','rome',{route:'随斗兽场参观'}),
         event('下午','真理之口','Bocca della Verità','Bocca della Verità, Rome','attraction','rome',{route:'步行'}),
         event('17:00','梵蒂冈博物馆','Vatican Museums','Vatican Museums, Vatican City','attraction','rome',{iso:at(9,30,'17:00','rome'),fixed:true,route:'步行／地铁',ticket:'vatican'}),
+        event('晚上','回酒店','Ruby Giulia Hotel Rome','Ruby Giulia Hotel Rome','hotel','rome',{route:'返回酒店'})
       ]},
       { date:'10/1', dow:'星期四', city:'罗马 → 尼斯', transport:'步行，飞机', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:['博尔盖塞美术馆门票 20 欧／张','罗马到尼斯机票'], todo:[], outfit:'白色礼裙＋短外套＋运动鞋', notes:['博尔盖塞美术馆不能迟到','到尼斯后买南法火车联票'], events:[
         event('09:00–11:00','博尔盖塞美术馆','Galleria Borghese','Galleria Borghese, Rome','attraction','rome',{iso:at(10,1,'09:00','rome'),fixed:true,route:'步行，不能迟到',ticket:'borghese'}),
         event('上午','博尔盖塞公园','Villa Borghese','Villa Borghese, Rome','attraction','rome',{route:'步行'}),
         event('17:15–18:30','罗马 T1 → 尼斯 T1','罗马菲乌米奇诺机场 → 尼斯蔚蓝海岸机场','Nice Côte d’Azur Airport','flight','rome',{iso:at(10,1,'17:15','rome'),fixed:true,route:'航班出发'}),
-        event('抵达后','购买南法火车联票','尼斯火车站','Nice-Ville station','train','nice',{route:'步行／火车站'})
+        event('抵达后','购买南法火车联票','尼斯火车站','Nice-Ville station','train','nice',{route:'步行／火车站'}),
+        event('晚上','回酒店','Novotel Nice Arénas Aéroport','Novotel Nice Arénas Aéroport','hotel','nice',{route:'返回酒店'})
       ]},
       { date:'10/2', dow:'星期五', city:'尼斯 → 埃兹 → 尼斯', transport:'火车，步行', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:['埃兹植物园门票 10 欧／张'], todo:[], outfit:'橘色长裙＋外套＋运动鞋', notes:[], events:[
         event('上午','埃兹植物园','Jardin Exotique d’Èze','Jardin Exotique d’Eze, Èze','attraction','nice',{route:'火车＋步行',ticket:'eze'}),
         event('下午','萨雷亚集市','Cours Saleya','Cours Saleya Market, Nice','attraction','nice',{route:'火车＋步行'}),
         event('下午','城堡山','Colline du Château','Castle Hill, Nice','attraction','nice',{route:'步行'}),
         event('下午','英国人大道','Promenade des Anglais','Promenade des Anglais, Nice','attraction','nice',{route:'步行'}),
-        event('下午','天使湾蓝滩','Blue Beach','Blue Beach, Nice','attraction','nice',{route:'步行'})
+        event('下午','天使湾蓝滩','Blue Beach','Blue Beach, Nice','attraction','nice',{route:'步行'}),
+        event('晚上','回酒店','Novotel Nice Arénas Aéroport','Novotel Nice Arénas Aéroport','hotel','nice',{route:'返回酒店'})
       ]},
       { date:'10/3', dow:'星期六', city:'尼斯 → 芒通 → 摩纳哥 → 尼斯', transport:'火车，步行', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:[], todo:[], outfit:'黄色短上衣＋红色格裙＋运动鞋', notes:[], events:[
         event('全天','芒通：圣米歇尔大教堂','Basilique Saint-Michel-Archange','Basilique Saint-Michel-Archange, Menton','attraction','menton',{route:'火车＋步行'}),
@@ -1028,31 +1097,34 @@
         event('全天','蒙特卡洛赌场','Casino de Monte-Carlo','Casino de Monte-Carlo, Monaco','attraction','monaco',{route:'火车＋步行'}),
         event('全天','F1 赛道','Circuit de Monaco','Circuit de Monaco','attraction','monaco',{route:'步行'}),
         event('全天','圣马丁花园','Jardins Saint-Martin','Jardins Saint-Martin, Monaco','attraction','monaco',{route:'步行'}),
-        event('全天','王子宫殿','Prince’s Palace of Monaco','Prince’s Palace of Monaco','attraction','monaco',{route:'步行'})
+        event('全天','王子宫殿','Prince’s Palace of Monaco','Prince’s Palace of Monaco','attraction','monaco',{route:'步行'}),
+        event('晚上','回酒店','Novotel Nice Arénas Aéroport','Novotel Nice Arénas Aéroport','hotel','nice',{route:'返回酒店'})
       ]},
       { date:'10/4', dow:'星期天', city:'尼斯 → 昂蒂布 → 尼斯', transport:'火车，步行', hotel:'Novotel Nice Arénas Aéroport', hotelCity:'尼斯', booked:[], todo:[], outfit:'黄色长裙＋外套＋银色单鞋', notes:[], events:[
         event('11:00–13:00','普罗旺斯集市','Marché Provençal d’Antibes','Marché Provençal, Antibes','attraction','antibes',{iso:at(10,4,'11:00','antibes'),fixed:true,route:'火车＋步行'}),
         event('下午','Plage du Ponteil','Plage du Ponteil','Plage du Ponteil, Antibes','attraction','antibes',{route:'步行'}),
         event('下午','尼斯老城','Vieux Nice','Vieux Nice','attraction','nice',{route:'火车＋步行'}),
         event('下午','马塞纳广场','Place Masséna','Place Masséna, Nice','attraction','nice',{route:'步行'}),
-        event('下午','生鲜市场','尼斯市区市场','Fresh market, Nice','attraction','nice',{route:'步行'})
+        event('下午','生鲜市场','尼斯市区市场','Fresh market, Nice','attraction','nice',{route:'步行'}),
+        event('晚上','回酒店','Novotel Nice Arénas Aéroport','Novotel Nice Arénas Aéroport','hotel','nice',{route:'返回酒店'})
       ]},
       { date:'10/5', dow:'星期一', city:'尼斯 → 巴黎', transport:'飞机，地铁，步行', hotel:'Aparthotel Adagio Paris Nation', hotelCity:'巴黎', booked:['尼斯到巴黎机票'], todo:[], outfit:'紫色长裙＋灰珍珠项链＋银色单鞋', notes:[], events:[
         event('上午','休息或自由活动','尼斯','Nice, France','attraction','nice',{route:'自由安排'}),
         event('13:40–15:10','尼斯 T2 → 巴黎奥利 T3','尼斯蔚蓝海岸机场 → 巴黎奥利机场','Nice Côte d’Azur Airport','flight','nice',{iso:at(10,5,'13:40','nice'),fixed:true,route:'航班出发'}),
         event('16:30','酒店 check-in','Aparthotel Adagio Paris Nation','Aparthotel Adagio Paris Nation','hotel','paris',{iso:at(10,5,'16:30','paris'),fixed:true,route:'地铁／步行'}),
-        event('17:30','蒙马特高地＋圣心大教堂','Montmartre / Sacré-Cœur','Sacré-Cœur, Paris','attraction','paris',{iso:at(10,5,'17:30','paris'),fixed:true,route:'地铁，步行'})
+        event('17:30','蒙马特高地＋圣心大教堂','Montmartre / Sacré-Cœur','Sacré-Cœur, Paris','attraction','paris',{iso:at(10,5,'17:30','paris'),fixed:true,route:'地铁，步行'}),
+        event('20:00','回酒店','Aparthotel Adagio Paris Nation','Aparthotel Adagio Paris Nation','hotel','paris',{route:'返回酒店'})
       ]},
-      { date:'10/6', dow:'星期二', city:'巴黎 → 迪拜', transport:'地铁，步行，飞机', hotel:'在飞机上', hotelCity:'—', booked:['海军府门票','圣礼拜堂门票','机票','送机服务'], todo:[], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['大哥 16:00 出发去机场','巴黎奥利机场送机：17:10','游乐园博物馆门票约 21 欧／张'], events:[
+      { date:'10/6', dow:'星期二', city:'巴黎 → 迪拜', transport:'地铁，步行，飞机', hotel:'在飞机上', hotelCity:'—', booked:['海军府门票','圣礼拜堂门票','机票','送机服务'], todo:[], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['大哥 16:00 出发去巴黎奥利机场','17:10 送我去巴黎戴高乐机场','大哥 18:20 从巴黎奥利机场飞往摩洛哥','游乐园博物馆门票约 21 欧／张'], events:[
         event('上午','早午饭','巴黎（餐厅待定）','Paris, France','food','paris',{route:'步行／地铁'}),
         event('10:45','海军府','Hôtel de la Marine','Hôtel de la Marine, Paris','attraction','paris',{iso:at(10,6,'10:45','paris'),fixed:true,route:'地铁／步行',ticket:'marine'}),
         event('13:00','圣礼拜堂','Sainte-Chapelle','Sainte-Chapelle, Paris','attraction','paris',{iso:at(10,6,'13:00','paris'),fixed:true,route:'步行',ticket:'sainte-chapelle'}),
         event('下午','巴黎圣母院','Cathédrale Notre-Dame de Paris','Notre-Dame de Paris','attraction','paris',{route:'步行'}),
         event('16:00','大哥出发去机场','巴黎市区 → 巴黎奥利机场','Orly Airport Paris','transfer','paris',{iso:at(10,6,'16:00','paris'),fixed:true,route:'送机'}),
         event('下午','玛黑区逛街','Le Marais','Le Marais, Paris','shopping','paris',{route:'步行'}),
-        event('17:10','送机去机场','巴黎市区 → 巴黎奥利机场','Orly Airport Paris','transfer','paris',{iso:at(10,6,'17:10','paris'),fixed:true,route:'送机服务'}),
-        event('18:20','巴黎奥利 ✈ 迪拜','巴黎奥利机场 → 迪拜国际机场','Orly Airport Paris','flight','paris',{iso:at(10,6,'18:20','paris'),fixed:true,route:'航班出发'}),
-        event('21:55','巴黎 ✈ 迪拜（晚间航班）','巴黎 → 迪拜','Paris, France','flight','paris',{iso:at(10,6,'21:55','paris'),fixed:true,route:'航班出发'})
+        event('17:10','送机 → 巴黎戴高乐机场','巴黎市区 → 巴黎戴高乐机场','Paris Charles de Gaulle Airport','transfer','paris',{iso:at(10,6,'17:10','paris'),fixed:true,route:'送我去戴高乐机场'}),
+        event('18:20','大哥：巴黎奥利机场 ✈ 摩洛哥','巴黎奥利机场 → 摩洛哥','Orly Airport Paris','flight','paris',{iso:at(10,6,'18:20','paris'),fixed:true,route:'大哥航班出发',routeExcluded:true}),
+        event('21:55','我：巴黎戴高乐机场 ✈ 迪拜','巴黎戴高乐机场 → 迪拜','Paris Charles de Gaulle Airport','flight','paris',{iso:at(10,6,'21:55','paris'),fixed:true,route:'我的航班出发',routeOrigin:'Paris Charles de Gaulle Airport'})
       ]},
       { date:'10/7', dow:'星期三', city:'迪拜 → 广州 → 深圳', transport:'飞机，打车', hotel:'回家', hotelCity:'—', booked:['机票','接机服务'], todo:['最晚一班高铁票（或顺风车）'], outfit:'白色蕾丝裙＋风衣＋爱心项链＋运动鞋', notes:['赶不上 23:25 高铁就打顺风车；如果也打不到，在广州南站过夜，8 号上午高铁回深圳'], events:[
         event('06:40','抵达迪拜','迪拜国际机场','Dubai International Airport','flight','dubai',{iso:at(10,7,'06:40','dubai'),fixed:true,route:'转机'}),
@@ -1063,7 +1135,7 @@
     ];
 
     const transportLegs = [
-      { icon:'🚄', route:'深圳北 → 广州白云', code:'C8024', detail:'9/24 18:00 · 4车厢 12F · 6检票口' },
+      { icon:'🚄', route:'深圳站 → 广州白云站', code:'C8024', detail:'9/24 18:00 · 4车厢 12F · 6检票口' },
       { icon:'✈', route:'广州 → 迪拜', code:'EK363', detail:'Emirates · 9/25 00:20 起飞 / 04:00 落地 · 20:20 开始值机 · 座位 16K' },
       { icon:'✈', route:'迪拜 → 巴黎', code:'EK075', detail:'Emirates · 9/25 14:40 起飞 / 20:00 落地 · 11:40 开始值机 · 座位 9A' },
       { icon:'✈', route:'巴黎 → 罗马', code:'W46062', detail:'Wizz Air · 9/28 09:55 起飞 / 12:00 落地 · 需提前在 APP 值机' },
@@ -1265,6 +1337,11 @@
     const reminderEditorTitle = document.querySelector('#reminder-editor-title');
     const reminderEditorCopy = document.querySelector('#reminder-editor-copy');
     const ticketModal = document.querySelector('#ticket-modal');
+    const routeModal = document.querySelector('#route-modal');
+    const routeModalSubtitle = document.querySelector('#route-modal-subtitle');
+    const routeOriginEl = document.querySelector('#route-origin');
+    const routeDestinationEl = document.querySelector('#route-destination');
+    const routeOptionsEl = document.querySelector('#route-options');
     const weatherOpenButton = document.querySelector('#weather-open');
     const weatherModal = document.querySelector('#weather-modal');
     const weatherTabs = document.querySelector('#weather-tabs');
@@ -1273,6 +1350,7 @@
     let nextEvent = null;
     let activeMap = null;
     let lastFocusedElement = null;
+    let lastRouteFocusedElement = null;
     let lastReminderFocusedElement = null;
     let lastWeatherFocusedElement = null;
     let editingReminderId = null;
@@ -1370,6 +1448,81 @@
       renderWeather();
     }
 
+    const routeIsUnknown = (item) => !item || item.routeExcluded || /待定|未定|未知|自由安排/.test(`${item.title || ''} ${item.location || ''} ${item.route || ''}`);
+
+    function routeSegment(day, dayIndex, eventIndex) {
+      const item = day.events[eventIndex];
+      if (day.routeOnly && !day.routeOnly.includes(item?.title)) return null;
+      if (routeIsUnknown(item)) return null;
+      const previousCandidates = day.events.slice(0, eventIndex).filter(candidate => !routeIsUnknown(candidate));
+      const previous = previousCandidates[previousCandidates.length - 1];
+      let origin = null;
+      if (item.routeOrigin) {
+        const routeOriginQuery = routeHotelQueries[item.routeOrigin] || item.routeOrigin;
+        origin = { label: item.routeOrigin, query: routeOriginQuery };
+      } else {
+        origin = previous ? { label: previous.location || previous.title, query: previous.query } : null;
+        if (!origin && dayIndex > 0) {
+          const previousHotel = days[dayIndex - 1].hotel;
+          const hotelQuery = routeHotelQueries[previousHotel];
+          if (hotelQuery) origin = { label: `前一晚住宿 · ${previousHotel}`, query: hotelQuery };
+        }
+      }
+      if (!origin || (item.type === 'flight' && previous?.type === 'flight')) return null;
+      return { item, origin, destination: { label: item.location || item.title, query: item.query }, day };
+    }
+
+    const directionsUrl = (origin, destination, mode) => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=${mode}`;
+
+    function routeOptions(segment) {
+      const routeLabel = segment.item.route || segment.day.transport || '公共交通';
+      const routeText = `${segment.item.title} ${segment.item.location} ${routeLabel}`;
+      const isDriving = /包车|接机|送机|打车|出租/.test(routeText);
+      const isLongDistance = /航班|飞机|高铁|火车|机场|车站|转机/.test(routeText);
+      const primaryMode = isDriving ? 'driving' : (/步行/.test(routeLabel) && !/地铁|火车|飞机|机场|车站/.test(routeText) ? 'walking' : 'transit');
+      const options = [{
+        title: `推荐 · ${routeLabel}`,
+        badge: '推荐',
+        detail: isDriving ? '按接送或打车安排，打开 Google Maps 查看实时行车路线。' : '按行程安排的交通方式出发，打开 Google Maps 查看实时站点、换乘和预计时间。',
+        mode: primaryMode
+      }];
+      if (isLongDistance || isDriving) {
+        options.push({ title: '公共交通', detail: '查看当天可用的地铁、公交或机场接驳方案。', mode: 'transit' });
+      } else if (primaryMode === 'walking') {
+        options.push({ title: '公共交通', detail: '如果天气或时间不合适，可切换为地铁或公交。', mode: 'transit' });
+      } else {
+        options.push({ title: '步行', detail: '适合短距离移动，出发前确认实时步行时间。', mode: 'walking' });
+      }
+      if (options.length < 3) options.push({ title: '打车／网约车', detail: '查看实时路况下的出租车或网约车路线。', mode: 'driving' });
+      return options.slice(0, 3);
+    }
+
+    function renderRouteModal(dayIndex, eventIndex) {
+      const day = days[dayIndex];
+      const segment = day && routeSegment(day, dayIndex, eventIndex);
+      if (!segment) return false;
+      document.querySelector('#route-modal-title').textContent = segment.item.title;
+      routeModalSubtitle.textContent = `${segment.day.date} · ${segment.item.time} · 查看这一段移动`;
+      routeOriginEl.textContent = segment.origin.label;
+      routeDestinationEl.textContent = segment.destination.label;
+      routeOptionsEl.innerHTML = routeOptions(segment).map(option => `<article class="route-option"><div class="route-option-head"><strong class="route-option-title">${escape(option.title)}</strong>${option.badge ? `<span class="route-option-badge">${escape(option.badge)}</span>` : ''}</div><p class="route-option-detail">${escape(option.detail)}</p><a class="route-option-link" href="${directionsUrl(segment.origin.query, segment.destination.query, option.mode)}" target="_blank" rel="noreferrer">在 Google Maps 中打开 ↗</a></article>`).join('');
+      return true;
+    }
+
+    function openRouteModal(dayIndex, eventIndex, trigger) {
+      if (!renderRouteModal(dayIndex, eventIndex)) return;
+      lastRouteFocusedElement = trigger;
+      routeModal.hidden = false;
+      document.body.classList.add('modal-open');
+      routeModal.querySelector('.ticket-modal-close').focus();
+    }
+
+    function closeRouteModal() {
+      routeModal.hidden = true;
+      document.body.classList.remove('modal-open');
+      if (lastRouteFocusedElement) lastRouteFocusedElement.focus();
+    }
+
     function renderTabs() {
       tabsEl.innerHTML = days.map((day, i) => `<button class="day-tab ${i === selectedDay ? 'is-active' : ''} ${i === (nextEvent?.dayIndex ?? -1) ? 'is-next' : ''}" data-day="${i}" aria-label="查看 ${day.date} ${day.city}" aria-pressed="${i === selectedDay}"><span class="day-tab-date">${day.date}</span><span class="day-tab-label">${day.dow.replace('星期','周')}</span></button>`).join('');
       tabsEl.querySelectorAll('.day-tab').forEach(button => button.addEventListener('click', () => { selectedDay = Number(button.dataset.day); renderDay(); renderTabs(); }));
@@ -1379,9 +1532,13 @@
       const day = days[selectedDay];
       const visibleEvents = fixedOnlyEl.checked ? day.events.filter(e => e.fixed) : day.events;
       const cards = visibleEvents.map((item) => {
+        const eventIndex = day.events.indexOf(item);
         const isNext = nextEvent && nextEvent.title === item.title && nextEvent.dayIndex === selectedDay;
         const ticketAction = item.ticket ? `<button class="ticket-button" type="button" data-ticket="${escape(item.ticket)}">门票信息</button>` : '';
-        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta"><span class="event-chip">${escape(item.route || day.transport)}</span>${ticketAction}</div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
+        const routeSegmentData = routeSegment(day, selectedDay, eventIndex);
+        const routeLabel = item.route || day.transport;
+        const routeAction = routeSegmentData ? `<button class="event-chip route-button" type="button" data-route-event="${selectedDay}:${eventIndex}">${escape(routeLabel)} <span aria-hidden="true">↗</span></button>` : `<span class="event-chip">${escape(routeLabel)}</span>`;
+        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta">${routeAction}${ticketAction}</div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
       }).join('');
       const notes = day.notes.length ? day.notes.map(n => `<span class="badge todo">提醒：${escape(n)}</span>`).join('') : '';
       const booked = day.booked.length ? `<span class="badge booked">✓ 已预订 ${day.booked.length} 项</span>` : '';
@@ -1389,6 +1546,10 @@
       if (activeMap) { activeMap.remove(); activeMap = null; }
       dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(day.city)}</h2><p class="day-route"><strong>主要交通</strong>　${escape(day.transport)}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : '<div class="empty-state">这一天没有符合筛选条件的项目。</div>'}<div class="day-foot"><div class="foot-item"><span class="foot-label">住宿</span><span class="foot-value">${escape(day.hotel)}</span></div><div class="foot-item"><span class="foot-label">穿搭</span><span class="foot-value">${escape(day.outfit)}</span></div><div class="foot-item"><span class="foot-label">当天提醒</span><span class="foot-value">${notes || '暂无额外提醒'}</span></div></div>${renderRouteMap(day)}`;
       dayEl.querySelectorAll('[data-ticket]').forEach(button => button.addEventListener('click', () => openTicketModal(button.dataset.ticket, button)));
+      dayEl.querySelectorAll('[data-route-event]').forEach(button => button.addEventListener('click', () => {
+        const [dayIndex, eventIndex] = button.dataset.routeEvent.split(':').map(Number);
+        openRouteModal(dayIndex, eventIndex, button);
+      }));
       requestAnimationFrame(() => drawLeafletMap(day));
       updateCountdowns();
     }
@@ -1403,7 +1564,13 @@
         if (mapElement) mapElement.innerHTML = '<div style="padding:20px;color:#62708d;font-size:13px">地图底图加载失败，请联网后刷新页面。</div>';
         return;
       }
-      const points = day.events.filter(item => !(item.type === 'food' && /待定|未定|未知/.test(item.location || ''))).map(item => ({ item, coords: placeCoords[item.query] || cityCoords[item.city] })).filter(point => point.coords);
+      const points = day.events.filter(item => !(item.type === 'food' && /待定|未定|未知/.test(item.location || ''))).flatMap(item => {
+        const mapItems = item.mapPoints || [item];
+        return mapItems.map(mapItem => {
+          const pointItem = mapItem === item ? item : { ...item, ...mapItem };
+          return { item: pointItem, coords: placeCoords[pointItem.query] || cityCoords[pointItem.city] };
+        });
+      }).filter(point => point.coords);
       if (!points.length) return;
       activeMap = L.map(mapElement, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
       const latLngs = points.map(point => point.coords);
@@ -1463,8 +1630,10 @@
     }
 
     ticketModal.querySelectorAll('[data-ticket-close]').forEach(element => element.addEventListener('click', closeTicketModal));
+    routeModal.querySelectorAll('[data-route-close]').forEach(element => element.addEventListener('click', closeRouteModal));
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && !ticketModal.hidden) closeTicketModal();
+      if (event.key === 'Escape' && !routeModal.hidden) closeRouteModal();
       if (event.key === 'Escape' && !reminderModal.hidden) closeReminderModal();
       if (event.key === 'Escape' && !weatherModal.hidden) closeWeatherModal();
     });
