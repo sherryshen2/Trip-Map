@@ -96,6 +96,22 @@
       white-space: nowrap;
     }
     .weather-trigger:hover { background: rgba(255,255,255,.18); }
+    .topbar-actions { display: inline-flex; align-items: center; gap: 8px; }
+    .language-trigger {
+      display: inline-flex;
+      align-items: center;
+      min-width: 42px;
+      justify-content: center;
+      padding: 7px 10px;
+      color: var(--paper);
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .language-trigger:hover { background: rgba(255,255,255,.18); }
     .source-link {
       display: inline-flex;
       align-items: center;
@@ -702,7 +718,7 @@
       .brand { grid-area: brand; min-width: 0; }
       .topbar-meta { display: contents; }
       .topbar-meta #clock { grid-area: clock; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .topbar-meta .weather-trigger { grid-area: weather; justify-self: end; }
+      .topbar-meta .topbar-actions { grid-area: weather; justify-self: end; }
       .topbar-meta .source-link { grid-area: source; justify-self: end; padding: 7px 10px; font-size: 12px; }
       .dashboard-grid { grid-template-columns: 1fr; }
       .side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -713,7 +729,7 @@
       .brand { grid-area: brand; min-width: 0; }
       .topbar-meta { display: contents; }
       .topbar-meta #clock { grid-area: clock; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .topbar-meta .weather-trigger { grid-area: weather; justify-self: end; }
+      .topbar-meta .topbar-actions { grid-area: weather; justify-self: end; }
       .topbar-meta .source-link { grid-area: source; justify-self: end; padding: 7px 10px; font-size: 12px; }
       .shell { width: min(calc(100% - 24px), 1420px); padding-top: 18px; }
       .hero { grid-template-columns: 1fr; }
@@ -777,61 +793,61 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span>Voyage / 行程板</span></div>
-    <div class="topbar-meta"><span id="clock">正在读取时间…</span><button class="weather-trigger" id="weather-open" type="button" aria-haspopup="dialog">查看天气</button><a class="source-link" href="https://docs.google.com/spreadsheets/d/1ePDJu8IQryhT_kBEzkip5-tlVueirg1-9IQhvny8Kvc/edit?gid=0#gid=0" target="_blank" rel="noreferrer">打开原始行程 ↗</a></div>
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span data-i18n="brand">Voyage / 行程板</span></div>
+    <div class="topbar-meta"><span id="clock">正在读取时间…</span><div class="topbar-actions"><button class="weather-trigger" id="weather-open" type="button" aria-haspopup="dialog" data-i18n="viewWeather">查看天气</button><button class="language-trigger" id="language-toggle" type="button" aria-label="切换语言">中</button></div><a class="source-link" data-i18n="openSource" href="https://docs.google.com/spreadsheets/d/1ePDJu8IQryhT_kBEzkip5-tlVueirg1-9IQhvny8Kvc/edit?gid=0#gid=0" target="_blank" rel="noreferrer">打开原始行程 ↗</a></div>
   </header>
 
   <main class="shell">
-    <section class="hero" aria-labelledby="page-title">
+    <section class="hero" aria-labelledby="page-title" data-i18n-aria-label="tripOverview">
       <div class="hero-copy">
         <div>
           <div class="eyebrow">2026 / Europe trip</div>
-          <h1 id="page-title">巴黎、罗马与南法</h1>
+          <h1 id="page-title" data-i18n="tripTitle">巴黎、罗马与南法</h1>
         </div>
-        <div class="hero-stats" aria-label="行程概况"><span class="stat-pill">14 天</span><span class="stat-pill">6 座城市</span></div>
+        <div class="hero-stats" aria-label="行程概况" data-i18n-aria-label="tripOverview"><span class="stat-pill" data-i18n="tripDays">14 天</span><span class="stat-pill" data-i18n="tripCities">6 座城市</span></div>
       </div>
       <div class="hero-photo">
-        <img src="https://images.unsplash.com/photo-1633632859220-2688037177d5?auto=format&fit=crop&fm=jpg&ixlib=rb-4.0.3&q=82&w=1200" alt="巴黎城市天际线与埃菲尔铁塔" />
+        <img src="https://images.unsplash.com/photo-1633632859220-2688037177d5?auto=format&fit=crop&fm=jpg&ixlib=rb-4.0.3&q=82&w=1200" alt="巴黎城市天际线与埃菲尔铁塔" data-i18n-alt="parisPhotoAlt" />
         <div class="photo-credit">Paris</div>
       </div>
     </section>
 
-    <section class="dashboard-grid" aria-label="旅行行程工作区">
+    <section class="dashboard-grid" aria-label="旅行行程工作区" data-i18n-aria-label="workspace">
       <section class="panel schedule-panel" aria-labelledby="schedule-title">
         <section class="panel countdown-panel" aria-live="polite">
           <div class="countdown-panel-inner">
-            <div class="section-kicker">Next fixed time</div>
-            <h2 class="countdown-title" id="next-title">正在寻找下一项…</h2>
+            <div class="section-kicker" data-i18n="nextFixed">Next fixed time</div>
+            <h2 class="countdown-title" id="next-title" data-i18n="findingNext">正在寻找下一项…</h2>
             <div class="countdown-value" id="next-countdown">—</div>
-            <p class="countdown-label" id="next-meta">固定时间项目会在这里倒计时</p>
+            <p class="countdown-label" id="next-meta" data-i18n="countdownHint">固定时间项目会在这里倒计时</p>
           </div>
           <div class="countdown-bar"><span id="countdown-progress"></span></div>
         </section>
         <div class="panel-head">
-          <div><div class="section-kicker">Live itinerary</div><h2 class="panel-title" id="schedule-title">每日行程</h2></div>
-          <label class="filter"><input id="fixed-only" type="checkbox" /> 只看固定时间</label>
+          <div><div class="section-kicker" data-i18n="liveItinerary">Live itinerary</div><h2 class="panel-title" id="schedule-title" data-i18n="dailyItinerary">每日行程</h2></div>
+          <label class="filter"><input id="fixed-only" type="checkbox" /> <span data-i18n="fixedOnly">只看固定时间</span></label>
         </div>
-        <nav class="day-tabs" id="day-tabs" aria-label="选择日期"></nav>
+      <nav class="day-tabs" id="day-tabs" aria-label="选择日期" data-i18n-aria-label="chooseDate"></nav>
         <div id="day-content"></div>
       </section>
 
-      <aside class="side-column" aria-label="提醒与交通">
+      <aside class="side-column" aria-label="提醒与交通" data-i18n-aria-label="remindersAndTransport">
         <section class="panel side-panel" aria-labelledby="transport-title">
-          <div class="section-kicker">Move smart</div>
-          <h2 class="side-title" id="transport-title">交通详情</h2>
-          <p class="side-intro">以下时间均为当地时间；航班号和车次已单独标注。</p>
+          <div class="section-kicker" data-i18n="moveSmart">Move smart</div>
+          <h2 class="side-title" id="transport-title" data-i18n="transportDetails">交通详情</h2>
+          <p class="side-intro" data-i18n="transportIntro">以下时间均为当地时间；航班号和车次已单独标注。</p>
           <div class="transport-list" id="transport-list"></div>
         </section>
 
         <section class="panel side-panel" aria-labelledby="reminder-title">
-          <div class="section-kicker">Don’t miss</div>
-          <div class="side-title-row"><h2 class="side-title" id="reminder-title">备忘提醒</h2><button class="reminder-add" id="reminder-add" type="button" aria-label="新增备忘提醒">+</button></div>
+          <div class="section-kicker" data-i18n="dontMiss">Don’t miss</div>
+          <div class="side-title-row"><h2 class="side-title" id="reminder-title" data-i18n="memoReminders">备忘提醒</h2><button class="reminder-add" id="reminder-add" type="button" aria-label="新增备忘提醒" data-i18n-aria-label="addMemo">+</button></div>
           <div class="reminder-list" id="reminder-list"></div>
         </section>
       </aside>
     </section>
 
-    <footer class="footer"><span>行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。</span><a href="https://www.google.com/maps" target="_blank" rel="noreferrer">打开 Google Maps ↗</a></footer>
+    <footer class="footer"><span data-i18n="footerNote">行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。</span><a data-i18n="openGoogleMaps" href="https://www.google.com/maps" target="_blank" rel="noreferrer">打开 Google Maps ↗</a></footer>
   </main>
 
   <div class="ticket-modal" id="ticket-modal" hidden>
@@ -839,11 +855,11 @@
     <section class="ticket-dialog" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title">
       <div class="ticket-modal-head">
         <div>
-          <div class="ticket-modal-kicker">Ticket details</div>
+          <div class="ticket-modal-kicker" data-i18n="ticketDetails">Ticket details</div>
           <h2 class="ticket-modal-title" id="ticket-modal-title">卢浮宫参观门票</h2>
           <p class="ticket-modal-subtitle" id="ticket-modal-subtitle">9月27日（周日） · 09:00 · Permanent collections</p>
         </div>
-        <button class="ticket-modal-close" type="button" data-ticket-close aria-label="关闭门票信息">×</button>
+        <button class="ticket-modal-close" type="button" data-ticket-close aria-label="关闭门票信息" data-i18n-aria-label="closeTicket">×</button>
       </div>
       <div class="ticket-modal-body">
         <div class="ticket-facts" id="ticket-facts"></div>
@@ -861,16 +877,16 @@
     <section class="ticket-dialog route-dialog" role="dialog" aria-modal="true" aria-labelledby="route-modal-title">
       <div class="ticket-modal-head">
         <div>
-          <div class="ticket-modal-kicker">Route plan</div>
+          <div class="ticket-modal-kicker" data-i18n="routePlan">Route plan</div>
           <h2 class="ticket-modal-title" id="route-modal-title">交通路线</h2>
           <p class="ticket-modal-subtitle" id="route-modal-subtitle">按行程顺序查看这一段移动</p>
         </div>
-        <button class="ticket-modal-close" type="button" data-route-close aria-label="关闭交通路线">×</button>
+        <button class="ticket-modal-close" type="button" data-route-close aria-label="关闭交通路线" data-i18n-aria-label="closeRoute">×</button>
       </div>
       <div class="route-modal-body">
-        <div class="route-path"><div class="route-point"><span class="route-point-label">出发</span><strong class="route-point-value" id="route-origin">—</strong></div><span class="route-path-arrow" aria-hidden="true">→</span><div class="route-point"><span class="route-point-label">到达</span><strong class="route-point-value" id="route-destination">—</strong></div></div>
+        <div class="route-path"><div class="route-point"><span class="route-point-label" data-i18n="departure">出发</span><strong class="route-point-value" id="route-origin">—</strong></div><span class="route-path-arrow" aria-hidden="true">→</span><div class="route-point"><span class="route-point-label" data-i18n="arrival">到达</span><strong class="route-point-value" id="route-destination">—</strong></div></div>
         <div class="route-options" id="route-options"></div>
-        <p class="route-modal-note">公共交通的站点、换乘和预计时间会随当天情况变化；点击方案按钮可打开 Google Maps 查看实时路线。</p>
+        <p class="route-modal-note" data-i18n="routeModalNote">公共交通的站点、换乘和预计时间会随当天情况变化；点击方案按钮可打开 Google Maps 查看实时路线。</p>
       </div>
     </section>
   </div>
@@ -880,15 +896,15 @@
     <section class="ticket-dialog reminder-dialog" role="dialog" aria-modal="true" aria-labelledby="reminder-modal-title">
       <div class="ticket-modal-head">
         <div>
-          <div class="ticket-modal-kicker">Memo</div>
+          <div class="ticket-modal-kicker" data-i18n="memo">Memo</div>
           <h2 class="ticket-modal-title" id="reminder-modal-title">新增备忘</h2>
         </div>
-        <button class="ticket-modal-close" type="button" data-reminder-close aria-label="关闭备忘编辑">×</button>
+        <button class="ticket-modal-close" type="button" data-reminder-close aria-label="关闭备忘编辑" data-i18n-aria-label="closeMemo">×</button>
       </div>
       <form class="reminder-editor" id="reminder-editor-form">
-        <label class="reminder-field"><span>标题</span><input id="reminder-editor-title" type="text" maxlength="60" placeholder="例如：提前预订" required /></label>
-        <label class="reminder-field"><span>内容</span><textarea id="reminder-editor-copy" maxlength="240" placeholder="补充具体时间、地点或注意事项" required></textarea></label>
-        <div class="reminder-editor-actions"><button class="reminder-cancel" type="button" data-reminder-close>取消</button><button class="reminder-save" type="submit">保存</button></div>
+        <label class="reminder-field"><span data-i18n="titleLabel">标题</span><input id="reminder-editor-title" type="text" maxlength="60" placeholder="例如：提前预订" data-i18n-placeholder="titlePlaceholder" required /></label>
+        <label class="reminder-field"><span data-i18n="contentLabel">内容</span><textarea id="reminder-editor-copy" maxlength="240" placeholder="补充具体时间、地点或注意事项" data-i18n-placeholder="contentPlaceholder" required></textarea></label>
+        <div class="reminder-editor-actions"><button class="reminder-cancel" type="button" data-reminder-close data-i18n="cancel">取消</button><button class="reminder-save" type="submit" data-i18n="save">保存</button></div>
       </form>
     </section>
   </div>
@@ -898,14 +914,14 @@
     <section class="ticket-dialog weather-dialog" role="dialog" aria-modal="true" aria-labelledby="weather-modal-title">
       <div class="ticket-modal-head">
         <div>
-          <div class="ticket-modal-kicker">Weather update</div>
-          <h2 class="ticket-modal-title" id="weather-modal-title">城市天气</h2>
-          <p class="ticket-modal-subtitle">打开时更新 · 温度为摄氏度</p>
+          <div class="ticket-modal-kicker" data-i18n="weatherUpdate">Weather update</div>
+          <h2 class="ticket-modal-title" id="weather-modal-title" data-i18n="cityWeather">城市天气</h2>
+          <p class="ticket-modal-subtitle" data-i18n="weatherSubtitle">打开时更新 · 温度为摄氏度</p>
         </div>
-        <button class="ticket-modal-close" type="button" data-weather-close aria-label="关闭天气信息">×</button>
+        <button class="ticket-modal-close" type="button" data-weather-close aria-label="关闭天气信息" data-i18n-aria-label="closeWeather">×</button>
       </div>
       <div class="weather-modal-body">
-        <nav class="weather-tabs" id="weather-tabs" role="tablist" aria-label="选择天气城市"></nav>
+        <nav class="weather-tabs" id="weather-tabs" role="tablist" aria-label="选择天气城市" data-i18n-aria-label="chooseWeatherCity"></nav>
         <div id="weather-content" aria-live="polite"></div>
       </div>
     </section>
@@ -1344,6 +1360,7 @@
     const routeDestinationEl = document.querySelector('#route-destination');
     const routeOptionsEl = document.querySelector('#route-options');
     const weatherOpenButton = document.querySelector('#weather-open');
+    const languageToggle = document.querySelector('#language-toggle');
     const weatherModal = document.querySelector('#weather-modal');
     const weatherTabs = document.querySelector('#weather-tabs');
     const weatherContent = document.querySelector('#weather-content');
@@ -1358,6 +1375,121 @@
     let draggedReminderId = null;
     const weatherState = { activeCity:'paris', loading:false, data:{}, errors:{}, loadedAt:null };
 
+    const languageStorageKey = 'voyage-europe-2026-language';
+    const languageLabels = { zh:'中', en:'EN', fr:'FR' };
+    const uiTranslations = {
+      zh: {
+        brand:'Voyage / 行程板', viewWeather:'查看天气', openSource:'打开原始行程 ↗', languageToggle:'切换语言', tripOverview:'行程概况', tripTitle:'巴黎、罗马与南法', metaDescription:'欧洲旅行行程、交通与固定时间提醒', tripDays:'14 天', tripCities:'6 座城市', parisPhotoAlt:'巴黎城市天际线与埃菲尔铁塔', workspace:'旅行行程工作区',
+        nextFixed:'Next fixed time', findingNext:'正在寻找下一项…', countdownHint:'固定时间项目会在这里倒计时', liveItinerary:'Live itinerary', dailyItinerary:'每日行程', fixedOnly:'只看固定时间', remindersAndTransport:'提醒与交通', moveSmart:'Move smart', transportDetails:'交通详情', transportIntro:'以下时间均为当地时间；航班号和车次已单独标注。', dontMiss:'Don’t miss', memoReminders:'备忘提醒', addMemo:'新增备忘提醒', footerNote:'行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。', openGoogleMaps:'打开 Google Maps ↗',
+        ticketDetails:'Ticket details', closeTicket:'关闭门票信息', routePlan:'Route plan', closeRoute:'关闭交通路线', departure:'出发', arrival:'到达', routeModalNote:'公共交通的站点、换乘和预计时间会随当天情况变化；点击方案按钮可打开 Google Maps 查看实时路线。', memo:'Memo', closeMemo:'关闭备忘编辑', titleLabel:'标题', titlePlaceholder:'例如：提前预订', contentLabel:'内容', contentPlaceholder:'补充具体时间、地点或注意事项', cancel:'取消', save:'保存', weatherUpdate:'Weather update', cityWeather:'城市天气', weatherSubtitle:'打开时更新 · 温度为摄氏度', closeWeather:'关闭天气信息', chooseWeatherCity:'选择天气城市',
+        ticketInfo:'门票信息', openOriginalTicket:'在新窗口打开原始凭证 ↗', routeOpenGoogle:'在 Google Maps 中打开 ↗', routeRecommended:'推荐', publicTransport:'公共交通', walking:'步行', taxi:'打车／网约车', routePlanMove:'查看这一段移动', routeDriving:'按接送或打车安排，打开 Google Maps 查看实时行车路线。', routeTransit:'按行程安排的交通方式出发，打开 Google Maps 查看实时站点、换乘和预计时间。', routeTransitAlt:'查看当天可用的地铁、公交或机场接驳方案。', routeWalkingAlt:'如果天气或时间不合适，可切换为地铁或公交。', routeWalking:'适合短距离移动，出发前确认实时步行时间。', routeTaxi:'查看实时路况下的出租车或网约车路线。',
+        mainTransport:'主要交通', bookedCount:'已预订', todoCount:'待处理', accommodation:'住宿', outfit:'穿搭', dayReminder:'当天提醒', reminderPrefix:'提醒：', noExtraReminder:'暂无额外提醒', emptyDay:'这一天没有符合筛选条件的项目。', routeMapTitle:'当天路线', routeMapNote:'真实地图位置 · 按行程顺序连线', routeMapAria:'真实地图路线', routeMapFoot:'地图使用 OpenStreetMap 底图；餐厅待定的吃饭行程不纳入路线。点击标记可直接打开 Google Maps。', mapOpen:'在 Google Maps 打开',
+        weatherLoading:'正在读取{city}天气…', weatherError:'暂时无法读取{city}天气，请检查网络后重试。', retryWeather:'重新读取', currentWeather:'当前天气', updatedAt:'更新于', todayRange:'今日温度范围', humidity:'湿度', wind:'风速', nextThreeDays:'未来三天', rainProbability:'降雨概率', clockNow:'现在', beijingTime:'北京时间', countdownAhead:'还有', countdownStarted:'已开始／已结束', journeyEnded:'旅程已结束', completedTrip:'本次固定行程已完成', sourceTable:'可以回到原始表格查看完整记录',
+        editMemo:'编辑备忘', newMemo:'新增备忘', completeMemo:'完成', edit:'编辑', delete:'删除', noMemos:'暂无备忘提醒', close:'关闭', previousHotel:'前一晚住宿'
+      },
+      en: {
+        brand:'Voyage / Itinerary', viewWeather:'Weather', openSource:'Open source itinerary ↗', languageToggle:'Switch language', tripOverview:'Trip overview', tripTitle:'Paris, Rome & Southern France', metaDescription:'European itinerary, transport and fixed-time reminders', tripDays:'14 days', tripCities:'6 cities', parisPhotoAlt:'Paris skyline and the Eiffel Tower', workspace:'Travel itinerary workspace',
+        nextFixed:'Next fixed time', findingNext:'Finding the next item…', countdownHint:'Fixed-time events will count down here', liveItinerary:'Live itinerary', dailyItinerary:'Daily itinerary', fixedOnly:'Fixed times only', remindersAndTransport:'Reminders and transport', moveSmart:'Move smart', transportDetails:'Transport details', transportIntro:'All times are local; flight and train numbers are shown separately.', dontMiss:'Don’t miss', memoReminders:'Memo reminders', addMemo:'Add memo reminder', footerNote:'Itinerary data comes from the Google Sheets plan; times follow the plan and countdowns use each city’s local time.', openGoogleMaps:'Open Google Maps ↗',
+        ticketDetails:'Ticket details', closeTicket:'Close ticket details', routePlan:'Route plan', closeRoute:'Close route details', departure:'From', arrival:'To', routeModalNote:'Public transport stops, transfers and travel times may change; open a route option in Google Maps for live details.', memo:'Memo', closeMemo:'Close memo editor', titleLabel:'Title', titlePlaceholder:'For example: Book in advance', contentLabel:'Details', contentPlaceholder:'Add the time, place or practical note', cancel:'Cancel', save:'Save', weatherUpdate:'Weather update', cityWeather:'City weather', weatherSubtitle:'Updated when opened · Celsius', closeWeather:'Close weather', chooseWeatherCity:'Choose a weather city',
+        ticketInfo:'Ticket details', openOriginalTicket:'Open original voucher in a new window ↗', routeOpenGoogle:'Open in Google Maps ↗', routeRecommended:'Recommended', publicTransport:'Public transport', walking:'Walk', taxi:'Taxi / ride-hailing', routePlanMove:'View this transfer', routeDriving:'Use the planned transfer or a taxi; open Google Maps for live driving directions.', routeTransit:'Follow the planned mode and open Google Maps for live stops, transfers and travel time.', routeTransitAlt:'View available metro, bus or airport-transfer options for the day.', routeWalkingAlt:'Switch to metro or bus if the weather or timing is not suitable.', routeWalking:'Suitable for a short distance; check the live walking time before leaving.', routeTaxi:'View taxi or ride-hailing routes with current traffic.',
+        mainTransport:'Main transport', bookedCount:'Booked', todoCount:'To do', accommodation:'Accommodation', outfit:'Outfit', dayReminder:'Day reminders', reminderPrefix:'Note: ', noExtraReminder:'No extra reminders', emptyDay:'No itinerary items match this filter.', routeMapTitle:'Day route', routeMapNote:'Real map positions · connected in itinerary order', routeMapAria:'real map route', routeMapFoot:'Map tiles by OpenStreetMap; meals with an unconfirmed location are excluded. Open a marker in Google Maps.', mapOpen:'Open in Google Maps',
+        weatherLoading:'Loading {city} weather…', weatherError:'Unable to load {city} weather. Check your connection and try again.', retryWeather:'Try again', currentWeather:'Current weather', updatedAt:'Updated', todayRange:'Today’s range', humidity:'Humidity', wind:'Wind', nextThreeDays:'Next three days', rainProbability:'Rain chance', clockNow:'Now', beijingTime:'Beijing time', countdownAhead:'In', countdownStarted:'Started / ended', journeyEnded:'Trip complete', completedTrip:'All fixed itinerary items are complete', sourceTable:'Return to the source table to view the full record',
+        editMemo:'Edit memo', newMemo:'New memo', completeMemo:'Complete', edit:'Edit', delete:'Delete', noMemos:'No memo reminders', close:'Close', previousHotel:'Previous night’s stay'
+      },
+      fr: {
+        brand:'Voyage / Itinéraire', viewWeather:'Météo', openSource:'Ouvrir l’itinéraire source ↗', languageToggle:'Changer de langue', tripOverview:'Vue d’ensemble du voyage', tripTitle:'Paris, Rome et le Sud de la France', metaDescription:'Itinéraire européen, transports et rappels d’horaires fixes', tripDays:'14 jours', tripCities:'6 villes', parisPhotoAlt:'Paris et la tour Eiffel', workspace:'Espace de voyage',
+        nextFixed:'Prochain horaire fixe', findingNext:'Recherche du prochain élément…', countdownHint:'Le compte à rebours des horaires fixes s’affichera ici', liveItinerary:'Itinéraire en direct', dailyItinerary:'Itinéraire du jour', fixedOnly:'Horaires fixes uniquement', remindersAndTransport:'Rappels et transports', moveSmart:'Bien se déplacer', transportDetails:'Détails des transports', transportIntro:'Tous les horaires sont en heure locale ; les numéros de vol et de train sont indiqués séparément.', dontMiss:'À ne pas oublier', memoReminders:'Rappels', addMemo:'Ajouter un rappel', footerNote:'Les données viennent du planning Google Sheets ; les horaires suivent le planning et les comptes à rebours utilisent l’heure locale de chaque ville.', openGoogleMaps:'Ouvrir Google Maps ↗',
+        ticketDetails:'Détails du billet', closeTicket:'Fermer les détails du billet', routePlan:'Itinéraire', closeRoute:'Fermer l’itinéraire', departure:'Départ', arrival:'Arrivée', routeModalNote:'Les arrêts, correspondances et durées des transports publics peuvent changer ; ouvrez une option dans Google Maps pour les informations en temps réel.', memo:'Rappel', closeMemo:'Fermer l’éditeur', titleLabel:'Titre', titlePlaceholder:'Par exemple : Réserver à l’avance', contentLabel:'Détails', contentPlaceholder:'Ajouter l’heure, le lieu ou une note pratique', cancel:'Annuler', save:'Enregistrer', weatherUpdate:'Mise à jour météo', cityWeather:'Météo des villes', weatherSubtitle:'Actualisée à l’ouverture · degrés Celsius', closeWeather:'Fermer la météo', chooseWeatherCity:'Choisir une ville',
+        ticketInfo:'Détails du billet', openOriginalTicket:'Ouvrir le justificatif original ↗', routeOpenGoogle:'Ouvrir dans Google Maps ↗', routeRecommended:'Recommandé', publicTransport:'Transports publics', walking:'À pied', taxi:'Taxi / VTC', routePlanMove:'Voir ce trajet', routeDriving:'Suivez le transfert prévu ou prenez un taxi ; ouvrez Google Maps pour l’itinéraire en temps réel.', routeTransit:'Suivez le mode prévu et ouvrez Google Maps pour les arrêts, correspondances et durées en temps réel.', routeTransitAlt:'Voir les options de métro, bus ou navette aéroport disponibles ce jour-là.', routeWalkingAlt:'Passez au métro ou au bus si la météo ou l’horaire ne conviennent pas.', routeWalking:'Adapté aux courtes distances ; vérifiez la durée à pied avant de partir.', routeTaxi:'Voir les itinéraires en taxi ou VTC selon la circulation.',
+        mainTransport:'Transport principal', bookedCount:'Réservé', todoCount:'À faire', accommodation:'Hébergement', outfit:'Tenue', dayReminder:'Rappel du jour', reminderPrefix:'Rappel : ', noExtraReminder:'Aucun rappel supplémentaire', emptyDay:'Aucune activité ne correspond à ce filtre.', routeMapTitle:'Itinéraire du jour', routeMapNote:'Positions réelles · reliées dans l’ordre du programme', routeMapAria:'itinéraire sur carte réelle', routeMapFoot:'Fond de carte OpenStreetMap ; les repas dont le lieu n’est pas confirmé sont exclus. Ouvrez un point dans Google Maps.', mapOpen:'Ouvrir dans Google Maps',
+        weatherLoading:'Chargement de la météo de {city}…', weatherError:'Impossible de charger la météo de {city}. Vérifiez la connexion puis réessayez.', retryWeather:'Réessayer', currentWeather:'Météo actuelle', updatedAt:'Mise à jour à', todayRange:'Plage du jour', humidity:'Humidité', wind:'Vent', nextThreeDays:'Les trois prochains jours', rainProbability:'Probabilité de pluie', clockNow:'Maintenant', beijingTime:'heure de Pékin', countdownAhead:'Dans', countdownStarted:'Commencé / terminé', journeyEnded:'Voyage terminé', completedTrip:'Tous les horaires fixes sont terminés', sourceTable:'Revenir au tableau source pour voir le détail complet',
+        editMemo:'Modifier le rappel', newMemo:'Nouveau rappel', completeMemo:'Terminé', edit:'Modifier', delete:'Supprimer', noMemos:'Aucun rappel', close:'Fermer', previousHotel:'Hébergement de la veille'
+      }
+    };
+    uiTranslations.zh.chooseDate = '选择日期';
+    uiTranslations.en.chooseDate = 'Choose a date';
+    uiTranslations.fr.chooseDate = 'Choisir une date';
+    const phraseTranslations = {
+      en: {
+        '星期四':'Thursday','星期五':'Friday','星期六':'Saturday','星期日':'Sunday','星期一':'Monday','星期二':'Tuesday','星期三':'Wednesday',
+        '深圳':'Shenzhen','广州':'Guangzhou','迪拜':'Dubai','巴黎':'Paris','罗马':'Rome','尼斯':'Nice','芒通':'Menton','摩纳哥':'Monaco','昂蒂布':'Antibes',
+        '深圳站高铁 → 广州白云站':'High-speed rail: Shenzhen Station → Guangzhou Baiyun Station','预约专车 → 广州白云机场':'Reserved transfer → Guangzhou Baiyun Airport','广州 ✈ 迪拜':'Guangzhou ✈ Dubai','迪拜 ✈ 巴黎':'Dubai ✈ Paris','巴黎奥利机场 T2 → 罗马机场':'Paris Orly T2 → Rome Airport','罗马 T1 → 尼斯 T1':'Rome T1 → Nice T1','尼斯 T2 → 巴黎奥利 T3':'Nice T2 → Paris Orly T3','迪拜 ✈ 广州':'Dubai ✈ Guangzhou','我：巴黎戴高乐机场 ✈ 迪拜':'Me: Charles de Gaulle Airport ✈ Dubai','Calvin：巴黎奥利机场 ✈ 摩洛哥':'Calvin: Paris Orly Airport ✈ Morocco','广州南 → 深圳北（最晚一班）':'Guangzhou South → Shenzhen North (last train)','抵达广州＋接机去广州南站':'Arrive in Guangzhou + transfer to Guangzhou South Station','送机 → 巴黎戴高乐机场':'Airport transfer → Charles de Gaulle Airport',
+        '卢浮宫参观门票':'Louvre Museum ticket','巴黎建筑与遗产之城门票':'Cité architecture ticket','巴黎歌剧院参观票':'Palais Garnier ticket','奥赛美术馆门票':'Musée d’Orsay ticket','塞纳河晚餐预订凭证':'Seine dinner reservation','梵蒂冈博物馆门票':'Vatican Museums ticket','罗马斗兽场门票':'Colosseum ticket','博尔盖塞美术馆门票':'Galleria Borghese ticket','埃兹植物园门票':'Èze Exotic Garden ticket','海军府门票':'Hôtel de la Marine ticket','圣礼拜堂门票':'Sainte-Chapelle ticket','完整门票（含二维码）':'Full ticket (with QR code)','完整电子票（含二维码）':'Full e-ticket (with QR code)','完整预订凭证':'Full reservation voucher','参观日期与时间':'Date and time','参观日期与时段':'Date and time','预约日期与时间':'Reserved date and time','持票人':'Ticket holder','持票人与价格':'Ticket holders and prices','票种与价格':'Ticket type and price','票种':'Ticket type','票面信息':'Ticket details','入场提醒':'Entry reminder','入场位置':'Entry location','公共交通':'Public transport','地址':'Address','价格':'Price','预订信息':'Booking information','预订日期':'Booking date','预订内容':'Booking details','地点与交通':'Location and transport','登船与航程':'Boarding and cruise','着装与座位':'Dress code and seating','打开时更新':'Updated when opened','在新窗口打开原始凭证 ↗':'Open original voucher in a new window ↗',
+        '深圳 → 广州':'Shenzhen → Guangzhou','广州 → 迪拜 → 巴黎':'Guangzhou → Dubai → Paris','广州 → 迪拜':'Guangzhou → Dubai','迪拜 → 巴黎':'Dubai → Paris','巴黎 → 罗马':'Paris → Rome','罗马 → 梵蒂冈 → 罗马':'Rome → Vatican City → Rome','罗马 → 尼斯':'Rome → Nice','尼斯 → 埃兹 → 尼斯':'Nice → Èze → Nice','尼斯 → 芒通 → 摩纳哥 → 尼斯':'Nice → Menton → Monaco → Nice','尼斯 → 昂蒂布 → 尼斯':'Nice → Antibes → Nice','尼斯 → 巴黎':'Nice → Paris','巴黎 → 迪拜':'Paris → Dubai','迪拜 → 广州':'Dubai → Guangzhou','广州南 → 深圳北':'Guangzhou South → Shenzhen North','迪拜 → 广州 → 深圳':'Dubai → Guangzhou → Shenzhen',
+        '高铁，专车':'High-speed rail, private transfer','飞机，包车':'Flight, private tour','地铁，步行':'Metro, walking','飞机，地铁，步行':'Flight, metro, walking','步行':'Walking','步行，飞机':'Walking, flight','火车，步行':'Train, walking','飞机，打车':'Flight, taxi','在飞机上':'On the plane','回家':'Home',
+        '高铁到广州白云站':'High-speed rail to Guangzhou Baiyun Station','预约专车接送':'Reserved private transfer','航班出发':'Flight departure','转机／入境':'Transfer / immigration','包车游，提前一周预订':'Private tour — book one week ahead','接机到酒店':'Airport transfer to hotel','地铁／步行':'Metro / walking','步行／地铁':'Walking / metro','地铁／步行':'Metro / walking','步行，不能迟到':'Walking · do not be late','火车＋步行':'Train + walking','随斗兽场参观':'Part of the Colosseum visit','返回酒店':'Return to hotel','自由安排':'Free time','送机':'Airport transfer','送我去戴高乐机场':'Take me to Charles de Gaulle Airport','Calvin 航班出发':'Calvin’s flight departure','我的航班出发':'My flight departure','提前到达登船':'Arrive early for boarding','赶不上则顺风车／南站过夜':'If missed: rideshare / overnight at the station',
+        '深圳站 → 广州白云站':'Shenzhen Station → Guangzhou Baiyun Station','广州白云站 → 广州白云机场':'Guangzhou Baiyun Station → Guangzhou Baiyun Airport','广州白云国际机场 → 迪拜国际机场':'Guangzhou Baiyun Airport → Dubai International Airport','迪拜国际机场 → 巴黎戴高乐机场':'Dubai International Airport → Paris Charles de Gaulle Airport','巴黎戴高乐机场 → 酒店':'Paris Charles de Gaulle Airport → hotel','巴黎奥利机场 → 罗马菲乌米奇诺机场':'Paris Orly Airport → Rome Fiumicino Airport','罗马菲乌米奇诺机场 → 尼斯蔚蓝海岸机场':'Rome Fiumicino Airport → Nice Côte d’Azur Airport','尼斯蔚蓝海岸机场 → 巴黎奥利机场':'Nice Côte d’Azur Airport → Paris Orly Airport','巴黎市区 → 巴黎戴高乐机场':'Paris city → Charles de Gaulle Airport','巴黎奥利机场 → 摩洛哥':'Paris Orly Airport → Morocco','巴黎戴高乐机场 → 迪拜':'Paris Charles de Gaulle Airport → Dubai',
+        '深圳站 → 广州白云站':'Shenzhen Station → Guangzhou Baiyun Station','深圳火车站':'Shenzhen Railway Station','广州白云火车站':'Guangzhou Baiyun Railway Station','广州白云站':'Guangzhou Baiyun Station','广州白云机场':'Guangzhou Baiyun Airport','广州白云国际机场':'Guangzhou Baiyun Airport','迪拜国际机场':'Dubai International Airport','巴黎戴高乐机场':'Paris Charles de Gaulle Airport','巴黎奥利机场':'Paris Orly Airport','尼斯蔚蓝海岸机场':'Nice Côte d’Azur Airport','尼斯火车站':'Nice-Ville station','深圳北站':'Shenzhen North Railway Station','广州南站':'Guangzhou South Railway Station','深圳北':'Shenzhen North','广州南':'Guangzhou South',
+        '抵达迪拜':'Arrive in Dubai','包车半日游':'Half-day private tour','抵达巴黎＋接机':'Arrive in Paris + airport pickup','埃菲尔铁塔亮灯夜景':'Eiffel Tower lights','回酒店':'Return to hotel','早午餐':'Brunch','巴黎建筑与遗产之城':'Cité de l’architecture et du patrimoine','巴黎歌剧院':'Palais Garnier','弥撒':'Mass','凯旋门':'Arc de Triomphe','老佛爷百货':'Galeries Lafayette','晚餐':'Dinner','卢浮宫参观':'Louvre Museum visit','午餐':'Lunch','杜乐丽花园':'Jardin des Tuileries','奥赛博物馆':'Musée d’Orsay','塞纳河游船晚餐':'Seine dinner cruise','西班牙广场':'Spanish Steps','许愿池':'Trevi Fountain','Vintage 店':'Vintage shop','圣彼得大教堂':'St. Peter’s Basilica','圣天使堡':'Castel Sant’Angelo','纳沃纳广场':'Piazza Navona','鲜花广场':'Campo de’ Fiori','万神殿':'Pantheon','圣依纳爵堂':'Church of St. Ignatius of Loyola','Cuoco e Camicia 晚餐':'Cuoco e Camicia dinner','斗兽场':'Colosseum','古罗马广场＋帕拉蒂尼山':'Roman Forum + Palatine Hill','真理之口':'Bocca della Verità','梵蒂冈博物馆':'Vatican Museums','博尔盖塞美术馆':'Galleria Borghese','博尔盖塞公园':'Villa Borghese','购买南法火车联票':'Buy the South of France rail pass','埃兹植物园':'Èze Exotic Garden','萨雷亚集市':'Cours Saleya Market','城堡山':'Castle Hill','英国人大道':'Promenade des Anglais','天使湾蓝滩':'Blue Beach','芒通：圣米歇尔大教堂':'Menton: Basilica of Saint Michael the Archangel','芒通老城区':'Menton Old Town','蒙特卡洛赌场':'Monte-Carlo Casino','F1 赛道':'F1 circuit','圣马丁花园':'Jardins Saint-Martin','王子宫殿':'Prince’s Palace','普罗旺斯集市':'Marché Provençal','尼斯老城':'Nice Old Town','马塞纳广场':'Place Masséna','生鲜市场':'Fresh market','休息或自由活动':'Rest or free time','酒店 check-in':'Hotel check-in','蒙马特高地＋圣心大教堂':'Montmartre + Sacré-Cœur','早午饭':'Brunch','海军府':'Hôtel de la Marine','圣礼拜堂':'Sainte-Chapelle','巴黎圣母院':'Notre-Dame de Paris','Calvin 出发去机场':'Calvin leaves for the airport',
+        '巴黎（餐厅待定）':'Paris (restaurant TBD)','罗马市区（店铺待定）':'Rome city (shop TBD)','巴黎':'Paris','尼斯':'Nice','尼斯市区市场':'Nice city market','迪拜（包车路线）':'Dubai (private-tour route)','香榭丽舍大街／协和广场':'Champs-Élysées / Place de la Concorde','Pont de l’Alma 登船点':'Pont de l’Alma boarding point','蒙马特高地＋圣心大教堂':'Montmartre + Sacré-Cœur','Calvin 16:00 出发去巴黎奥利机场':'Calvin leaves for Paris Orly Airport at 16:00','17:10 送我去巴黎戴高乐机场':'17:10: take me to Charles de Gaulle Airport','Calvin 18:20 从巴黎奥利机场飞往摩洛哥':'Calvin flies from Paris Orly Airport to Morocco at 18:20','到达后要买巴黎交通卡':'Buy a Paris transit pass after arrival','夜间看埃菲尔铁塔亮灯':'See the Eiffel Tower lights at night','广州白云站已预约专车前往机场':'Private transfer from Guangzhou Baiyun Station to the airport is booked','斗兽场、古罗马广场与帕拉蒂尼山作为一段参观安排':'The Colosseum, Roman Forum and Palatine Hill are one combined visit','赶不上 23:25 高铁就打顺风车；如果也打不到，在广州南站过夜，8 号上午高铁回深圳':'If you miss the 23:25 train, take a rideshare; if that also fails, stay overnight at Guangzhou South and take the morning train to Shenzhen on the 8th',
+        '巴黎歌剧院参观票 25／15 欧':'Palais Garnier tickets €25 / €15','巴黎建筑与遗产之城门票 13 欧／张':'Cité tickets €13 / person','卢浮宫门票 32／22 欧':'Louvre tickets €32 / €22','奥赛博物馆门票 16 欧／张':'Musée d’Orsay tickets €16 / person','塞纳河游船晚餐 170 欧／人':'Seine dinner cruise €170 / person','博尔盖塞美术馆门票 20 欧／张':'Galleria Borghese tickets €20 / person','埃兹植物园门票 10 欧／张':'Èze garden tickets €10 / person','罗马到尼斯机票':'Rome–Nice flight','尼斯到巴黎机票':'Nice–Paris flight','巴黎到罗马机票':'Paris–Rome flight','机票':'Flights','接机服务':'Airport pickup','高铁票':'High-speed rail ticket','专车接送':'Private transfer','送机服务':'Airport transfer service','海军府门票':'Hôtel de la Marine ticket','圣礼拜堂门票':'Sainte-Chapelle ticket','接机服务':'Airport pickup',
+        '包车半日游需提前一周；巴黎交通卡可用 Apple Pay。':'Book the private tour one week ahead; Paris transit can be paid with Apple Pay.','10/1 09:00–11:00 博尔盖塞美术馆，迟到会影响入场。':'Galleria Borghese is 10/1 09:00–11:00; being late may affect entry.','9/27 19:20 塞纳河游船，登船点在 Pont de l’Alma。':'Seine dinner cruise on 9/27 at 19:20; board at Pont de l’Alma.','10/7 赶不上 23:25 高铁时，按顺风车／南站过夜方案处理。':'If you miss the 23:25 train on 10/7, use a rideshare or stay overnight at the station.','18:00 深圳站高铁到广州白云站':'18:00 high-speed rail from Shenzhen Station to Guangzhou Baiyun Station','游船登船点在 Pont de l’Alma，需提前到达':'Cruise boarding point: Pont de l’Alma; arrive early','圣彼得大教堂可现场排队，登顶票可现场购买':'Queue on site at St. Peter’s Basilica; rooftop tickets can be bought on site','晚餐地址：Via di Monte Polacco, 2, I-00184 Roma':'Dinner address: Via di Monte Polacco, 2, I-00184 Roma','博尔盖塞美术馆不能迟到':'Do not be late for Galleria Borghese','到尼斯后买南法火车联票':'Buy the South of France rail pass after arriving in Nice','游乐园博物馆门票约 21 欧／张':'Amusement park museum ticket: about €21 per person','提前预订':'Book in advance','不能迟到':'Do not be late','提前到码头':'Arrive early at the pier','回程留后手':'Keep a backup return plan','自定义提醒':'Custom reminder','埃菲尔铁塔':'Eiffel Tower','卢浮宫博物馆':'Louvre Museum','梵蒂冈圣彼得大教堂':'St. Peter’s Basilica','地铁，步行，飞机':'Metro, walking, flight','步行，火车站':'Walking, train station',
+        '全价票（非 EEA）':'Full-price ticket (non-EEA)','永久藏品参观':'Permanent collection visit','Carrousel 入口或 Pyramid 入口':'Carrousel entrance or Pyramid entrance','Porte des Lions 入口开放至 17:15':'Porte des Lions entrance open until 17:15','地铁 M1 / M7：Palais-Royal / Musée du Louvre':'Metro M1 / M7: Palais-Royal / Musée du Louvre','地铁 M14：Pyramides':'Metro M14: Pyramides','持票人：Yanru Shen':'Ticket holder: Yanru Shen','订单号：21481405':'Order no.: 21481405','合计 · 40 €':'Total · €40','Entrée horodatée · 全价票':'Timed entry · full-price ticket','16 € / 张 · 共 2 张':'€16 / ticket · 2 tickets total','Musée d’Orsay · 奥赛美术馆':'Musée d’Orsay · Musée d’Orsay','PDF 内含两张独立票面和票号':'The PDF contains two separate tickets and ticket numbers','2026/09/27 · 晚餐航次':'2026/09/27 · dinner cruise','19:30 登船：Pont de l’Alma':'19:30 boarding: Pont de l’Alma','20:30 出发 · 22:45 返回港口 · 2 小时 15 分':'20:30 departure · 22:45 return to port · 2 h 15 min','地铁 M9：Alma-Marceau':'Metro M9: Alma-Marceau','需要正装':'Formal dress required','含服务费 · 优先安排靠窗座位':'Service included · window seating preferred','票价 20 € + 预订费 5 €':'Ticket €20 + €5 booking fee','24 小时组合票':'24-hour combo ticket','10 € / 张 · 共 2 张':'€10 / ticket · 2 tickets total','无固定预约时间':'No fixed reservation time','7–9 月：09:00–19:30':'July–September: 09:00–19:30','4–6 月及 10 月：09:00–18:30':'April–June and October: 09:00–18:30','Chinese · 2 张单人票':'Chinese · 2 individual tickets','17 € / 张 · 共 2 张':'€17 / ticket · 2 tickets total','地铁 M1：Concorde 站':'Metro M1: Concorde station','可直接入场':'Direct entry allowed','可使用手机或打印票':'Mobile or printed ticket accepted','地铁 M4：Cité':'Metro M4: Cité','地铁 M1 / M7 / M11 / M14：Châtelet':'Metro M1 / M7 / M11 / M14: Châtelet','入口可能因安检出现排队':'Security queues may occur at the entrance','EEA 票持有人需出示有效身份证或护照':'EEA ticket holders must show valid ID or passport','门票实名、不可转让、不可修改，仅可使用一次。二维码、订单号和完整票面请查看右侧原始 PDF。':'Tickets are issued in the holder’s name, non-transferable and non-modifiable, and valid for one use only. See the original PDF on the right for QR codes, order numbers and full ticket details.','博物馆通常 11:00–19:00 开放，闭馆前 1 小时停止入场；票面二维码和票号请查看右侧 PDF。':'The museum is usually open 11:00–19:00 and stops admission one hour before closing; see the PDF on the right for the ticket QR code and number.','歌剧院票面预约时间为 15:30；请按票面时间前往入口，并准备好电子票。':'The opera house ticket is reserved for 15:30; go to the entrance at the booked time and have the e-ticket ready.','这是定时入场票；二维码和两张独立票面请在右侧 PDF 中分别出示。':'This is a timed-entry ticket; show the QR code and the two separate tickets from the PDF on the right.','请在 19:30 前到 Pont de l’Alma 的餐厅欢迎台出示预订凭证；完整订单信息请查看右侧 PDF。':'Arrive at the Pont de l’Alma restaurant welcome desk before 19:30 and show the reservation voucher; see the PDF on the right for the full order details.','携带电子或纸质票及有效身份证件':'Bring the electronic or paper tickets and valid ID','先由入口外工作人员验证，再前往一楼闸机':'Have staff outside the entrance validate them before proceeding to the ground-floor gates','PDF 内含两张票；到达梵蒂冈博物馆入口后，必须先完成工作人员验证，再刷闸机入场。':'The PDF contains two tickets; at the Vatican Museums entrance, complete staff validation before scanning through the gates.','建议提前 15 分钟到达斗兽场入口':'Arrive at the Colosseum entrance 15 minutes early','需出示身份证件；斗兽场参观时长约 75 分钟':'ID is required; the Colosseum visit takes about 75 minutes','斗兽场仅可按预约时段入场一次':'The Colosseum can be entered once during the reserved time slot','古罗马广场与帕拉蒂尼山可在预约时间前后 24 小时内进入':'The Roman Forum and Palatine Hill can be entered within 24 hours before or after the reserved time','PDF 内含两张独立电子票；请按票面时间提前到达，并分别准备好二维码和身份证件。':'The PDF contains two separate e-tickets; arrive early and have each QR code and ID ready.','两张合计 · 36 €':'Total for two · €36','每位访客只能出示自己的票':'Each visitor must show their own ticket','请把条形码朝上，准备好供入口扫描':'Keep the barcode facing up and ready to be scanned at the entrance','博尔盖塞公园内':'Inside Villa Borghese','票面为有效期票，没有固定预约时段；游览当天请携带二维码并在入口扫码。':'This is a flexible-date ticket with no fixed time slot; bring the QR code and scan it at the entrance.','PDF 内含两张独立电子票，请分别准备好二维码。':'The PDF contains two separate e-tickets; have each QR code ready.','门票允许直接入场；PDF 内含两张独立电子票，请分别准备好二维码。':'Direct entry is allowed; the PDF contains two separate e-tickets, so have each QR code ready.','PDF 内含两张不同票种的门票；请根据持票人身份准备对应证件，并预留安检时间。':'The PDF contains two ticket types; prepare the correct ID for each holder and allow time for security screening.'
+      },
+      fr: {
+        '星期四':'Jeudi','星期五':'Vendredi','星期六':'Samedi','星期日':'Dimanche','星期一':'Lundi','星期二':'Mardi','星期三':'Mercredi',
+        '深圳':'Shenzhen','广州':'Canton','迪拜':'Dubaï','巴黎':'Paris','罗马':'Rome','尼斯':'Nice','芒通':'Menton','摩纳哥':'Monaco','昂蒂布':'Antibes',
+        '深圳站高铁 → 广州白云站':'TGV : gare de Shenzhen → gare de Guangzhou Baiyun','预约专车 → 广州白云机场':'Transfert réservé → aéroport de Guangzhou Baiyun','广州 ✈ 迪拜':'Canton ✈ Dubaï','迪拜 ✈ 巴黎':'Dubaï ✈ Paris','巴黎奥利机场 T2 → 罗马机场':'Paris-Orly T2 → aéroport de Rome','罗马 T1 → 尼斯 T1':'Rome T1 → Nice T1','尼斯 T2 → 巴黎奥利 T3':'Nice T2 → Paris-Orly T3','迪拜 ✈ 广州':'Dubaï ✈ Canton','我：巴黎戴高乐机场 ✈ 迪拜':'Moi : Charles-de-Gaulle ✈ Dubaï','Calvin：巴黎奥利机场 ✈ 摩洛哥':'Calvin : Paris-Orly ✈ Maroc','广州南 → 深圳北（最晚一班）':'Guangzhou Sud → Shenzhen Nord (dernier train)','抵达广州＋接机去广州南站':'Arrivée à Canton + transfert vers la gare de Guangzhou Sud','送机 → 巴黎戴高乐机场':'Transfert → aéroport Charles-de-Gaulle',
+        '卢浮宫参观门票':'Billet du Louvre','巴黎建筑与遗产之城门票':'Billet de la Cité de l’architecture','巴黎歌剧院参观票':'Billet du Palais Garnier','奥赛美术馆门票':'Billet du Musée d’Orsay','塞纳河晚餐预订凭证':'Réservation du dîner sur la Seine','梵蒂冈博物馆门票':'Billet des Musées du Vatican','罗马斗兽场门票':'Billet du Colisée','博尔盖塞美术馆门票':'Billet de la Galerie Borghèse','埃兹植物园门票':'Billet du jardin exotique d’Èze','海军府门票':'Billet de l’Hôtel de la Marine','圣礼拜堂门票':'Billet de la Sainte-Chapelle','完整门票（含二维码）':'Billet complet (avec QR code)','完整电子票（含二维码）':'Billet électronique complet (avec QR code)','完整预订凭证':'Justificatif de réservation complet','参观日期与时间':'Date et heure','参观日期与时段':'Date et horaire','预约日期与时间':'Date et heure réservées','持票人':'Titulaire du billet','持票人与价格':'Titulaires et prix','票种与价格':'Type et prix','票种':'Type de billet','票面信息':'Détails du billet','入场提醒':'Rappel d’entrée','入场位置':'Lieu d’entrée','公共交通':'Transports publics','地址':'Adresse','价格':'Prix','预订信息':'Informations de réservation','预订日期':'Date de réservation','预订内容':'Détails de la réservation','地点与交通':'Lieu et transport','登船与航程':'Embarquement et croisière','着装与座位':'Tenue et placement','打开时更新':'Actualisée à l’ouverture','在新窗口打开原始凭证 ↗':'Ouvrir le justificatif original ↗',
+        '深圳 → 广州':'Shenzhen → Canton','广州 → 迪拜 → 巴黎':'Canton → Dubaï → Paris','广州 → 迪拜':'Canton → Dubaï','迪拜 → 巴黎':'Dubaï → Paris','巴黎 → 罗马':'Paris → Rome','罗马 → 梵蒂冈 → 罗马':'Rome → Vatican → Rome','罗马 → 尼斯':'Rome → Nice','尼斯 → 埃兹 → 尼斯':'Nice → Èze → Nice','尼斯 → 芒通 → 摩纳哥 → 尼斯':'Nice → Menton → Monaco → Nice','尼斯 → 昂蒂布 → 尼斯':'Nice → Antibes → Nice','尼斯 → 巴黎':'Nice → Paris','巴黎 → 迪拜':'Paris → Dubaï','迪拜 → 广州':'Dubaï → Canton','广州南 → 深圳北':'Guangzhou Sud → Shenzhen Nord','迪拜 → 广州 → 深圳':'Dubaï → Canton → Shenzhen',
+        '高铁，专车':'TGV, transfert privé','飞机，包车':'Avion, excursion privée','地铁，步行':'Métro, marche','飞机，地铁，步行':'Avion, métro, marche','步行':'À pied','步行，飞机':'À pied, avion','火车，步行':'Train, marche','飞机，打车':'Avion, taxi','在飞机上':'Dans l’avion','回家':'À la maison',
+        '高铁到广州白云站':'TGV jusqu’à la gare de Guangzhou Baiyun','预约专车接送':'Transfert privé réservé','航班出发':'Départ du vol','转机／入境':'Correspondance / immigration','包车游，提前一周预订':'Excursion privée — réserver une semaine à l’avance','接机到酒店':'Transfert de l’aéroport à l’hôtel','地铁／步行':'Métro / marche','步行／地铁':'Marche / métro','步行，不能迟到':'À pied · ne pas être en retard','火车＋步行':'Train + marche','随斗兽场参观':'Avec la visite du Colisée','返回酒店':'Retour à l’hôtel','自由安排':'Temps libre','送机':'Transfert vers l’aéroport','送我去戴高乐机场':'M’accompagner à l’aéroport Charles-de-Gaulle','Calvin 航班出发':'Départ du vol de Calvin','我的航班出发':'Départ de mon vol','提前到达登船':'Arriver tôt pour l’embarquement','赶不上则顺风车／南站过夜':'Si le train est manqué : covoiturage / nuit à la gare',
+        '深圳站 → 广州白云站':'Gare de Shenzhen → gare de Guangzhou Baiyun','深圳火车站':'Gare ferroviaire de Shenzhen','广州白云火车站':'Gare ferroviaire de Guangzhou Baiyun','广州白云站':'Gare de Guangzhou Baiyun','广州白云机场':'Aéroport de Guangzhou Baiyun','广州白云国际机场':'Aéroport de Guangzhou Baiyun','迪拜国际机场':'Aéroport international de Dubaï','巴黎戴高乐机场':'Aéroport Charles-de-Gaulle','巴黎奥利机场':'Aéroport de Paris-Orly','尼斯蔚蓝海岸机场':'Aéroport Nice Côte d’Azur','尼斯火车站':'Gare de Nice-Ville','深圳北站':'Gare de Shenzhen Nord','广州南站':'Gare de Guangzhou Sud','深圳北':'Shenzhen Nord','广州南':'Guangzhou Sud',
+        '抵达迪拜':'Arrivée à Dubaï','包车半日游':'Excursion privée d’une demi-journée','抵达巴黎＋接机':'Arrivée à Paris + transfert','埃菲尔铁塔亮灯夜景':'Illuminations de la tour Eiffel','回酒店':'Retour à l’hôtel','早午餐':'Brunch','巴黎建筑与遗产之城':'Cité de l’architecture et du patrimoine','巴黎歌剧院':'Palais Garnier','弥撒':'Messe','凯旋门':'Arc de Triomphe','老佛爷百货':'Galeries Lafayette','晚餐':'Dîner','卢浮宫参观':'Visite du Louvre','午餐':'Déjeuner','杜乐丽花园':'Jardin des Tuileries','奥赛博物馆':'Musée d’Orsay','塞纳河游船晚餐':'Dîner-croisière sur la Seine','西班牙广场':'Place d’Espagne','许愿池':'Fontaine de Trevi','Vintage 店':'Boutique vintage','圣彼得大教堂':'Basilique Saint-Pierre','圣天使堡':'Château Saint-Ange','纳沃纳广场':'Piazza Navona','鲜花广场':'Campo de’ Fiori','万神殿':'Panthéon','圣依纳爵堂':'Église Saint-Ignace-de-Loyola','Cuoco e Camicia 晚餐':'Dîner Cuoco e Camicia','斗兽场':'Colisée','古罗马广场＋帕拉蒂尼山':'Forum romain + mont Palatin','真理之口':'Bouche de la Vérité','梵蒂冈博物馆':'Musées du Vatican','博尔盖塞美术馆':'Galerie Borghèse','博尔盖塞公园':'Villa Borghèse','购买南法火车联票':'Acheter le pass ferroviaire du Sud de la France','埃兹植物园':'Jardin exotique d’Èze','萨雷亚集市':'Marché du Cours Saleya','城堡山':'Colline du Château','英国人大道':'Promenade des Anglais','天使湾蓝滩':'Blue Beach','芒通：圣米歇尔大教堂':'Menton : basilique Saint-Michel-Archange','芒通老城区':'Vieille ville de Menton','蒙特卡洛赌场':'Casino de Monte-Carlo','F1 赛道':'Circuit de F1','圣马丁花园':'Jardins Saint-Martin','王子宫殿':'Palais princier','普罗旺斯集市':'Marché provençal','尼斯老城':'Vieille ville de Nice','马塞纳广场':'Place Masséna','生鲜市场':'Marché de produits frais','休息或自由活动':'Repos ou temps libre','酒店 check-in':'Arrivée à l’hôtel','蒙马特高地＋圣心大教堂':'Montmartre + Sacré-Cœur','早午饭':'Brunch','海军府':'Hôtel de la Marine','圣礼拜堂':'Sainte-Chapelle','巴黎圣母院':'Notre-Dame de Paris','Calvin 出发去机场':'Calvin part pour l’aéroport',
+        '巴黎（餐厅待定）':'Paris (restaurant à confirmer)','罗马市区（店铺待定）':'Centre de Rome (boutique à confirmer)','巴黎':'Paris','尼斯':'Nice','尼斯市区市场':'Marché du centre de Nice','迪拜（包车路线）':'Dubaï (circuit privé)','香榭丽舍大街／协和广场':'Champs-Élysées / place de la Concorde','Pont de l’Alma 登船点':'Point d’embarquement Pont de l’Alma','到达后要买巴黎交通卡':'Acheter un pass de transport parisien après l’arrivée','夜间看埃菲尔铁塔亮灯':'Voir les illuminations de la tour Eiffel le soir','广州白云站已预约专车前往机场':'Transfert privé réservé de la gare de Guangzhou Baiyun à l’aéroport','Calvin 16:00 出发去巴黎奥利机场':'Calvin part pour Paris-Orly à 16 h','17:10 送我去巴黎戴高乐机场':'17 h 10 : m’accompagner à Charles-de-Gaulle','Calvin 18:20 从巴黎奥利机场飞往摩洛哥':'Calvin prend son vol d’Orly vers le Maroc à 18 h 20','斗兽场、古罗马广场与帕拉蒂尼山作为一段参观安排':'Le Colisée, le Forum romain et le mont Palatin forment une seule visite','赶不上 23:25 高铁就打顺风车；如果也打不到，在广州南站过夜，8 号上午高铁回深圳':'Si le TGV de 23 h 25 est manqué, prendre un covoiturage ; sinon dormir à Guangzhou Sud et prendre le train du matin vers Shenzhen le 8',
+        '巴黎歌剧院参观票 25／15 欧':'Billets Palais Garnier 25 € / 15 €','巴黎建筑与遗产之城门票 13 欧／张':'Billets Cité 13 € / personne','卢浮宫门票 32／22 欧':'Billets du Louvre 32 € / 22 €','奥赛博物馆门票 16 欧／张':'Billets Musée d’Orsay 16 € / personne','塞纳河游船晚餐 170 欧／人':'Dîner-croisière 170 € / personne','博尔盖塞美术馆门票 20 欧／张':'Billets Galerie Borghèse 20 € / personne','埃兹植物园门票 10 欧／张':'Billets jardin d’Èze 10 € / personne','罗马到尼斯机票':'Vol Rome–Nice','尼斯到巴黎机票':'Vol Nice–Paris','巴黎到罗马机票':'Vol Paris–Rome','机票':'Vols','接机服务':'Transfert aéroport','高铁票':'Billet de TGV','专车接送':'Transfert privé','送机服务':'Transfert vers l’aéroport','海军府门票':'Billet Hôtel de la Marine','圣礼拜堂门票':'Billet Sainte-Chapelle',
+        '包车半日游需提前一周；巴黎交通卡可用 Apple Pay。':'Réserver l’excursion privée une semaine à l’avance ; le transport parisien peut être payé avec Apple Pay.','10/1 09:00–11:00 博尔盖塞美术馆，迟到会影响入场。':'Galerie Borghèse le 1/10 de 09:00 à 11:00 ; un retard peut compromettre l’entrée.','9/27 19:20 塞纳河游船，登船点在 Pont de l’Alma。':'Dîner-croisière le 27/09 à 19:20 ; embarquement au Pont de l’Alma.','10/7 赶不上 23:25 高铁时，按顺风车／南站过夜方案处理。':'Si le TGV de 23:25 est manqué le 7/10, prendre un covoiturage ou passer la nuit à la gare.','18:00 深圳站高铁到广州白云站':'18 h 00 : TGV de la gare de Shenzhen à la gare de Guangzhou Baiyun','游船登船点在 Pont de l’Alma，需提前到达':'Embarquement au Pont de l’Alma ; arriver tôt','圣彼得大教堂可现场排队，登顶票可现场购买':'Faire la queue sur place à la basilique Saint-Pierre ; les billets pour la coupole s’achètent sur place','晚餐地址：Via di Monte Polacco, 2, I-00184 Roma':'Adresse du dîner : Via di Monte Polacco, 2, I-00184 Roma','博尔盖塞美术馆不能迟到':'Ne pas être en retard pour la Galerie Borghèse','到尼斯后买南法火车联票':'Acheter le pass ferroviaire du Sud de la France après l’arrivée à Nice','游乐园博物馆门票约 21 欧／张':'Billet du musée du parc : environ 21 € par personne','提前预订':'Réserver à l’avance','不能迟到':'Ne pas être en retard','提前到码头':'Arriver tôt au quai','回程留后手':'Prévoir un plan B pour le retour','自定义提醒':'Rappel personnalisé','埃菲尔铁塔':'Tour Eiffel','卢浮宫博物馆':'Musée du Louvre','梵蒂冈圣彼得大教堂':'Basilique Saint-Pierre','地铁，步行，飞机':'Métro, marche, avion','步行，火车站':'À pied, gare',
+        '全价票（非 EEA）':'Billet plein tarif (hors EEE)','永久藏品参观':'Visite des collections permanentes','Carrousel 入口或 Pyramid 入口':'Entrée Carrousel ou entrée Pyramide','Porte des Lions 入口开放至 17:15':'Entrée Porte des Lions ouverte jusqu’à 17 h 15','地铁 M1 / M7：Palais-Royal / Musée du Louvre':'Métro M1 / M7 : Palais-Royal / Musée du Louvre','地铁 M14：Pyramides':'Métro M14 : Pyramides','持票人：Yanru Shen':'Titulaire : Yanru Shen','订单号：21481405':'N° de commande : 21481405','合计 · 40 €':'Total · 40 €','Entrée horodatée · 全价票':'Entrée horodatée · plein tarif','16 € / 张 · 共 2 张':'16 € / billet · 2 billets au total','Musée d’Orsay · 奥赛美术馆':'Musée d’Orsay · Musée d’Orsay','PDF 内含两张独立票面和票号':'Le PDF contient deux billets distincts et leurs numéros','2026/09/27 · 晚餐航次':'27/09/2026 · dîner-croisière','19:30 登船：Pont de l’Alma':'Embarquement à 19 h 30 : Pont de l’Alma','20:30 出发 · 22:45 返回港口 · 2 小时 15 分':'Départ à 20 h 30 · retour au port à 22 h 45 · 2 h 15','地铁 M9：Alma-Marceau':'Métro M9 : Alma-Marceau','需要正装':'Tenue de soirée exigée','含服务费 · 优先安排靠窗座位':'Service compris · préférence pour une place près de la fenêtre','票价 20 € + 预订费 5 €':'Billet 20 € + frais de réservation 5 €','24 小时组合票':'Billet combiné valable 24 h','10 € / 张 · 共 2 张':'10 € / billet · 2 billets au total','无固定预约时间':'Sans horaire de réservation fixe','7–9 月：09:00–19:30':'Juillet–septembre : 09:00–19:30','4–6 月及 10 月：09:00–18:30':'Avril–juin et octobre : 09:00–18:30','Chinese · 2 张单人票':'Chinese · 2 billets individuels','17 € / 张 · 共 2 张':'17 € / billet · 2 billets au total','地铁 M1：Concorde 站':'Métro M1 : station Concorde','可直接入场':'Entrée directe autorisée','可使用手机或打印票':'Billet mobile ou imprimé accepté','地铁 M4：Cité':'Métro M4 : Cité','地铁 M1 / M7 / M11 / M14：Châtelet':'Métro M1 / M7 / M11 / M14 : Châtelet','入口可能因安检出现排队':'Une file peut se former à cause du contrôle de sécurité','EEA 票持有人需出示有效身份证或护照':'Les titulaires de billets EEE doivent présenter une pièce d’identité ou un passeport valide','门票实名、不可转让、不可修改，仅可使用一次。二维码、订单号和完整票面请查看右侧原始 PDF。':'Billets nominatifs, non cessibles et non modifiables, valables une seule fois. Consultez le PDF original à droite pour les QR codes, numéros de commande et détails complets.','博物馆通常 11:00–19:00 开放，闭馆前 1 小时停止入场；票面二维码和票号请查看右侧 PDF。':'Le musée est généralement ouvert de 11 h à 19 h et cesse les entrées une heure avant la fermeture ; consultez le PDF à droite pour le QR code et le numéro du billet.','歌剧院票面预约时间为 15:30；请按票面时间前往入口，并准备好电子票。':'Le billet de l’opéra est réservé à 15 h 30 ; rendez-vous à l’entrée à l’heure prévue avec le billet électronique.','这是定时入场票；二维码和两张独立票面请在右侧 PDF 中分别出示。':'Il s’agit d’un billet à horaire fixe ; présentez le QR code et les deux billets du PDF à droite.','请在 19:30 前到 Pont de l’Alma 的餐厅欢迎台出示预订凭证；完整订单信息请查看右侧 PDF。':'Arrivez au comptoir d’accueil du restaurant de Pont de l’Alma avant 19 h 30 et présentez le justificatif ; consultez le PDF à droite pour la commande complète.','携带电子或纸质票及有效身份证件':'Apporter les billets électroniques ou papier et une pièce d’identité valide','先由入口外工作人员验证，再前往一楼闸机':'Faire valider les billets par le personnel à l’extérieur avant de se rendre aux portiques du rez-de-chaussée','PDF 内含两张票；到达梵蒂冈博物馆入口后，必须先完成工作人员验证，再刷闸机入场。':'Le PDF contient deux billets ; à l’entrée des Musées du Vatican, faire valider les billets avant de franchir les portiques.','建议提前 15 分钟到达斗兽场入口':'Arriver 15 minutes en avance à l’entrée du Colisée','需出示身份证件；斗兽场参观时长约 75 分钟':'Une pièce d’identité est requise ; la visite du Colisée dure environ 75 minutes','斗兽场仅可按预约时段入场一次':'L’entrée au Colisée n’est possible qu’une fois pendant le créneau réservé','古罗马广场与帕拉蒂尼山可在预约时间前后 24 小时内进入':'Le Forum romain et le mont Palatin sont accessibles dans les 24 heures avant ou après le créneau réservé','PDF 内含两张独立电子票；请按票面时间提前到达，并分别准备好二维码和身份证件。':'Le PDF contient deux billets électroniques distincts ; arriver en avance avec chaque QR code et une pièce d’identité.','两张合计 · 36 €':'Total pour deux · 36 €','每位访客只能出示自己的票':'Chaque visiteur doit présenter son propre billet','请把条形码朝上，准备好供入口扫描':'Garder le code-barres vers le haut, prêt à être scanné à l’entrée','博尔盖塞公园内':'Dans la villa Borghèse','票面为有效期票，没有固定预约时段；游览当天请携带二维码并在入口扫码。':'Ce billet est valable pendant sa période de validité, sans créneau fixe ; apporter le QR code et le scanner à l’entrée.','PDF 内含两张独立电子票，请分别准备好二维码。':'Le PDF contient deux billets électroniques distincts ; préparer chaque QR code.','门票允许直接入场；PDF 内含两张独立电子票，请分别准备好二维码。':'L’entrée directe est autorisée ; le PDF contient deux billets électroniques distincts, avec un QR code pour chacun.','PDF 内含两张不同票种的门票；请根据持票人身份准备对应证件，并预留安检时间。':'Le PDF contient deux types de billets ; préparer la pièce d’identité adaptée à chaque titulaire et prévoir le contrôle de sécurité.'
+      }
+    };
+    const supplementalPhraseTranslations = {
+      en: {
+        '包车游（提前一周）':'Private tour (book one week ahead)','巴黎交通卡（Apple Pay）':'Paris transit pass (Apple Pay)','圣彼得大教堂登顶票 10 欧／张':'St. Peter’s Basilica dome ticket €10 / person','万神殿门票 7 欧／张':'Pantheon ticket €7 / person','罗马斗兽场 18 欧／张':'Colosseum ticket €18 / person','梵蒂冈博物馆门票 25 欧／张':'Vatican Museums ticket €25 / person','星期天':'Sunday','巴黎市区 → 巴黎奥利机场':'Paris city → Paris Orly Airport','玛黑区逛街':'Le Marais shopping','最晚一班高铁票（或顺风车）':'Last high-speed train ticket (or rideshare)','迪拜国际机场 → 广州白云国际机场':'Dubai International Airport → Guangzhou Baiyun Airport','广州白云国际机场 → 广州南站':'Guangzhou Baiyun Airport → Guangzhou South Station','广州南站 → 深圳北站':'Guangzhou South Station → Shenzhen North Railway Station','大件行李、滑板和滑板车不可带入':'Large luggage, skateboards and scooters are not allowed inside','rue Scribe 与 rue Auber 交界入口':'Entrance at the junction of rue Scribe and rue Auber','斗兽场、古罗马广场、帕拉蒂尼山':'Colosseum, Roman Forum and Palatine Hill','票面规则':'Ticket rules','Yanru Shen · 2 张票':'Yanru Shen · 2 tickets','这是不能迟到的预约时段票；PDF 内含两张独立票面，请分别准备好条形码。':'This is a timed ticket; the PDF contains two separate tickets, so have each barcode ready.','入口处出示打印票或手机电子票':'Show a printed ticket or mobile e-ticket at the entrance','请调高屏幕亮度并放大二维码':'Raise the screen brightness and enlarge the QR code','完整门票（含条形码）':'Full ticket (with barcode)','完整门票（含电子票）':'Full ticket (with e-ticket)'},
+      fr: {
+        '包车游（提前一周）':'Excursion privée (réserver une semaine à l’avance)','巴黎交通卡（Apple Pay）':'Pass de transport parisien (Apple Pay)','圣彼得大教堂登顶票 10 欧／张':'Billet pour la coupole de Saint-Pierre : 10 € / personne','万神殿门票 7 欧／张':'Billet du Panthéon : 7 € / personne','罗马斗兽场 18 欧／张':'Billet du Colisée : 18 € / personne','梵蒂冈博物馆门票 25 欧／张':'Billet des Musées du Vatican : 25 € / personne','星期天':'Dimanche','巴黎市区 → 巴黎奥利机场':'Paris → aéroport de Paris-Orly','玛黑区逛街':'Shopping dans le Marais','最晚一班高铁票（或顺风车）':'Billet du dernier TGV (ou covoiturage)','迪拜国际机场 → 广州白云国际机场':'Aéroport international de Guangzhou Baiyun → aéroport international de Dubaï','广州白云国际机场 → 广州南站':'Aéroport de Guangzhou Baiyun → gare de Guangzhou Sud','广州南站 → 深圳北站':'Gare de Guangzhou Sud → gare de Shenzhen Nord','广州白云国际机场 → 迪拜国际机场':'Aéroport de Guangzhou Baiyun → aéroport international de Dubaï','迪拜国际机场 → 巴黎戴高乐机场':'Aéroport international de Dubaï → aéroport Charles-de-Gaulle','巴黎戴高乐机场 → 酒店':'Aéroport Charles-de-Gaulle → hôtel','巴黎奥利机场 → 罗马菲乌米奇诺机场':'Aéroport de Paris-Orly → aéroport de Rome-Fiumicino','罗马菲乌米奇诺机场 → 尼斯蔚蓝海岸机场':'Aéroport de Rome-Fiumicino → aéroport Nice Côte d’Azur','尼斯蔚蓝海岸机场 → 巴黎奥利机场':'Aéroport Nice Côte d’Azur → aéroport de Paris-Orly','巴黎市区 → 巴黎戴高乐机场':'Paris → aéroport Charles-de-Gaulle','巴黎奥利机场 → 摩洛哥':'Aéroport de Paris-Orly → Maroc','巴黎戴高乐机场 → 迪拜':'Aéroport Charles-de-Gaulle → Dubaï','大件行李、滑板和滑板车不可带入':'Les bagages volumineux, skateboards et trottinettes sont interdits à l’intérieur','rue Scribe 与 rue Auber 交界入口':'Entrée à l’angle de la rue Scribe et de la rue Auber','斗兽场、古罗马广场、帕拉蒂尼山':'Colisée, Forum romain et mont Palatin','票面规则':'Règles du billet','Yanru Shen · 2 张票':'Yanru Shen · 2 billets','这是不能迟到的预约时段票；PDF 内含两张独立票面，请分别准备好条形码。':'Billet à horaire fixe : le PDF contient deux billets distincts ; préparer chaque code-barres.','入口处出示打印票或手机电子票':'Présenter un billet imprimé ou mobile à l’entrée','请调高屏幕亮度并放大二维码':'Augmenter la luminosité et agrandir le QR code','完整门票（含条形码）':'Billet complet (avec code-barres)','完整门票（含电子票）':'Billet complet (avec billet électronique)'}
+    };
+    const tokenTranslations = {
+      en: [
+        ['抵达后','After arrival'], ['上午','Morning'], ['下午','Afternoon'], ['晚上','Evening'], ['夜间','Evening'], ['全天','All day'], ['周日','Sunday'], ['周一','Monday'], ['周二','Tuesday'], ['周三','Wednesday'], ['周四','Thursday'], ['周五','Friday'], ['周六','Saturday'], ['深圳','Shenzhen'], ['广州','Guangzhou'], ['白云','Baiyun'], ['迪拜','Dubai'], ['巴黎','Paris'], ['罗马','Rome'], ['尼斯','Nice'], ['芒通','Menton'], ['摩纳哥','Monaco'], ['昂蒂布','Antibes'], ['梵蒂冈','Vatican'], ['南法','South of France'], ['博物馆','museum'], ['植物园','botanical garden'], ['转机','Transfer'], ['抵达','Arrival'], ['出发','Departure'], ['接机','Airport pickup'], ['送机','Airport drop-off'], ['包车','Private tour'], ['高铁','High-speed rail'], ['火车','Train'], ['飞机','Flight'], ['航班','Flight'], ['地铁','Metro'], ['公交','Bus'], ['步行','Walking'], ['打车','Taxi'], ['餐厅待定','restaurant TBD'], ['店铺待定','shop TBD'], ['市区','city center'], ['路线','route'], ['酒店','hotel'], ['机场','Airport'], ['车站','station'], ['站','Station'], ['起飞','departs'], ['落地','lands'], ['开始值机','check-in opens'], ['座位','seat'], ['检票口','gate'], ['车厢','carriage'], ['最晚一班','last service'], ['需提前在 APP 值机','check in on the app in advance'], ['顺风车','rideshare'], ['南站过夜','overnight at South Station'], ['航班号','flight number'], ['车次','train number'], ['门票','ticket'], ['全价票','full-price ticket'], ['入口开放至','entrance open until'], ['开放至','open until'], ['入口','entrance'], ['出口','exit'], ['持票人：','Ticket holder: '], ['订单号：','Order no.: '], ['合计','Total'], ['票价','Ticket price'], ['预订费','booking fee'], ['费用','fee'], ['张','tickets'], ['共','total'], ['两张','two tickets'], ['单人票','individual ticket'], ['打印票','printed ticket'], ['手机电子票','mobile e-ticket'], ['出示','show'], ['调高屏幕亮度','raise the screen brightness'], ['放大','enlarge'], ['扫码','scan the QR code'], ['不可转让','non-transferable'], ['不可修改','cannot be modified'], ['不可更改','changes not allowed'], ['不可退款','no refunds'], ['仅可使用一次','single use only'], ['二维码','QR code'], ['条形码','barcode'], ['票号','ticket number'], ['票面','ticket'], ['大件行李','large luggage'], ['滑板车','scooters'], ['滑板','skateboards'], ['不可带入','not allowed inside'], ['交界入口','entrance at the junction of'], ['晚餐航次','dinner cruise'], ['登船','boarding'], ['返回港口','return to port'], ['小时','hours'], ['分','min'], ['人','guests'], ['需要正装','formal dress required'], ['含服务费','service included'], ['优先安排靠窗座位','window seating preferred'], ['开放时间','opening hours'], ['有效期','validity'], ['无固定预约时间','no fixed reservation time'], ['参观地点','venue'], ['参观项目','visit'], ['包含项目','includes'], ['入场方式','entry method'], ['票面规则','ticket rules'], ['地址与交通','address and transport'], ['与',' and '], ['及',' and '], ['年','year'],
+        ['白色蕾丝裙','white lace dress'], ['白色吊带长裙','white slip dress'], ['白碎花长裙','white floral maxi dress'], ['金色礼服裙','gold evening dress'], ['黄色短上衣','yellow crop top'], ['紫色长裙','purple dress'], ['红色格裙','red plaid skirt'], ['灰珍珠项链','grey pearl necklace'], ['红色花裙子','red floral dress'], ['白色礼裙','white formal dress'], ['橘色长裙','orange dress'], ['黄色长裙','yellow dress'], ['格子长裙','plaid maxi dress'], ['短外套','short jacket'], ['蝴蝶项链','butterfly necklace'], ['蝴蝶手链','butterfly bracelet'], ['珍珠项链','pearl necklace'], ['爱心项链','heart necklace'], ['银色单鞋','silver flats'], ['白色高跟','white heels'], ['米色上衣','beige top'], ['腰链','waist chain'], ['牛仔裤','jeans'], ['外套','jacket'], ['运动鞋','sneakers'], ['风衣','trench coat'], ['帽子','hat'], ['戒指','ring']
+      ],
+      fr: [
+        ['抵达后','Après l’arrivée'], ['上午','Matin'], ['下午','Après-midi'], ['晚上','Soir'], ['夜间','Soir'], ['全天','Toute la journée'], ['周日','dimanche'], ['周一','lundi'], ['周二','mardi'], ['周三','mercredi'], ['周四','jeudi'], ['周五','vendredi'], ['周六','samedi'], ['深圳','Shenzhen'], ['广州','Canton'], ['白云','Baiyun'], ['迪拜','Dubaï'], ['巴黎','Paris'], ['罗马','Rome'], ['尼斯','Nice'], ['芒通','Menton'], ['摩纳哥','Monaco'], ['昂蒂布','Antibes'], ['梵蒂冈','Vatican'], ['南法','Sud de la France'], ['博物馆','musée'], ['植物园','jardin botanique'], ['转机','Correspondance'], ['抵达','Arrivée'], ['出发','Départ'], ['接机','Transfert aéroport'], ['送机','Transfert vers l’aéroport'], ['包车','Excursion privée'], ['高铁','TGV'], ['火车','Train'], ['飞机','Avion'], ['航班','Vol'], ['地铁','Métro'], ['公交','Bus'], ['步行','À pied'], ['打车','Taxi'], ['餐厅待定','restaurant à confirmer'], ['店铺待定','boutique à confirmer'], ['市区','centre-ville'], ['路线','itinéraire'], ['酒店','hôtel'], ['机场','aéroport'], ['车站','gare'], ['站','gare'], ['起飞','départ'], ['落地','arrivée'], ['开始值机','ouverture de l’enregistrement'], ['座位','siège'], ['检票口','porte'], ['车厢','voiture'], ['最晚一班','dernier service'], ['需提前在 APP 值机','enregistrement préalable dans l’application'], ['顺风车','covoiturage'], ['南站过夜','nuit à la gare de Guangzhou Sud'], ['航班号','numéro de vol'], ['车次','numéro de train'], ['门票','billet'], ['全价票','plein tarif'], ['入口开放至','entrée ouverte jusqu’à'], ['开放至','ouvert jusqu’à'], ['入口','entrée'], ['出口','sortie'], ['持票人：','Titulaire : '], ['订单号：','N° de commande : '], ['合计','Total'], ['票价','Prix du billet'], ['预订费','frais de réservation'], ['费用','frais'], ['张','billets'], ['共','au total'], ['两张','deux billets'], ['单人票','billet individuel'], ['打印票','billet imprimé'], ['手机电子票','billet électronique mobile'], ['出示','présenter'], ['调高屏幕亮度','augmenter la luminosité'], ['放大','agrandir'], ['扫码','scanner le QR code'], ['不可转让','non cessible'], ['不可修改','non modifiable'], ['不可更改','modifications interdites'], ['不可退款','non remboursable'], ['仅可使用一次','valable une seule fois'], ['二维码','QR code'], ['条形码','code-barres'], ['票号','numéro du billet'], ['票面','billet'], ['大件行李','bagages volumineux'], ['滑板车','trottinettes'], ['滑板','skateboards'], ['不可带入','non autorisé à l’intérieur'], ['交界入口','entrée à l’angle de'], ['晚餐航次','dîner-croisière'], ['登船','embarquement'], ['返回港口','retour au port'], ['小时','heures'], ['分','min'], ['人','personnes'], ['需要正装','tenue de soirée exigée'], ['含服务费','service compris'], ['优先安排靠窗座位','préférence pour une place près de la fenêtre'], ['开放时间','horaires d’ouverture'], ['有效期','validité'], ['无固定预约时间','sans horaire fixe'], ['参观地点','lieu de visite'], ['参观项目','visite'], ['包含项目','comprend'], ['入场方式','modalités d’entrée'], ['票面规则','règles du billet'], ['地址与交通','adresse et transport'], ['与',' et '], ['及',' et '], ['年','année'],
+        ['白色蕾丝裙','robe blanche en dentelle'], ['白色吊带长裙','robe blanche à bretelles'], ['白碎花长裙','robe longue blanche fleurie'], ['金色礼服裙','robe de soirée dorée'], ['黄色短上衣','crop top jaune'], ['紫色长裙','robe violette'], ['红色格裙','jupe rouge à carreaux'], ['灰珍珠项链','collier de perles grises'], ['红色花裙子','robe rouge fleurie'], ['白色礼裙','robe blanche habillée'], ['橘色长裙','robe orange'], ['黄色长裙','robe jaune'], ['格子长裙','robe longue à carreaux'], ['短外套','veste courte'], ['蝴蝶项链','collier papillon'], ['蝴蝶手链','bracelet papillon'], ['珍珠项链','collier de perles'], ['爱心项链','collier cœur'], ['银色单鞋','chaussures plates argentées'], ['白色高跟','talons blancs'], ['米色上衣','haut beige'], ['腰链','chaîne de taille'], ['牛仔裤','jean'], ['外套','veste'], ['运动鞋','baskets'], ['风衣','trench'], ['帽子','chapeau'], ['戒指','bague']
+      ]
+    };
+    const supplementalTranslations = {
+      en: [['完整门票','Full ticket'], ['完整电子票','Full e-ticket'], ['完整预订凭证','Full reservation voucher'], ['含二维码','with QR code'], ['含条形码','with barcode'], ['含电子票','with e-ticket'], ['埃兹村植物园','Èze village garden'], ['博物馆','museum'], ['植物园','botanical garden'], ['深圳','Shenzhen'], ['广州','Guangzhou'], ['白云','Baiyun'], ['迪拜','Dubai'], ['巴黎','Paris'], ['罗马','Rome'], ['尼斯','Nice'], ['梵蒂冈','Vatican'], ['南法','South of France']],
+      fr: [['完整门票','Billet complet'], ['完整电子票','Billet électronique complet'], ['完整预订凭证','Justificatif de réservation complet'], ['含二维码','avec QR code'], ['含条形码','avec code-barres'], ['含电子票','avec billet électronique'], ['埃兹村植物园','Jardin du village d’Èze'], ['博物馆','musée'], ['植物园','jardin botanique'], ['深圳','Shenzhen'], ['广州','Canton'], ['白云','Baiyun'], ['迪拜','Dubaï'], ['巴黎','Paris'], ['罗马','Rome'], ['尼斯','Nice'], ['梵蒂冈','Vatican'], ['南法','Sud de la France']]
+    };
+    let activeLanguage = (() => {
+      try {
+        const saved = window.localStorage.getItem(languageStorageKey);
+        return ['zh','en','fr'].includes(saved) ? saved : 'zh';
+      } catch (error) { return 'zh'; }
+    })();
+    const t = (key) => uiTranslations[activeLanguage]?.[key] || uiTranslations.zh[key] || key;
+    const translatePhrase = (value) => {
+      if (value === null || value === undefined) return '';
+      const source = String(value);
+      const exact = phraseTranslations[activeLanguage]?.[source] || supplementalPhraseTranslations[activeLanguage]?.[source];
+      if (exact) return exact;
+      let translated = [...(supplementalTranslations[activeLanguage] || []), ...(tokenTranslations[activeLanguage] || [])].reduce((text, [from, to]) => text.split(from).join(to), source);
+      if (activeLanguage !== 'zh') translated = translated.replace(/(\d{1,2})月(\d{1,2})日/g, (_, month, day) => activeLanguage === 'fr' ? `${day}/${month}` : `${month}/${day}`);
+      return translated;
+    };
+    const translateRoutePoint = (value) => {
+      const prefix = '前一晚住宿 · ';
+      return String(value || '').startsWith(prefix) ? `${t('previousHotel')} · ${translatePhrase(String(value).slice(prefix.length))}` : translatePhrase(value);
+    };
+    const localeForLanguage = () => ({ zh:'zh-CN', en:'en-US', fr:'fr-FR' }[activeLanguage] || 'zh-CN');
+    const dayLabel = (day) => activeLanguage === 'zh' ? day.dow.replace('星期','周') : translatePhrase(day.dow);
+    const translateTime = (value) => activeLanguage === 'zh' ? String(value || '') : translatePhrase(value);
+    const weatherNameTranslations = {
+      en: { '晴':'Clear', '大致晴':'Mostly clear', '局部多云':'Partly cloudy', '阴':'Overcast', '雾':'Fog', '雾凇':'Rime fog', '小雨':'Light rain', '中雨':'Moderate rain', '大雨':'Heavy rain', '冻雨':'Freezing rain', '小雪':'Light snow', '中雪':'Moderate snow', '大雪':'Heavy snow', '雪粒':'Snow grains', '阵雨':'Rain showers', '强阵雨':'Heavy showers', '阵雪':'Snow showers', '雷雨':'Thunderstorm', '雷雨冰雹':'Thunderstorm with hail', '天气变化':'Changing weather' },
+      fr: { '晴':'Ensoleillé', '大致晴':'Plutôt dégagé', '局部多云':'Partiellement nuageux', '阴':'Couvert', '雾':'Brouillard', '雾凇':'Brouillard givrant', '小雨':'Pluie faible', '中雨':'Pluie modérée', '大雨':'Forte pluie', '冻雨':'Pluie verglaçante', '小雪':'Neige faible', '中雪':'Neige modérée', '大雪':'Forte neige', '雪粒':'Neige en grains', '阵雨':'Averses', '强阵雨':'Fortes averses', '阵雪':'Averses de neige', '雷雨':'Orage', '雷雨冰雹':'Orage avec grêle', '天气变化':'Météo variable' }
+    };
+
     const now = () => new Date();
     const eventDate = (item) => item.iso ? new Date(item.iso) : null;
     const fixedEvents = () => days.flatMap((day, dayIndex) => day.events.filter(e => e.fixed && e.iso).map(e => ({...e, dayIndex, day}))).sort((a,b) => eventDate(a) - eventDate(b));
@@ -1370,15 +1502,18 @@
       const hours = Math.floor((ms % 86400000) / 3600000);
       const minutes = Math.floor((ms % 3600000) / 60000);
       const seconds = Math.floor((ms % 60000) / 1000);
-      const compact = daysPart ? `${daysPart}天 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-      return positive ? `还有 ${compact}` : '已开始／已结束';
+      const compact = daysPart ? `${daysPart}${activeLanguage === 'zh' ? '天' : activeLanguage === 'fr' ? ' j' : 'd'} ${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      return positive ? `${t('countdownAhead')} ${compact}` : t('countdownStarted');
     };
     const escape = (value) => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const eventIcon = (type) => ({flight:'✈',train:'🚄',transfer:'⇢',food:'◒',shopping:'◇',hotel:'⌂',attraction:'✦'}[type] || '•');
-    const weatherInfo = (code) => weatherDescriptions[Number(code)] || ['天气变化','🌤️'];
+    const weatherInfo = (code) => {
+      const info = weatherDescriptions[Number(code)] || ['天气变化','🌤️'];
+      return [weatherNameTranslations[activeLanguage]?.[info[0]] || info[0], info[1]];
+    };
     const weatherNumber = (value, suffix = '') => Number.isFinite(Number(value)) ? `${Math.round(Number(value))}${suffix}` : '—';
-    const weatherDate = (value, timezone) => new Intl.DateTimeFormat('zh-CN', { month:'numeric', day:'numeric', weekday:'short', timeZone:timezone }).format(new Date(`${value}T12:00:00`));
-    const weatherUpdatedTime = (timezone) => new Intl.DateTimeFormat('zh-CN', { hour:'2-digit', minute:'2-digit', hour12:false, timeZone:timezone }).format(new Date());
+    const weatherDate = (value, timezone) => new Intl.DateTimeFormat(localeForLanguage(), { month:'numeric', day:'numeric', weekday:'short', timeZone:timezone }).format(new Date(`${value}T12:00:00`));
+    const weatherUpdatedTime = (timezone) => new Intl.DateTimeFormat(localeForLanguage(), { hour:'2-digit', minute:'2-digit', hour12:false, timeZone:timezone }).format(new Date());
 
     function weatherRequestUrl(city) {
       const params = new URLSearchParams({
@@ -1395,7 +1530,7 @@
     }
 
     function renderWeatherTabs() {
-      weatherTabs.innerHTML = weatherCities.map(city => `<button class="weather-tab ${city.id === weatherState.activeCity ? 'is-active' : ''}" type="button" role="tab" data-weather-city="${city.id}" aria-selected="${city.id === weatherState.activeCity}">${city.label}</button>`).join('');
+      weatherTabs.innerHTML = weatherCities.map(city => `<button class="weather-tab ${city.id === weatherState.activeCity ? 'is-active' : ''}" type="button" role="tab" data-weather-city="${city.id}" aria-selected="${city.id === weatherState.activeCity}">${escape(translatePhrase(city.label))}</button>`).join('');
       weatherTabs.querySelectorAll('[data-weather-city]').forEach(button => button.addEventListener('click', () => {
         weatherState.activeCity = button.dataset.weatherCity;
         renderWeather();
@@ -1407,11 +1542,11 @@
       const city = weatherCities.find(item => item.id === weatherState.activeCity) || weatherCities[0];
       const data = weatherState.data[city.id];
       if (weatherState.loading && !data) {
-        weatherContent.innerHTML = `<div class="weather-state">正在读取${escape(city.label)}天气…</div>`;
+        weatherContent.innerHTML = `<div class="weather-state">${escape(t('weatherLoading').replace('{city}', translatePhrase(city.label)))}</div>`;
         return;
       }
       if (!data) {
-        weatherContent.innerHTML = `<div class="weather-state"><div>暂时无法读取${escape(city.label)}天气，请检查网络后重试。<br><button type="button" data-weather-retry>重新读取</button></div></div>`;
+        weatherContent.innerHTML = `<div class="weather-state"><div>${escape(t('weatherError').replace('{city}', translatePhrase(city.label)))}<br><button type="button" data-weather-retry>${escape(t('retryWeather'))}</button></div></div>`;
         return;
       }
       const current = data.current;
@@ -1420,9 +1555,9 @@
       const forecast = daily.time.slice(1, 4).map((date, index) => {
         const dailyIndex = index + 1;
         const [summary, icon] = weatherInfo(daily.weather_code[dailyIndex]);
-        return `<article class="weather-day"><div class="weather-day-name">${escape(weatherDate(date, city.timezone))}</div><span class="weather-day-icon" aria-hidden="true">${icon}</span><div class="weather-day-summary">${escape(summary)}</div><div class="weather-day-temp">${weatherNumber(daily.temperature_2m_max[dailyIndex], '°')} / ${weatherNumber(daily.temperature_2m_min[dailyIndex], '°')}</div><div class="weather-day-rain">降雨概率 ${weatherNumber(daily.precipitation_probability_max?.[dailyIndex], '%')}</div></article>`;
+        return `<article class="weather-day"><div class="weather-day-name">${escape(weatherDate(date, city.timezone))}</div><span class="weather-day-icon" aria-hidden="true">${icon}</span><div class="weather-day-summary">${escape(summary)}</div><div class="weather-day-temp">${weatherNumber(daily.temperature_2m_max[dailyIndex], '°')} / ${weatherNumber(daily.temperature_2m_min[dailyIndex], '°')}</div><div class="weather-day-rain">${escape(t('rainProbability'))} ${weatherNumber(daily.precipitation_probability_max?.[dailyIndex], '%')}</div></article>`;
       }).join('');
-      weatherContent.innerHTML = `<section class="weather-current"><div class="weather-current-head"><div class="weather-current-place">${escape(city.label)} · 当前天气</div><span class="weather-updated">更新于 ${escape(weatherUpdatedTime(city.timezone))}</span></div><div class="weather-current-main"><span class="weather-current-icon" aria-hidden="true">${currentIcon}</span><div><strong class="weather-current-temp">${weatherNumber(current.temperature_2m, '°')}</strong><span class="weather-current-text">${escape(currentSummary)}</span></div></div><div class="weather-facts"><div class="weather-fact"><span class="weather-fact-label">今日温度范围</span><strong class="weather-fact-value">${weatherNumber(daily.temperature_2m_min?.[0], '°')} – ${weatherNumber(daily.temperature_2m_max?.[0], '°')}</strong></div><div class="weather-fact"><span class="weather-fact-label">湿度</span><strong class="weather-fact-value">${weatherNumber(current.relative_humidity_2m, '%')}</strong></div><div class="weather-fact"><span class="weather-fact-label">风速</span><strong class="weather-fact-value">${weatherNumber(current.wind_speed_10m, ' km/h')}</strong></div></div></section><h3 class="weather-forecast-title">未来三天</h3><div class="weather-forecast-grid">${forecast}</div>`;
+      weatherContent.innerHTML = `<section class="weather-current"><div class="weather-current-head"><div class="weather-current-place">${escape(translatePhrase(city.label))} · ${escape(t('currentWeather'))}</div><span class="weather-updated">${escape(t('updatedAt'))} ${escape(weatherUpdatedTime(city.timezone))}</span></div><div class="weather-current-main"><span class="weather-current-icon" aria-hidden="true">${currentIcon}</span><div><strong class="weather-current-temp">${weatherNumber(current.temperature_2m, '°')}</strong><span class="weather-current-text">${escape(currentSummary)}</span></div></div><div class="weather-facts"><div class="weather-fact"><span class="weather-fact-label">${escape(t('todayRange'))}</span><strong class="weather-fact-value">${weatherNumber(daily.temperature_2m_min?.[0], '°')} – ${weatherNumber(daily.temperature_2m_max?.[0], '°')}</strong></div><div class="weather-fact"><span class="weather-fact-label">${escape(t('humidity'))}</span><strong class="weather-fact-value">${weatherNumber(current.relative_humidity_2m, '%')}</strong></div><div class="weather-fact"><span class="weather-fact-label">${escape(t('wind'))}</span><strong class="weather-fact-value">${weatherNumber(current.wind_speed_10m, ' km/h')}</strong></div></div></section><h3 class="weather-forecast-title">${escape(t('nextThreeDays'))}</h3><div class="weather-forecast-grid">${forecast}</div>`;
     }
 
     async function loadWeather() {
@@ -1482,19 +1617,19 @@
       const isLongDistance = /航班|飞机|高铁|火车|机场|车站|转机/.test(routeText);
       const primaryMode = isDriving ? 'driving' : (/步行/.test(routeLabel) && !/地铁|火车|飞机|机场|车站/.test(routeText) ? 'walking' : 'transit');
       const options = [{
-        title: `推荐 · ${routeLabel}`,
-        badge: '推荐',
-        detail: isDriving ? '按接送或打车安排，打开 Google Maps 查看实时行车路线。' : '按行程安排的交通方式出发，打开 Google Maps 查看实时站点、换乘和预计时间。',
+        title: `${t('routeRecommended')} · ${translatePhrase(routeLabel)}`,
+        badge: t('routeRecommended'),
+        detail: isDriving ? t('routeDriving') : t('routeTransit'),
         mode: primaryMode
       }];
       if (isLongDistance || isDriving) {
-        options.push({ title: '公共交通', detail: '查看当天可用的地铁、公交或机场接驳方案。', mode: 'transit' });
+        options.push({ title: t('publicTransport'), detail: t('routeTransitAlt'), mode: 'transit' });
       } else if (primaryMode === 'walking') {
-        options.push({ title: '公共交通', detail: '如果天气或时间不合适，可切换为地铁或公交。', mode: 'transit' });
+        options.push({ title: t('publicTransport'), detail: t('routeWalkingAlt'), mode: 'transit' });
       } else {
-        options.push({ title: '步行', detail: '适合短距离移动，出发前确认实时步行时间。', mode: 'walking' });
+        options.push({ title: t('walking'), detail: t('routeWalking'), mode: 'walking' });
       }
-      if (options.length < 3) options.push({ title: '打车／网约车', detail: '查看实时路况下的出租车或网约车路线。', mode: 'driving' });
+      if (options.length < 3) options.push({ title: t('taxi'), detail: t('routeTaxi'), mode: 'driving' });
       return options.slice(0, 3);
     }
 
@@ -1502,11 +1637,11 @@
       const day = days[dayIndex];
       const segment = day && routeSegment(day, dayIndex, eventIndex);
       if (!segment) return false;
-      document.querySelector('#route-modal-title').textContent = segment.item.title;
-      routeModalSubtitle.textContent = `${segment.day.date} · ${segment.item.time} · 查看这一段移动`;
-      routeOriginEl.textContent = segment.origin.label;
-      routeDestinationEl.textContent = segment.destination.label;
-      routeOptionsEl.innerHTML = routeOptions(segment).map(option => `<article class="route-option"><div class="route-option-head"><strong class="route-option-title">${escape(option.title)}</strong>${option.badge ? `<span class="route-option-badge">${escape(option.badge)}</span>` : ''}</div><p class="route-option-detail">${escape(option.detail)}</p><a class="route-option-link" href="${directionsUrl(segment.origin.query, segment.destination.query, option.mode)}" target="_blank" rel="noreferrer">在 Google Maps 中打开 ↗</a></article>`).join('');
+      document.querySelector('#route-modal-title').textContent = translatePhrase(segment.item.title);
+      routeModalSubtitle.textContent = `${segment.day.date} · ${translateTime(segment.item.time)} · ${t('routePlanMove')}`;
+      routeOriginEl.textContent = translateRoutePoint(segment.origin.label);
+      routeDestinationEl.textContent = translateRoutePoint(segment.destination.label);
+      routeOptionsEl.innerHTML = routeOptions(segment).map(option => `<article class="route-option"><div class="route-option-head"><strong class="route-option-title">${escape(option.title)}</strong>${option.badge ? `<span class="route-option-badge">${escape(option.badge)}</span>` : ''}</div><p class="route-option-detail">${escape(option.detail)}</p><a class="route-option-link" href="${directionsUrl(segment.origin.query, segment.destination.query, option.mode)}" target="_blank" rel="noreferrer">${escape(t('routeOpenGoogle'))}</a></article>`).join('');
       return true;
     }
 
@@ -1525,7 +1660,7 @@
     }
 
     function renderTabs() {
-      tabsEl.innerHTML = days.map((day, i) => `<button class="day-tab ${i === selectedDay ? 'is-active' : ''} ${i === (nextEvent?.dayIndex ?? -1) ? 'is-next' : ''}" data-day="${i}" aria-label="查看 ${day.date} ${day.city}" aria-pressed="${i === selectedDay}"><span class="day-tab-date">${day.date}</span><span class="day-tab-label">${day.dow.replace('星期','周')}</span></button>`).join('');
+      tabsEl.innerHTML = days.map((day, i) => `<button class="day-tab ${i === selectedDay ? 'is-active' : ''} ${i === (nextEvent?.dayIndex ?? -1) ? 'is-next' : ''}" data-day="${i}" aria-label="${escape(activeLanguage === 'zh' ? `查看 ${day.date} ${day.city}` : `${day.date} · ${translatePhrase(day.city)}`)}" aria-pressed="${i === selectedDay}"><span class="day-tab-date">${day.date}</span><span class="day-tab-label">${escape(dayLabel(day))}</span></button>`).join('');
       tabsEl.querySelectorAll('.day-tab').forEach(button => button.addEventListener('click', () => { selectedDay = Number(button.dataset.day); renderDay(); renderTabs(); }));
     }
 
@@ -1535,17 +1670,18 @@
       const cards = visibleEvents.map((item) => {
         const eventIndex = day.events.indexOf(item);
         const isNext = nextEvent && nextEvent.title === item.title && nextEvent.dayIndex === selectedDay;
-        const ticketAction = item.ticket ? `<button class="ticket-button" type="button" data-ticket="${escape(item.ticket)}">门票信息</button>` : '';
+        const ticketAction = item.ticket ? `<button class="ticket-button" type="button" data-ticket="${escape(item.ticket)}">${escape(t('ticketInfo'))}</button>` : '';
         const routeSegmentData = routeSegment(day, selectedDay, eventIndex);
         const routeLabel = item.route || day.transport;
-        const routeAction = routeSegmentData ? `<button class="event-chip route-button" type="button" data-route-event="${selectedDay}:${eventIndex}">${escape(routeLabel)} <span aria-hidden="true">↗</span></button>` : `<span class="event-chip">${escape(routeLabel)}</span>`;
-        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(item.time)}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(item.title)}</h3><div class="event-location">${escape(item.location)}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="在 Google Maps 打开 ${escape(item.title)}">地图 ↗</a></div><div class="event-meta">${routeAction}${ticketAction}</div>${item.note ? `<p class="event-note">${escape(item.note)}</p>` : ''}</div></article>`;
+        const routeAction = routeSegmentData ? `<button class="event-chip route-button" type="button" data-route-event="${selectedDay}:${eventIndex}">${escape(translatePhrase(routeLabel))} <span aria-hidden="true">↗</span></button>` : `<span class="event-chip">${escape(translatePhrase(routeLabel))}</span>`;
+        const itemTitle = translatePhrase(item.title);
+        return `<article class="event ${isNext ? 'is-next' : ''}" data-type="${escape(item.type)}"><div class="event-time ${item.fixed ? 'is-open' : ''}">${escape(translateTime(item.time))}</div><span class="event-dot" aria-hidden="true"></span><div class="event-card ${isNext ? 'is-next' : ''}"><div class="event-topline"><div class="event-name-row"><span class="event-icon" aria-hidden="true">${eventIcon(item.type)}</span><div><h3 class="event-title">${escape(itemTitle)}</h3><div class="event-location">${escape(translatePhrase(item.location))}</div></div></div><a class="map-link" href="${mapUrl(item.query)}" target="_blank" rel="noreferrer" aria-label="${escape(activeLanguage === 'zh' ? `在 Google Maps 打开 ${itemTitle}` : `${t('mapOpen')} ${itemTitle}`)}">${escape(t('mapOpen'))} ↗</a></div><div class="event-meta">${routeAction}${ticketAction}</div>${item.note ? `<p class="event-note">${escape(translatePhrase(item.note))}</p>` : ''}</div></article>`;
       }).join('');
-      const notes = day.notes.length ? day.notes.map(n => `<span class="badge todo">提醒：${escape(n)}</span>`).join('') : '';
-      const booked = day.booked.length ? `<span class="badge booked">✓ 已预订 ${day.booked.length} 项</span>` : '';
-      const todo = day.todo.length ? `<span class="badge todo">待处理 ${day.todo.length} 项</span>` : '';
+      const notes = day.notes.length ? day.notes.map(n => `<span class="badge todo">${escape(t('reminderPrefix'))}${escape(translatePhrase(n))}</span>`).join('') : '';
+      const booked = day.booked.length ? `<span class="badge booked">✓ ${escape(t('bookedCount'))} ${day.booked.length}</span>` : '';
+      const todo = day.todo.length ? `<span class="badge todo">${escape(t('todoCount'))} ${day.todo.length}</span>` : '';
       if (activeMap) { activeMap.remove(); activeMap = null; }
-      dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(day.city)}</h2><p class="day-route"><strong>主要交通</strong>　${escape(day.transport)}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : '<div class="empty-state">这一天没有符合筛选条件的项目。</div>'}<div class="day-foot"><div class="foot-item"><span class="foot-label">住宿</span><span class="foot-value">${escape(day.hotel)}</span></div><div class="foot-item"><span class="foot-label">穿搭</span><span class="foot-value">${escape(day.outfit)}</span></div><div class="foot-item"><span class="foot-label">当天提醒</span><span class="foot-value">${notes || '暂无额外提醒'}</span></div></div>${renderRouteMap(day)}`;
+      dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(translatePhrase(day.city))}</h2><p class="day-route"><strong>${escape(t('mainTransport'))}</strong>　${escape(translatePhrase(day.transport))}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : `<div class="empty-state">${escape(t('emptyDay'))}</div>`}<div class="day-foot"><div class="foot-item"><span class="foot-label">${escape(t('accommodation'))}</span><span class="foot-value">${escape(translatePhrase(day.hotel))}</span></div><div class="foot-item"><span class="foot-label">${escape(t('outfit'))}</span><span class="foot-value">${escape(translatePhrase(day.outfit))}</span></div><div class="foot-item"><span class="foot-label">${escape(t('dayReminder'))}</span><span class="foot-value">${notes || escape(t('noExtraReminder'))}</span></div></div>${renderRouteMap(day)}`;
       dayEl.querySelectorAll('[data-ticket]').forEach(button => button.addEventListener('click', () => openTicketModal(button.dataset.ticket, button)));
       dayEl.querySelectorAll('[data-route-event]').forEach(button => button.addEventListener('click', () => {
         const [dayIndex, eventIndex] = button.dataset.routeEvent.split(':').map(Number);
@@ -1556,13 +1692,13 @@
     }
 
     function renderRouteMap(day) {
-      return `<section class="route-map" aria-label="${escape(day.date)} ${escape(day.city)} 真实地图路线"><div class="route-map-head"><h3 class="route-map-title">当天路线</h3><span class="route-map-note">真实地图位置 · 按行程顺序连线</span></div><div class="route-map-scroll"><div class="route-canvas"><div class="route-map-canvas" id="route-map-view-${selectedDay}" role="img" aria-label="${escape(day.date)} ${escape(day.city)} 的路线地图"></div></div></div><div class="route-map-foot">地图使用 OpenStreetMap 底图；餐厅待定的吃饭行程不纳入路线。点击标记可直接打开 Google Maps。</div></section>`;
+      return `<section class="route-map" aria-label="${escape(day.date)} ${escape(translatePhrase(day.city))} ${escape(t('routeMapAria'))}"><div class="route-map-head"><h3 class="route-map-title">${escape(t('routeMapTitle'))}</h3><span class="route-map-note">${escape(t('routeMapNote'))}</span></div><div class="route-map-scroll"><div class="route-canvas"><div class="route-map-canvas" id="route-map-view-${selectedDay}" role="img" aria-label="${escape(day.date)} ${escape(translatePhrase(day.city))} ${escape(t('routeMapAria'))}"></div></div></div><div class="route-map-foot">${escape(t('routeMapFoot'))}</div></section>`;
     }
 
     function drawLeafletMap(day) {
       const mapElement = document.querySelector(`#route-map-view-${selectedDay}`);
       if (!mapElement || typeof L === 'undefined') {
-        if (mapElement) mapElement.innerHTML = '<div style="padding:20px;color:#62708d;font-size:13px">地图底图加载失败，请联网后刷新页面。</div>';
+        if (mapElement) mapElement.innerHTML = `<div style="padding:20px;color:#62708d;font-size:13px">${escape(activeLanguage === 'zh' ? '地图底图加载失败，请联网后刷新页面。' : activeLanguage === 'fr' ? 'Le fond de carte n’a pas pu être chargé. Vérifiez la connexion puis actualisez la page.' : 'The map base layer could not be loaded. Check your connection and refresh the page.')}</div>`;
         return;
       }
       const points = day.events.filter(item => !(item.type === 'food' && /待定|未定|未知/.test(item.location || ''))).flatMap(item => {
@@ -1589,7 +1725,7 @@
       const route = L.polyline(latLngs, { color: '#f06449', weight: 4, opacity: .9, className: 'leaflet-routing-line' }).addTo(activeMap);
       points.forEach((point, index) => {
         const icon = L.divIcon({ className: 'leaflet-number-marker', html: `<span>${index + 1}</span>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
-        L.marker(point.coords, { icon }).addTo(activeMap).bindPopup(`<strong>${escape(point.item.title)}</strong><div>${escape(point.item.time)} · ${escape(point.item.location)}</div><a href="${mapUrl(point.item.query)}" target="_blank" rel="noreferrer">在 Google Maps 中打开 ↗</a>`);
+        L.marker(point.coords, { icon }).addTo(activeMap).bindPopup(`<strong>${escape(translatePhrase(point.item.title))}</strong><div>${escape(translateTime(point.item.time))} · ${escape(translatePhrase(point.item.location))}</div><a href="${mapUrl(point.item.query)}" target="_blank" rel="noreferrer">${escape(t('routeOpenGoogle'))}</a>`);
       });
       const bounds = L.latLngBounds(latLngs);
       if (latLngs.length === 1 || bounds.getNorthEast().equals(bounds.getSouthWest())) {
@@ -1603,16 +1739,16 @@
     function renderTicketModal(kind) {
       const ticket = ticketData[kind];
       if (!ticket) return false;
-      document.querySelector('#ticket-modal-title').textContent = ticket.title;
-      document.querySelector('#ticket-modal-subtitle').textContent = ticket.subtitle;
-      document.querySelector('#ticket-preview-label').textContent = ticket.previewLabel;
-      document.querySelector('#ticket-facts').innerHTML = ticket.facts.map(fact => `<div class="ticket-fact"><span class="ticket-fact-label">${escape(fact.label)}</span>${fact.values.map(value => `<strong class="ticket-fact-value">${escape(value)}</strong>`).join('')}</div>`).join('') + `<p class="ticket-modal-note">${escape(ticket.note)}</p>`;
+      document.querySelector('#ticket-modal-title').textContent = translatePhrase(ticket.title);
+      document.querySelector('#ticket-modal-subtitle').textContent = translatePhrase(ticket.subtitle);
+      document.querySelector('#ticket-preview-label').textContent = translatePhrase(ticket.previewLabel);
+      document.querySelector('#ticket-facts').innerHTML = ticket.facts.map(fact => `<div class="ticket-fact"><span class="ticket-fact-label">${escape(translatePhrase(fact.label))}</span>${fact.values.map(value => `<strong class="ticket-fact-value">${escape(translatePhrase(value))}</strong>`).join('')}</div>`).join('') + `<p class="ticket-modal-note">${escape(translatePhrase(ticket.note))}</p>`;
       const pdf = document.querySelector('#ticket-pdf');
       pdf.src = `${ticket.pdf}#view=FitH`;
-      pdf.title = `${ticket.title} PDF`;
+      pdf.title = `${translatePhrase(ticket.title)} PDF`;
       const openLink = document.querySelector('#ticket-open-link');
       openLink.href = ticket.pdf;
-      openLink.textContent = '在新窗口打开原始凭证 ↗';
+      openLink.textContent = t('openOriginalTicket');
       return true;
     }
 
@@ -1642,7 +1778,7 @@
     function openReminderEditor(reminderId, trigger) {
       const reminder = reminders.find(item => item.id === reminderId);
       editingReminderId = reminder?.id || null;
-      document.querySelector('#reminder-modal-title').textContent = reminder ? '编辑备忘' : '新增备忘';
+      document.querySelector('#reminder-modal-title').textContent = reminder ? t('editMemo') : t('newMemo');
       reminderEditorTitle.value = reminder?.title || '';
       reminderEditorCopy.value = reminder?.copy || '';
       lastReminderFocusedElement = trigger || reminderAddButton;
@@ -1703,7 +1839,7 @@
     }
 
     function renderReminders() {
-      reminderListEl.innerHTML = reminders.length ? reminders.map(reminder => `<div class="reminder ${reminder.done ? 'is-done' : ''}" draggable="true" data-reminder-id="${escape(reminder.id)}"><label class="reminder-check"><input type="checkbox" data-reminder-toggle="${escape(reminder.id)}" ${reminder.done ? 'checked' : ''} aria-label="完成 ${escape(reminder.title)}" /></label><div class="reminder-copy"><strong>${escape(reminder.title)}</strong>${escape(reminder.copy)}</div><div class="reminder-actions"><button class="reminder-action reminder-edit" type="button" data-reminder-edit="${escape(reminder.id)}" aria-label="编辑 ${escape(reminder.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.12 2.12 0 0 0-3-3L5 17v3zM14.5 8.5l3 3"></path></svg></button><button class="reminder-action reminder-delete" type="button" data-reminder-delete="${escape(reminder.id)}" aria-label="删除 ${escape(reminder.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div>`).join('') : '<div class="reminder-empty">暂无备忘提醒</div>';
+      reminderListEl.innerHTML = reminders.length ? reminders.map(reminder => `<div class="reminder ${reminder.done ? 'is-done' : ''}" draggable="true" data-reminder-id="${escape(reminder.id)}"><label class="reminder-check"><input type="checkbox" data-reminder-toggle="${escape(reminder.id)}" ${reminder.done ? 'checked' : ''} aria-label="${escape(t('completeMemo'))} ${escape(translatePhrase(reminder.title))}" /></label><div class="reminder-copy"><strong>${escape(translatePhrase(reminder.title))}</strong>${escape(translatePhrase(reminder.copy))}</div><div class="reminder-actions"><button class="reminder-action reminder-edit" type="button" data-reminder-edit="${escape(reminder.id)}" aria-label="${escape(t('edit'))} ${escape(translatePhrase(reminder.title))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.12 2.12 0 0 0-3-3L5 17v3zM14.5 8.5l3 3"></path></svg></button><button class="reminder-action reminder-delete" type="button" data-reminder-delete="${escape(reminder.id)}" aria-label="${escape(t('delete'))} ${escape(translatePhrase(reminder.title))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div>`).join('') : `<div class="reminder-empty">${escape(t('noMemos'))}</div>`;
     }
 
     reminderListEl.addEventListener('change', event => {
@@ -1773,7 +1909,7 @@
     });
 
     function renderSidebar() {
-      document.querySelector('#transport-list').innerHTML = transportLegs.map(leg => `<div class="transport-row"><div class="transport-symbol" aria-hidden="true">${leg.icon}</div><div><div class="transport-route-row"><div class="transport-route">${escape(leg.route)}</div><span class="transport-code">${escape(leg.code)}</span></div><div class="transport-detail">${escape(leg.detail)}</div></div></div>`).join('');
+      document.querySelector('#transport-list').innerHTML = transportLegs.map(leg => `<div class="transport-row"><div class="transport-symbol" aria-hidden="true">${leg.icon}</div><div><div class="transport-route-row"><div class="transport-route">${escape(translatePhrase(leg.route))}</div><span class="transport-code">${escape(leg.code)}</span></div><div class="transport-detail">${escape(translatePhrase(leg.detail))}</div></div></div>`).join('');
       renderReminders();
     }
 
@@ -1782,25 +1918,53 @@
       document.querySelectorAll('[data-countdown]').forEach(el => {
         const target = new Date(el.dataset.countdown);
         const diff = target - current;
-        el.textContent = diff > 0 ? countdownText(diff) : '已过时间';
+        el.textContent = diff > 0 ? countdownText(diff) : t('countdownStarted');
         el.classList.toggle('is-done', diff <= 0);
       });
       if (nextEvent) {
         const diff = eventDate(nextEvent) - current;
-        document.querySelector('#next-title').textContent = nextEvent.title;
-        document.querySelector('#next-countdown').textContent = diff > 0 ? countdownText(diff) : '旅程已结束';
-        document.querySelector('#next-meta').textContent = `${nextEvent.day.date} · ${nextEvent.time} · ${nextEvent.location}`;
+        document.querySelector('#next-title').textContent = translatePhrase(nextEvent.title);
+        document.querySelector('#next-countdown').textContent = diff > 0 ? countdownText(diff) : t('journeyEnded');
+        document.querySelector('#next-meta').textContent = `${nextEvent.day.date} · ${translateTime(nextEvent.time)} · ${translatePhrase(nextEvent.location)}`;
         const nextIndex = fixedEvents().indexOf(nextEvent);
         const total = Math.max(fixedEvents().length - 1, 1);
         document.querySelector('#countdown-progress').style.width = `${Math.max(8, Math.min(100, ((nextIndex + 1) / total) * 100))}%`;
       } else {
-        document.querySelector('#next-title').textContent = '本次固定行程已完成';
-        document.querySelector('#next-countdown').textContent = '旅程已结束';
-        document.querySelector('#next-meta').textContent = '可以回到原始表格查看完整记录';
+        document.querySelector('#next-title').textContent = t('completedTrip');
+        document.querySelector('#next-countdown').textContent = t('journeyEnded');
+        document.querySelector('#next-meta').textContent = t('sourceTable');
         document.querySelector('#countdown-progress').style.width = '100%';
       }
-      const display = new Intl.DateTimeFormat('zh-CN', { timeZone:'Asia/Shanghai', month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false }).format(current);
-      document.querySelector('#clock').textContent = `现在 · ${display}（北京时间）`;
+      const display = new Intl.DateTimeFormat(localeForLanguage(), { timeZone:'Asia/Shanghai', month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false }).format(current);
+      document.querySelector('#clock').textContent = `${t('clockNow')} · ${display} (${t('beijingTime')})`;
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = activeLanguage === 'zh' ? 'zh-CN' : activeLanguage;
+      document.title = t('tripTitle');
+      const description = document.querySelector('meta[name="description"]');
+      if (description) description.content = t('metaDescription');
+      document.querySelectorAll('[data-i18n]').forEach(element => { element.textContent = t(element.dataset.i18n); });
+      document.querySelectorAll('[data-i18n-aria-label]').forEach(element => { element.setAttribute('aria-label', t(element.dataset.i18nAriaLabel)); });
+      document.querySelectorAll('[data-i18n-alt]').forEach(element => { element.alt = t(element.dataset.i18nAlt); });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => { element.placeholder = t(element.dataset.i18nPlaceholder); });
+      languageToggle.textContent = languageLabels[activeLanguage];
+      languageToggle.setAttribute('aria-label', t('languageToggle'));
+      languageToggle.title = t('languageToggle');
+    }
+
+    function setLanguage(nextLanguage) {
+      if (!['zh','en','fr'].includes(nextLanguage)) return;
+      activeLanguage = nextLanguage;
+      try { window.localStorage.setItem(languageStorageKey, activeLanguage); } catch (error) {}
+      const currentDay = selectedDay;
+      applyLanguage();
+      renderTabs();
+      renderDay();
+      renderSidebar();
+      selectedDay = currentDay;
+      if (!weatherModal.hidden) renderWeather();
+      updateCountdowns();
     }
 
     function refreshNext() {
@@ -1814,6 +1978,11 @@
     }
 
     fixedOnlyEl.addEventListener('change', renderDay);
+    languageToggle.addEventListener('click', () => {
+      const order = ['zh','en','fr'];
+      setLanguage(order[(order.indexOf(activeLanguage) + 1) % order.length]);
+    });
+    applyLanguage();
     refreshNext();
     setInterval(updateCountdowns, 1000);
   </script>
