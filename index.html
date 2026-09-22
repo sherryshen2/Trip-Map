@@ -847,7 +847,7 @@
       </aside>
     </section>
 
-    <footer class="footer"><span data-i18n="footerNote">行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。</span><a data-i18n="openGoogleMaps" href="https://www.google.com/maps" target="_blank" rel="noreferrer">打开 Google Maps ↗</a></footer>
+    <footer class="footer"><span data-i18n="footerNote">行程数据来自 Google Sheets 计划表；时间按表中安排显示，倒计时按各城市当地时间计算。</span><a data-i18n="openGoogleMaps" href="https://www.google.com/maps" target="_blank" rel="noreferrer">地图</a></footer>
   </main>
 
   <div class="ticket-modal" id="ticket-modal" hidden>
@@ -886,7 +886,7 @@
       <div class="route-modal-body">
         <div class="route-path"><div class="route-point"><span class="route-point-label" data-i18n="departure">出发</span><strong class="route-point-value" id="route-origin">—</strong></div><span class="route-path-arrow" aria-hidden="true">→</span><div class="route-point"><span class="route-point-label" data-i18n="arrival">到达</span><strong class="route-point-value" id="route-destination">—</strong></div></div>
         <div class="route-options" id="route-options"></div>
-        <p class="route-modal-note" data-i18n="routeModalNote">公共交通的站点、换乘和预计时间会随当天情况变化；点击方案按钮可打开 Google Maps 查看实时路线。</p>
+        <p class="route-modal-note" data-i18n="routeModalNote">公共交通的站点、换乘和预计时间会随当天情况变化；点击方案按钮查看实时路线。</p>
       </div>
     </section>
   </div>
@@ -1409,6 +1409,27 @@
     uiTranslations.zh.chooseDate = '选择日期';
     uiTranslations.en.chooseDate = 'Choose a date';
     uiTranslations.fr.chooseDate = 'Choisir une date';
+    uiTranslations.zh.openGoogleMaps = '地图';
+    uiTranslations.zh.routeOpenGoogle = '地图';
+    uiTranslations.zh.mapOpen = '地图';
+    uiTranslations.en.openGoogleMaps = 'Map';
+    uiTranslations.en.routeOpenGoogle = 'Map';
+    uiTranslations.en.mapOpen = 'Map';
+    uiTranslations.fr.openGoogleMaps = 'Carte';
+    uiTranslations.fr.routeOpenGoogle = 'Carte';
+    uiTranslations.fr.mapOpen = 'Carte';
+    uiTranslations.zh.routeModalNote = '公共交通的站点、换乘和预计时间会随当天情况变化；点击方案按钮查看实时路线。';
+    uiTranslations.en.routeModalNote = 'Public transport stops, transfers and travel times may change; open a route option for live details.';
+    uiTranslations.fr.routeModalNote = 'Les arrêts, correspondances et durées des transports publics peuvent changer ; ouvrez une option pour les informations en temps réel.';
+    uiTranslations.zh.routeDriving = '按接送或打车安排，查看实时行车路线。';
+    uiTranslations.en.routeDriving = 'Use the planned transfer or a taxi; view live driving directions.';
+    uiTranslations.fr.routeDriving = 'Suivez le transfert prévu ou prenez un taxi ; consultez l’itinéraire en temps réel.';
+    uiTranslations.zh.routeTransit = '按行程安排的交通方式出发，查看实时站点、换乘和预计时间。';
+    uiTranslations.en.routeTransit = 'Follow the planned mode and view live stops, transfers and travel time.';
+    uiTranslations.fr.routeTransit = 'Suivez le mode prévu et consultez les arrêts, correspondances et durées en temps réel.';
+    uiTranslations.zh.routeMapFoot = '地图使用 OpenStreetMap 底图；餐厅待定的吃饭行程不纳入路线。点击标记查看地图。';
+    uiTranslations.en.routeMapFoot = 'Map tiles by OpenStreetMap; meals with an unconfirmed location are excluded. Open a marker to view the map.';
+    uiTranslations.fr.routeMapFoot = 'Fond de carte OpenStreetMap ; les repas dont le lieu n’est pas confirmé sont exclus. Ouvrez un point pour voir la carte.';
     const phraseTranslations = {
       en: {
         '星期四':'Thursday','星期五':'Friday','星期六':'Saturday','星期日':'Sunday','星期一':'Monday','星期二':'Tuesday','星期三':'Wednesday',
@@ -1682,6 +1703,7 @@
       const todo = day.todo.length ? `<span class="badge todo">${escape(t('todoCount'))} ${day.todo.length}</span>` : '';
       if (activeMap) { activeMap.remove(); activeMap = null; }
       dayEl.innerHTML = `<div class="day-summary"><div><h2 class="day-heading">${escape(day.date)} · ${escape(translatePhrase(day.city))}</h2><p class="day-route"><strong>${escape(t('mainTransport'))}</strong>　${escape(translatePhrase(day.transport))}</p></div><div class="day-badges">${booked}${todo}</div></div>${cards ? `<div class="timeline">${cards}</div>` : `<div class="empty-state">${escape(t('emptyDay'))}</div>`}<div class="day-foot"><div class="foot-item"><span class="foot-label">${escape(t('accommodation'))}</span><span class="foot-value">${escape(translatePhrase(day.hotel))}</span></div><div class="foot-item"><span class="foot-label">${escape(t('outfit'))}</span><span class="foot-value">${escape(translatePhrase(day.outfit))}</span></div><div class="foot-item"><span class="foot-label">${escape(t('dayReminder'))}</span><span class="foot-value">${notes || escape(t('noExtraReminder'))}</span></div></div>${renderRouteMap(day)}`;
+      dayEl.querySelectorAll('.map-link').forEach(link => link.setAttribute('aria-label', t('mapOpen')));
       dayEl.querySelectorAll('[data-ticket]').forEach(button => button.addEventListener('click', () => openTicketModal(button.dataset.ticket, button)));
       dayEl.querySelectorAll('[data-route-event]').forEach(button => button.addEventListener('click', () => {
         const [dayIndex, eventIndex] = button.dataset.routeEvent.split(':').map(Number);
