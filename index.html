@@ -794,7 +794,7 @@
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span data-i18n="brand">Voyage / 行程板</span></div>
-    <div class="topbar-meta"><span id="clock">正在读取时间…</span><div class="topbar-actions"><button class="weather-trigger" id="weather-open" type="button" aria-haspopup="dialog" data-i18n="viewWeather">查看天气</button><button class="language-trigger" id="language-toggle" type="button" aria-label="切换语言">中</button></div><a class="source-link" data-i18n="openSource" href="https://docs.google.com/spreadsheets/d/1ePDJu8IQryhT_kBEzkip5-tlVueirg1-9IQhvny8Kvc/edit?gid=0#gid=0" target="_blank" rel="noreferrer">打开原始行程 ↗</a></div>
+    <div class="topbar-meta"><span id="clock">正在读取时间…</span><div class="topbar-actions"><button class="weather-trigger" id="weather-open" type="button" aria-haspopup="dialog" data-i18n="viewWeather">查看天气</button><button class="language-trigger" id="language-toggle" type="button" aria-label="切换语言">简中</button></div><a class="source-link" data-i18n="openSource" href="https://docs.google.com/spreadsheets/d/1ePDJu8IQryhT_kBEzkip5-tlVueirg1-9IQhvny8Kvc/edit?gid=0#gid=0" target="_blank" rel="noreferrer">打开原始行程 ↗</a></div>
   </header>
 
   <main class="shell">
@@ -1376,7 +1376,8 @@
     const weatherState = { activeCity:'paris', loading:false, data:{}, errors:{}, loadedAt:null };
 
     const languageStorageKey = 'voyage-europe-2026-language';
-    const languageLabels = { zh:'中', en:'EN', fr:'FR' };
+    const languageOrder = ['zh','zhHant','en','fr'];
+    const languageLabels = { zh:'简中', zhHant:'繁中', en:'EN', fr:'FR' };
     const uiTranslations = {
       zh: {
         brand:'Voyage / 行程板', viewWeather:'查看天气', openSource:'打开原始行程 ↗', languageToggle:'切换语言', tripOverview:'行程概况', tripTitle:'巴黎、罗马与南法', metaDescription:'欧洲旅行行程、交通与固定时间提醒', tripDays:'14 天', tripCities:'6 座城市', parisPhotoAlt:'巴黎城市天际线与埃菲尔铁塔', workspace:'旅行行程工作区',
@@ -1430,6 +1431,12 @@
     uiTranslations.zh.routeMapFoot = '地图使用 OpenStreetMap 底图；餐厅待定的吃饭行程不纳入路线。点击标记查看地图。';
     uiTranslations.en.routeMapFoot = 'Map tiles by OpenStreetMap; meals with an unconfirmed location are excluded. Open a marker to view the map.';
     uiTranslations.fr.routeMapFoot = 'Fond de carte OpenStreetMap ; les repas dont le lieu n’est pas confirmé sont exclus. Ouvrez un point pour voir la carte.';
+    const traditionalCharMap = {
+      '简':'簡','体':'體','语':'語','换':'換','选':'選','择':'擇','开':'開','闭':'閉','关':'關','图':'圖','标':'標','签':'籤','来':'來','进':'進','项':'項','时':'時','间':'間','会':'會','这':'這','里':'裡','预':'預','订':'訂','读':'讀','筛':'篩','过':'過','当':'當','击':'擊','实':'實','现':'現','线':'線','详':'詳','细':'細','据':'據','况':'況','气':'氣','温':'溫','湿':'濕','风':'風','还':'還','结':'結','发':'發','达':'達','罗':'羅','马':'馬','广':'廣','云':'雲','铁':'鐵','飞':'飛','机':'機','转':'轉','车':'車','购':'購','买':'買','联':'聯','园':'園','遗':'遺','产':'產','参':'參','凯':'凱','货':'貨','卢':'盧','宫':'宮','奥':'奧','赛':'賽','纳':'納','游':'遊','许':'許','愿':'願','圣':'聖','馆':'館','场':'場','电':'電','码':'碼','号':'號','价':'價','费':'費','类':'類','区':'區','须':'須','证':'證','纸':'紙','携':'攜','独':'獨','内':'內','两':'兩','张':'張','门':'門','仅':'僅','欧':'歐','乐':'樂','驶':'駛','爱':'愛','链':'鏈','银':'銀','运':'運','动':'動','丝':'絲','长':'長','黄':'黃','红':'紅','礼':'禮','数':'數','单':'單','专':'專','际':'際','国':'國','归':'歸','东':'東','并':'並','与':'與','录':'錄','档':'檔','询':'詢','总':'總','额':'額','务':'務','优':'優','靠':'靠','驻':'駐','周':'週','节':'節','庆':'慶','艺':'藝','术':'術','馆':'館','饭':'飯','饮':'飲','种':'種','类':'類','须':'須','为':'為','于':'於','从':'從','净':'淨','岛':'島','数':'數','岁':'歲','员':'員','务':'務','欢':'歡','迎':'迎','头':'頭','脑':'腦','页':'頁','题':'題','记':'記','录':'錄','备':'備','忘':'忘','删':'刪','除':'除','編':'編','辑':'輯','編':'編','辑':'輯','储':'儲','存':'存','状':'狀','态':'態','错':'錯','误':'誤','复':'複','试':'試','载':'載','连':'連','接':'接','网':'網','络':'絡','层':'層','楼':'樓','间':'間','辆':'輛','队':'隊','换':'換','乘':'乘','驶':'駛','顺':'順','辆':'輛','扩':'擴','缩':'縮','显':'顯','示':'示','声':'聲','级':'級','别':'別','优':'優','荐':'薦','况':'況','该':'該','给':'給','让':'讓','将':'將','应':'應','为':'為','无':'無','与':'與','并':'並','个':'個','这':'這','种':'種','哪':'哪','么':'麼','还':'還','过':'過','进':'進','出':'出','向':'向','从':'從','经':'經','过':'過','线':'線','将':'將','里':'裡','面':'面','项':'項','务':'務','标':'標','题':'題','单':'單','复':'複','务':'務','号':'號','张':'張','辆':'輛','处':'處','别':'別','难':'難','轻':'輕','较':'較','远':'遠','近':'近','长':'長','短':'短','员':'員','动':'動','静':'靜','满':'滿','空':'空','间':'間','宽':'寬','窄':'窄','压':'壓','缩':'縮','读':'讀','写':'寫','签':'簽','权':'權','限':'限','访':'訪','问':'問','离':'離','开':'開','联':'聯','系':'係','导':'導','航':'航','岛':'島','洲':'洲','汉':'漢','字':'字','語':'語'
+    };
+    Object.assign(traditionalCharMap, { 后:'後',约:'約',灯:'燈',尔:'爾',剧:'劇',观:'觀',丽:'麗',协:'協',鲜:'鮮',兽:'獸',斗:'鬥',万:'萬',顶:'頂',赌:'賭',兹:'茲',乌:'烏',诺:'諾',阶:'階',迟:'遲',为:'為',么:'麼',库:'庫',苏:'蘇',亚:'亞',卢:'盧',维:'維',尼:'尼',奥:'奧',赛:'賽',县:'縣',岛:'島',湾:'灣',冈:'岡',馆:'館',晓:'曉',显:'顯',剑:'劍',艺:'藝',术:'術',荣:'榮',历:'歷',钟:'鐘',页:'頁',邻:'鄰',张:'張',护:'護',卫:'衛',专:'專',营:'營',额:'額',际:'際',选:'選',择:'擇',数:'數',据:'據',单:'單',备:'備',忘:'忘',删:'刪',除:'除',储:'儲',存:'存',复:'複',试:'試',载:'載',连:'連',络:'絡',层:'層',楼:'樓',队:'隊',扩:'擴',缩:'縮',级:'級',荐:'薦',该:'該',给:'給',让:'讓',应:'應',无:'無',个:'個',经:'經',处:'處',难:'難',轻:'輕',较:'較',远:'遠',宽:'寬',压:'壓',权:'權',访:'訪',问:'問',离:'離',开:'開',导:'導',汉:'漢',裤:'褲',爷:'爺',点:'點',随:'隨',盖:'蓋',萨:'薩',蓝:'藍',军:'軍',扩:'擴',邻:'鄰',辈:'輩',药:'藥',烧:'燒',岛:'島' });
+    const traditionalize = value => String(value ?? '').split('').map(character => traditionalCharMap[character] || character).join('');
+    uiTranslations.zhHant = Object.fromEntries(Object.entries(uiTranslations.zh).map(([key, value]) => [key, traditionalize(value)]));
     const phraseTranslations = {
       en: {
         '星期四':'Thursday','星期五':'Friday','星期六':'Saturday','星期日':'Sunday','星期一':'Monday','星期二':'Tuesday','星期三':'Wednesday',
@@ -1486,7 +1493,7 @@
     let activeLanguage = (() => {
       try {
         const saved = window.localStorage.getItem(languageStorageKey);
-        return ['zh','en','fr'].includes(saved) ? saved : 'zh';
+        return languageOrder.includes(saved) ? saved : 'zh';
       } catch (error) { return 'zh'; }
     })();
     const t = (key) => uiTranslations[activeLanguage]?.[key] || uiTranslations.zh[key] || key;
@@ -1495,17 +1502,18 @@
       const source = String(value);
       const exact = phraseTranslations[activeLanguage]?.[source] || supplementalPhraseTranslations[activeLanguage]?.[source];
       if (exact) return exact;
+      if (activeLanguage === 'zhHant') return traditionalize(source);
       let translated = [...(supplementalTranslations[activeLanguage] || []), ...(tokenTranslations[activeLanguage] || [])].reduce((text, [from, to]) => text.split(from).join(to), source);
-      if (activeLanguage !== 'zh') translated = translated.replace(/(\d{1,2})月(\d{1,2})日/g, (_, month, day) => activeLanguage === 'fr' ? `${day}/${month}` : `${month}/${day}`);
+      if (activeLanguage !== 'zh' && activeLanguage !== 'zhHant') translated = translated.replace(/(\d{1,2})月(\d{1,2})日/g, (_, month, day) => activeLanguage === 'fr' ? `${day}/${month}` : `${month}/${day}`);
       return translated;
     };
     const translateRoutePoint = (value) => {
       const prefix = '前一晚住宿 · ';
       return String(value || '').startsWith(prefix) ? `${t('previousHotel')} · ${translatePhrase(String(value).slice(prefix.length))}` : translatePhrase(value);
     };
-    const localeForLanguage = () => ({ zh:'zh-CN', en:'en-US', fr:'fr-FR' }[activeLanguage] || 'zh-CN');
-    const dayLabel = (day) => activeLanguage === 'zh' ? day.dow.replace('星期','周') : translatePhrase(day.dow);
-    const translateTime = (value) => activeLanguage === 'zh' ? String(value || '') : translatePhrase(value);
+    const localeForLanguage = () => ({ zh:'zh-CN', zhHant:'zh-TW', en:'en-US', fr:'fr-FR' }[activeLanguage] || 'zh-CN');
+    const dayLabel = (day) => activeLanguage === 'zh' ? day.dow.replace('星期','周') : activeLanguage === 'zhHant' ? traditionalize(day.dow.replace('星期','周')) : translatePhrase(day.dow);
+    const translateTime = (value) => activeLanguage === 'zh' ? String(value || '') : activeLanguage === 'zhHant' ? traditionalize(value) : translatePhrase(value);
     const weatherNameTranslations = {
       en: { '晴':'Clear', '大致晴':'Mostly clear', '局部多云':'Partly cloudy', '阴':'Overcast', '雾':'Fog', '雾凇':'Rime fog', '小雨':'Light rain', '中雨':'Moderate rain', '大雨':'Heavy rain', '冻雨':'Freezing rain', '小雪':'Light snow', '中雪':'Moderate snow', '大雪':'Heavy snow', '雪粒':'Snow grains', '阵雨':'Rain showers', '强阵雨':'Heavy showers', '阵雪':'Snow showers', '雷雨':'Thunderstorm', '雷雨冰雹':'Thunderstorm with hail', '天气变化':'Changing weather' },
       fr: { '晴':'Ensoleillé', '大致晴':'Plutôt dégagé', '局部多云':'Partiellement nuageux', '阴':'Couvert', '雾':'Brouillard', '雾凇':'Brouillard givrant', '小雨':'Pluie faible', '中雨':'Pluie modérée', '大雨':'Forte pluie', '冻雨':'Pluie verglaçante', '小雪':'Neige faible', '中雪':'Neige modérée', '大雪':'Forte neige', '雪粒':'Neige en grains', '阵雨':'Averses', '强阵雨':'Fortes averses', '阵雪':'Averses de neige', '雷雨':'Orage', '雷雨冰雹':'Orage avec grêle', '天气变化':'Météo variable' }
@@ -1523,14 +1531,14 @@
       const hours = Math.floor((ms % 86400000) / 3600000);
       const minutes = Math.floor((ms % 3600000) / 60000);
       const seconds = Math.floor((ms % 60000) / 1000);
-      const compact = daysPart ? `${daysPart}${activeLanguage === 'zh' ? '天' : activeLanguage === 'fr' ? ' j' : 'd'} ${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      const compact = daysPart ? `${daysPart}${activeLanguage === 'zh' || activeLanguage === 'zhHant' ? '天' : activeLanguage === 'fr' ? ' j' : 'd'} ${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
       return positive ? `${t('countdownAhead')} ${compact}` : t('countdownStarted');
     };
     const escape = (value) => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const eventIcon = (type) => ({flight:'✈',train:'🚄',transfer:'⇢',food:'◒',shopping:'◇',hotel:'⌂',attraction:'✦'}[type] || '•');
     const weatherInfo = (code) => {
       const info = weatherDescriptions[Number(code)] || ['天气变化','🌤️'];
-      return [weatherNameTranslations[activeLanguage]?.[info[0]] || info[0], info[1]];
+      return [weatherNameTranslations[activeLanguage]?.[info[0]] || (activeLanguage === 'zhHant' ? traditionalize(info[0]) : info[0]), info[1]];
     };
     const weatherNumber = (value, suffix = '') => Number.isFinite(Number(value)) ? `${Math.round(Number(value))}${suffix}` : '—';
     const weatherDate = (value, timezone) => new Intl.DateTimeFormat(localeForLanguage(), { month:'numeric', day:'numeric', weekday:'short', timeZone:timezone }).format(new Date(`${value}T12:00:00`));
@@ -1720,7 +1728,7 @@
     function drawLeafletMap(day) {
       const mapElement = document.querySelector(`#route-map-view-${selectedDay}`);
       if (!mapElement || typeof L === 'undefined') {
-        if (mapElement) mapElement.innerHTML = `<div style="padding:20px;color:#62708d;font-size:13px">${escape(activeLanguage === 'zh' ? '地图底图加载失败，请联网后刷新页面。' : activeLanguage === 'fr' ? 'Le fond de carte n’a pas pu être chargé. Vérifiez la connexion puis actualisez la page.' : 'The map base layer could not be loaded. Check your connection and refresh the page.')}</div>`;
+        if (mapElement) mapElement.innerHTML = `<div style="padding:20px;color:#62708d;font-size:13px">${escape(activeLanguage === 'zh' || activeLanguage === 'zhHant' ? traditionalize('地图底图加载失败，请联网后刷新页面。') : activeLanguage === 'fr' ? 'Le fond de carte n’a pas pu être chargé. Vérifiez la connexion puis actualisez la page.' : 'The map base layer could not be loaded. Check your connection and refresh the page.')}</div>`;
         return;
       }
       const points = day.events.filter(item => !(item.type === 'food' && /待定|未定|未知/.test(item.location || ''))).flatMap(item => {
@@ -1966,7 +1974,7 @@
     }
 
     function applyLanguage() {
-      document.documentElement.lang = activeLanguage === 'zh' ? 'zh-CN' : activeLanguage;
+      document.documentElement.lang = activeLanguage === 'zh' ? 'zh-CN' : activeLanguage === 'zhHant' ? 'zh-TW' : activeLanguage;
       document.title = t('tripTitle');
       const description = document.querySelector('meta[name="description"]');
       if (description) description.content = t('metaDescription');
@@ -1980,7 +1988,7 @@
     }
 
     function setLanguage(nextLanguage) {
-      if (!['zh','en','fr'].includes(nextLanguage)) return;
+      if (!languageOrder.includes(nextLanguage)) return;
       activeLanguage = nextLanguage;
       try { window.localStorage.setItem(languageStorageKey, activeLanguage); } catch (error) {}
       const currentDay = selectedDay;
@@ -2005,8 +2013,7 @@
 
     fixedOnlyEl.addEventListener('change', renderDay);
     languageToggle.addEventListener('click', () => {
-      const order = ['zh','en','fr'];
-      setLanguage(order[(order.indexOf(activeLanguage) + 1) % order.length]);
+      setLanguage(languageOrder[(languageOrder.indexOf(activeLanguage) + 1) % languageOrder.length]);
     });
     applyLanguage();
     refreshNext();
